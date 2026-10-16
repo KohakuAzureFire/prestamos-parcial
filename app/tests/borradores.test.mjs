@@ -1,0 +1,32 @@
+import {db,users,asUser,rpc,proof,runTests} from './operaciones.test.mjs';
+import fs from 'node:fs';import assert from 'node:assert/strict';import crypto from 'node:crypto';
+await runTests();
+for(const name of ['20261016072244_clientes_agencia_y_busquedas.sql','20261016080346_cliente_nuevo_confirmacion_final.sql'])await db.exec(fs.readFileSync(new URL('../supabase/migrations/'+name,import.meta.url),'utf8'));
+const count=async()=> (await db.query("select (select count(*)::int from public.clientes) clientes,(select count(*)::int from public.verificaciones_identidad) verificaciones,(select count(*)::int from public.prestamos) prestamos,(select count(*)::int from public.cuotas) cuotas")).rows[0];
+const input=proof('00000201');const before=await count();
+assert.equal(await rpc('resolver_cliente',{p_dni:'00000201'}),null);assert.deepEqual(await count(),before);
+await assert.rejects(rpc('registrar_identidad',input),/paso 3/);assert.deepEqual(await count(),before);
+const args={...input,p_monto:1000,p_meses:6,p_clave:crypto.randomUUID()};
+await assert.rejects(rpc('confirmar_cliente_prestamo',{...args,p_monto:10001}),/capital disponible/);assert.deepEqual(await count(),before,'Falló el préstamo: no quedan alta, revisión ni cuotas');
+await assert.rejects(rpc('confirmar_cliente_prestamo',{...args,p_meses:0}),/inválido/);assert.deepEqual(await count(),before);
+await assert.rejects(rpc('confirmar_cliente_prestamo',{...args,p_firma:'incorrecta'}),/inválida/);assert.deepEqual(await count(),before);
+await db.exec("create function public.fallo_prueba_cuota() returns trigger language plpgsql as $$begin raise exception 'fallo simulado de cuota';end$$;create trigger fallo_cuota before insert on public.cuotas for each row execute function public.fallo_prueba_cuota();");
+await assert.rejects(rpc('confirmar_cliente_prestamo',args),/fallo simulado/);assert.deepEqual(await count(),before,'Falla intermedia revierte todo');await db.exec('drop trigger fallo_cuota on public.cuotas;drop function public.fallo_prueba_cuota();');
+const loan=await rpc('confirmar_cliente_prestamo',args);let after=await count();assert.equal(after.clientes,before.clientes+1);assert.equal(after.verificaciones,before.verificaciones+1);assert.equal(after.prestamos,before.prestamos+1);assert.equal(after.cuotas,before.cuotas+6);
+assert.equal(await rpc('confirmar_cliente_prestamo',args),loan);assert.deepEqual(await count(),after);
+await assert.rejects(rpc('confirmar_cliente_prestamo',{...args,p_monto:1001}),/otra operación/);
+const c=(await rpc('resolver_cliente',{p_dni:'00000201'})).cliente;
+await db.query('update public.clientes set dni_caducidad=public.fecha_peru()-1 where id=$1',[c.id]);
+const reviewsBefore=(await count()).verificaciones;await rpc('registrar_identidad',proof('00000201',users.trujillo),users.trujillo);
+assert.equal((await count()).verificaciones,reviewsBefore+1);assert.equal((await count()).prestamos,after.prestamos,'Revalidar existente no crea préstamo');
+assert.equal((await rpc('resolver_cliente',{p_dni:'00000201'})).situacion.verificacion,'aprobada');
+const origin=(await asUser(users.chimbote,tx=>tx.query('select agencia_nombre from public.verificaciones_con_agencia where cliente_id=$1',[c.id]))).rows;assert.ok(origin.some(r=>r.agencia_nombre==='Trujillo'));
+// A different draft of the same DNI reuses a now-existing valid client, without overwriting evidence.
+const race=proof('00000202');const raceArgs={...race,p_monto:100,p_meses:2,p_clave:crypto.randomUUID()};await rpc('confirmar_cliente_prestamo',raceArgs);
+const counts=await count();await rpc('confirmar_cliente_prestamo',{...raceArgs,p_monto:50,p_meses:1,p_clave:crypto.randomUUID()});const reused=await count();assert.equal(reused.clientes,counts.clientes);assert.equal(reused.verificaciones,counts.verificaciones);assert.equal(reused.prestamos,counts.prestamos+1);
+// A proof expires before first commit, but a committed idempotent retry still returns the same loan.
+const expired=proof('00000203');let payload=JSON.parse(expired.p_payload);payload.consultadoEn=new Date(Date.now()-31*60*1000).toISOString();expired.p_payload=JSON.stringify(payload);const {secret}=await import('./operaciones.test.mjs');expired.p_firma=crypto.createHmac('sha256',secret).update(expired.p_payload).digest('hex');
+const b=await count();await assert.rejects(rpc('confirmar_cliente_prestamo',{...expired,p_monto:100,p_meses:1,p_clave:crypto.randomUUID()}),/expiró/);assert.deepEqual(await count(),b);
+await assert.rejects(rpc('confirmar_cliente_prestamo',args,users.trujillo),/otra operación|expiró/);
+console.log('PASS: borrador sin alta, alta directa bloqueada, confirmación conjunta, rollback ante error intermedio, reintento sin duplicados, revalidación independiente compartida, DNI concurrente y expiración.');
+await db.close();

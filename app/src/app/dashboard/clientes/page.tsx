@@ -1,0 +1,3 @@
+export const dynamic='force-dynamic';
+import {createClient} from '@/lib/supabase/server';import TablaClientes from '@/components/TablaClientes';
+export default async function Clientes(){const s=await createClient();const {data,error}=await s.from('clientes_resumen').select('*').order('created_at',{ascending:false});if(error)throw new Error('No se pudieron cargar los clientes. Compruebe la migración de esta versión.');return <div className="animate-fade-in"><div className="page-heading"><div><h1>Clientes</h1><p>Clientes registrados o con préstamos en tu agencia.</p></div></div><TablaClientes clientesIniciales={data||[]}/></div>}

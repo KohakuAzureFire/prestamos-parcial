@@ -1,0 +1,803 @@
+{
+  "cuotas": [
+    {
+      "id": "10000023-0000-4000-8000-000000000023",
+      "saldo": 505.46,
+      "interes": 22.1,
+      "created_at": "2026-10-15T19:44:51.02269+00:00",
+      "cuota_total": 516.64,
+      "prestamo_id": "10000038-0000-4000-8000-000000000038",
+      "amortizacion": 494.54,
+      "numero_cuota": 1,
+      "fecha_vencimiento": "2026-11-15"
+    },
+    {
+      "id": "10000001-0000-4000-8000-000000000001",
+      "saldo": 0,
+      "interes": 11.17,
+      "created_at": "2026-10-15T19:44:51.02269+00:00",
+      "cuota_total": 516.63,
+      "prestamo_id": "10000038-0000-4000-8000-000000000038",
+      "amortizacion": 505.46,
+      "numero_cuota": 2,
+      "fecha_vencimiento": "2026-12-15"
+    },
+    {
+      "id": "10000031-0000-4000-8000-000000000031",
+      "saldo": 4851.89,
+      "interes": 132.63,
+      "created_at": "2026-10-15T19:53:08.843732+00:00",
+      "cuota_total": 1280.74,
+      "prestamo_id": "10000047-0000-4000-8000-000000000047",
+      "amortizacion": 1148.11,
+      "numero_cuota": 1,
+      "fecha_vencimiento": "2026-11-15"
+    },
+    {
+      "id": "10000033-0000-4000-8000-000000000033",
+      "saldo": 3678.4,
+      "interes": 107.25,
+      "created_at": "2026-10-15T19:53:08.843732+00:00",
+      "cuota_total": 1280.74,
+      "prestamo_id": "10000047-0000-4000-8000-000000000047",
+      "amortizacion": 1173.49,
+      "numero_cuota": 2,
+      "fecha_vencimiento": "2026-12-15"
+    },
+    {
+      "id": "1000000a-0000-4000-8000-00000000000a",
+      "saldo": 2478.97,
+      "interes": 81.31,
+      "created_at": "2026-10-15T19:53:08.843732+00:00",
+      "cuota_total": 1280.74,
+      "prestamo_id": "10000047-0000-4000-8000-000000000047",
+      "amortizacion": 1199.43,
+      "numero_cuota": 3,
+      "fecha_vencimiento": "2027-01-15"
+    },
+    {
+      "id": "10000026-0000-4000-8000-000000000026",
+      "saldo": 1253.03,
+      "interes": 54.8,
+      "created_at": "2026-10-15T19:53:08.843732+00:00",
+      "cuota_total": 1280.74,
+      "prestamo_id": "10000047-0000-4000-8000-000000000047",
+      "amortizacion": 1225.94,
+      "numero_cuota": 4,
+      "fecha_vencimiento": "2027-02-15"
+    },
+    {
+      "id": "10000006-0000-4000-8000-000000000006",
+      "saldo": 0,
+      "interes": 27.7,
+      "created_at": "2026-10-15T19:53:08.843732+00:00",
+      "cuota_total": 1280.73,
+      "prestamo_id": "10000047-0000-4000-8000-000000000047",
+      "amortizacion": 1253.03,
+      "numero_cuota": 5,
+      "fecha_vencimiento": "2027-03-15"
+    },
+    {
+      "id": "10000018-0000-4000-8000-000000000018",
+      "saldo": 1977.72,
+      "interes": 44.21,
+      "created_at": "2026-10-16T04:47:22.490544+00:00",
+      "cuota_total": 66.49,
+      "prestamo_id": "10000034-0000-4000-8000-000000000034",
+      "amortizacion": 22.28,
+      "numero_cuota": 1,
+      "fecha_vencimiento": "2026-11-15"
+    },
+    {
+      "id": "10000017-0000-4000-8000-000000000017",
+      "saldo": 1954.95,
+      "interes": 43.72,
+      "created_at": "2026-10-16T04:47:22.490544+00:00",
+      "cuota_total": 66.49,
+      "prestamo_id": "10000034-0000-4000-8000-000000000034",
+      "amortizacion": 22.77,
+      "numero_cuota": 2,
+      "fecha_vencimiento": "2026-12-15"
+    },
+    {
+      "id": "1000001a-0000-4000-8000-00000000001a",
+      "saldo": 1931.67,
+      "interes": 43.21,
+      "created_at": "2026-10-16T04:47:22.490544+00:00",
+      "cuota_total": 66.49,
+      "prestamo_id": "10000034-0000-4000-8000-000000000034",
+      "amortizacion": 23.28,
+      "numero_cuota": 3,
+      "fecha_vencimiento": "2027-01-15"
+    },
+    {
+      "id": "10000024-0000-4000-8000-000000000024",
+      "saldo": 1907.88,
+      "interes": 42.7,
+      "created_at": "2026-10-16T04:47:22.490544+00:00",
+      "cuota_total": 66.49,
+      "prestamo_id": "10000034-0000-4000-8000-000000000034",
+      "amortizacion": 23.79,
+      "numero_cuota": 4,
+      "fecha_vencimiento": "2027-02-15"
+    },
+    {
+      "id": "1000002e-0000-4000-8000-00000000002e",
+      "saldo": 1883.56,
+      "interes": 42.17,
+      "created_at": "2026-10-16T04:47:22.490544+00:00",
+      "cuota_total": 66.49,
+      "prestamo_id": "10000034-0000-4000-8000-000000000034",
+      "amortizacion": 24.32,
+      "numero_cuota": 5,
+      "fecha_vencimiento": "2027-03-15"
+    },
+    {
+      "id": "1000000d-0000-4000-8000-00000000000d",
+      "saldo": 1858.71,
+      "interes": 41.64,
+      "created_at": "2026-10-16T04:47:22.490544+00:00",
+      "cuota_total": 66.49,
+      "prestamo_id": "10000034-0000-4000-8000-000000000034",
+      "amortizacion": 24.85,
+      "numero_cuota": 6,
+      "fecha_vencimiento": "2027-04-15"
+    },
+    {
+      "id": "10000045-0000-4000-8000-000000000045",
+      "saldo": 1833.31,
+      "interes": 41.09,
+      "created_at": "2026-10-16T04:47:22.490544+00:00",
+      "cuota_total": 66.49,
+      "prestamo_id": "10000034-0000-4000-8000-000000000034",
+      "amortizacion": 25.4,
+      "numero_cuota": 7,
+      "fecha_vencimiento": "2027-05-15"
+    },
+    {
+      "id": "1000002d-0000-4000-8000-00000000002d",
+      "saldo": 1807.34,
+      "interes": 40.52,
+      "created_at": "2026-10-16T04:47:22.490544+00:00",
+      "cuota_total": 66.49,
+      "prestamo_id": "10000034-0000-4000-8000-000000000034",
+      "amortizacion": 25.97,
+      "numero_cuota": 8,
+      "fecha_vencimiento": "2027-06-15"
+    },
+    {
+      "id": "1000001d-0000-4000-8000-00000000001d",
+      "saldo": 1780.8,
+      "interes": 39.95,
+      "created_at": "2026-10-16T04:47:22.490544+00:00",
+      "cuota_total": 66.49,
+      "prestamo_id": "10000034-0000-4000-8000-000000000034",
+      "amortizacion": 26.54,
+      "numero_cuota": 9,
+      "fecha_vencimiento": "2027-07-15"
+    },
+    {
+      "id": "10000025-0000-4000-8000-000000000025",
+      "saldo": 1753.67,
+      "interes": 39.36,
+      "created_at": "2026-10-16T04:47:22.490544+00:00",
+      "cuota_total": 66.49,
+      "prestamo_id": "10000034-0000-4000-8000-000000000034",
+      "amortizacion": 27.13,
+      "numero_cuota": 10,
+      "fecha_vencimiento": "2027-08-15"
+    },
+    {
+      "id": "10000016-0000-4000-8000-000000000016",
+      "saldo": 1725.94,
+      "interes": 38.76,
+      "created_at": "2026-10-16T04:47:22.490544+00:00",
+      "cuota_total": 66.49,
+      "prestamo_id": "10000034-0000-4000-8000-000000000034",
+      "amortizacion": 27.73,
+      "numero_cuota": 11,
+      "fecha_vencimiento": "2027-09-15"
+    },
+    {
+      "id": "1000002b-0000-4000-8000-00000000002b",
+      "saldo": 1697.6,
+      "interes": 38.15,
+      "created_at": "2026-10-16T04:47:22.490544+00:00",
+      "cuota_total": 66.49,
+      "prestamo_id": "10000034-0000-4000-8000-000000000034",
+      "amortizacion": 28.34,
+      "numero_cuota": 12,
+      "fecha_vencimiento": "2027-10-15"
+    },
+    {
+      "id": "10000035-0000-4000-8000-000000000035",
+      "saldo": 1668.63,
+      "interes": 37.52,
+      "created_at": "2026-10-16T04:47:22.490544+00:00",
+      "cuota_total": 66.49,
+      "prestamo_id": "10000034-0000-4000-8000-000000000034",
+      "amortizacion": 28.97,
+      "numero_cuota": 13,
+      "fecha_vencimiento": "2027-11-15"
+    },
+    {
+      "id": "1000002a-0000-4000-8000-00000000002a",
+      "saldo": 1639.02,
+      "interes": 36.88,
+      "created_at": "2026-10-16T04:47:22.490544+00:00",
+      "cuota_total": 66.49,
+      "prestamo_id": "10000034-0000-4000-8000-000000000034",
+      "amortizacion": 29.61,
+      "numero_cuota": 14,
+      "fecha_vencimiento": "2027-12-15"
+    },
+    {
+      "id": "10000039-0000-4000-8000-000000000039",
+      "saldo": 1608.76,
+      "interes": 36.23,
+      "created_at": "2026-10-16T04:47:22.490544+00:00",
+      "cuota_total": 66.49,
+      "prestamo_id": "10000034-0000-4000-8000-000000000034",
+      "amortizacion": 30.26,
+      "numero_cuota": 15,
+      "fecha_vencimiento": "2028-01-15"
+    },
+    {
+      "id": "10000004-0000-4000-8000-000000000004",
+      "saldo": 1577.83,
+      "interes": 35.56,
+      "created_at": "2026-10-16T04:47:22.490544+00:00",
+      "cuota_total": 66.49,
+      "prestamo_id": "10000034-0000-4000-8000-000000000034",
+      "amortizacion": 30.93,
+      "numero_cuota": 16,
+      "fecha_vencimiento": "2028-02-15"
+    },
+    {
+      "id": "1000003c-0000-4000-8000-00000000003c",
+      "saldo": 1546.22,
+      "interes": 34.88,
+      "created_at": "2026-10-16T04:47:22.490544+00:00",
+      "cuota_total": 66.49,
+      "prestamo_id": "10000034-0000-4000-8000-000000000034",
+      "amortizacion": 31.61,
+      "numero_cuota": 17,
+      "fecha_vencimiento": "2028-03-15"
+    },
+    {
+      "id": "1000000b-0000-4000-8000-00000000000b",
+      "saldo": 1513.91,
+      "interes": 34.18,
+      "created_at": "2026-10-16T04:47:22.490544+00:00",
+      "cuota_total": 66.49,
+      "prestamo_id": "10000034-0000-4000-8000-000000000034",
+      "amortizacion": 32.31,
+      "numero_cuota": 18,
+      "fecha_vencimiento": "2028-04-15"
+    },
+    {
+      "id": "1000004a-0000-4000-8000-00000000004a",
+      "saldo": 1480.88,
+      "interes": 33.46,
+      "created_at": "2026-10-16T04:47:22.490544+00:00",
+      "cuota_total": 66.49,
+      "prestamo_id": "10000034-0000-4000-8000-000000000034",
+      "amortizacion": 33.03,
+      "numero_cuota": 19,
+      "fecha_vencimiento": "2028-05-15"
+    },
+    {
+      "id": "10000027-0000-4000-8000-000000000027",
+      "saldo": 1447.12,
+      "interes": 32.73,
+      "created_at": "2026-10-16T04:47:22.490544+00:00",
+      "cuota_total": 66.49,
+      "prestamo_id": "10000034-0000-4000-8000-000000000034",
+      "amortizacion": 33.76,
+      "numero_cuota": 20,
+      "fecha_vencimiento": "2028-06-15"
+    },
+    {
+      "id": "10000021-0000-4000-8000-000000000021",
+      "saldo": 1412.62,
+      "interes": 31.99,
+      "created_at": "2026-10-16T04:47:22.490544+00:00",
+      "cuota_total": 66.49,
+      "prestamo_id": "10000034-0000-4000-8000-000000000034",
+      "amortizacion": 34.5,
+      "numero_cuota": 21,
+      "fecha_vencimiento": "2028-07-15"
+    },
+    {
+      "id": "1000000c-0000-4000-8000-00000000000c",
+      "saldo": 1377.36,
+      "interes": 31.23,
+      "created_at": "2026-10-16T04:47:22.490544+00:00",
+      "cuota_total": 66.49,
+      "prestamo_id": "10000034-0000-4000-8000-000000000034",
+      "amortizacion": 35.26,
+      "numero_cuota": 22,
+      "fecha_vencimiento": "2028-08-15"
+    },
+    {
+      "id": "10000013-0000-4000-8000-000000000013",
+      "saldo": 1341.32,
+      "interes": 30.45,
+      "created_at": "2026-10-16T04:47:22.490544+00:00",
+      "cuota_total": 66.49,
+      "prestamo_id": "10000034-0000-4000-8000-000000000034",
+      "amortizacion": 36.04,
+      "numero_cuota": 23,
+      "fecha_vencimiento": "2028-09-15"
+    },
+    {
+      "id": "10000041-0000-4000-8000-000000000041",
+      "saldo": 1304.48,
+      "interes": 29.65,
+      "created_at": "2026-10-16T04:47:22.490544+00:00",
+      "cuota_total": 66.49,
+      "prestamo_id": "10000034-0000-4000-8000-000000000034",
+      "amortizacion": 36.84,
+      "numero_cuota": 24,
+      "fecha_vencimiento": "2028-10-15"
+    },
+    {
+      "id": "10000029-0000-4000-8000-000000000029",
+      "saldo": 1266.82,
+      "interes": 28.83,
+      "created_at": "2026-10-16T04:47:22.490544+00:00",
+      "cuota_total": 66.49,
+      "prestamo_id": "10000034-0000-4000-8000-000000000034",
+      "amortizacion": 37.66,
+      "numero_cuota": 25,
+      "fecha_vencimiento": "2028-11-15"
+    },
+    {
+      "id": "10000028-0000-4000-8000-000000000028",
+      "saldo": 1228.33,
+      "interes": 28,
+      "created_at": "2026-10-16T04:47:22.490544+00:00",
+      "cuota_total": 66.49,
+      "prestamo_id": "10000034-0000-4000-8000-000000000034",
+      "amortizacion": 38.49,
+      "numero_cuota": 26,
+      "fecha_vencimiento": "2028-12-15"
+    },
+    {
+      "id": "1000002f-0000-4000-8000-00000000002f",
+      "saldo": 1188.99,
+      "interes": 27.15,
+      "created_at": "2026-10-16T04:47:22.490544+00:00",
+      "cuota_total": 66.49,
+      "prestamo_id": "10000034-0000-4000-8000-000000000034",
+      "amortizacion": 39.34,
+      "numero_cuota": 27,
+      "fecha_vencimiento": "2029-01-15"
+    },
+    {
+      "id": "1000001f-0000-4000-8000-00000000001f",
+      "saldo": 1148.78,
+      "interes": 26.28,
+      "created_at": "2026-10-16T04:47:22.490544+00:00",
+      "cuota_total": 66.49,
+      "prestamo_id": "10000034-0000-4000-8000-000000000034",
+      "amortizacion": 40.21,
+      "numero_cuota": 28,
+      "fecha_vencimiento": "2029-02-15"
+    },
+    {
+      "id": "10000005-0000-4000-8000-000000000005",
+      "saldo": 1107.68,
+      "interes": 25.39,
+      "created_at": "2026-10-16T04:47:22.490544+00:00",
+      "cuota_total": 66.49,
+      "prestamo_id": "10000034-0000-4000-8000-000000000034",
+      "amortizacion": 41.1,
+      "numero_cuota": 29,
+      "fecha_vencimiento": "2029-03-15"
+    },
+    {
+      "id": "10000022-0000-4000-8000-000000000022",
+      "saldo": 1065.67,
+      "interes": 24.48,
+      "created_at": "2026-10-16T04:47:22.490544+00:00",
+      "cuota_total": 66.49,
+      "prestamo_id": "10000034-0000-4000-8000-000000000034",
+      "amortizacion": 42.01,
+      "numero_cuota": 30,
+      "fecha_vencimiento": "2029-04-15"
+    },
+    {
+      "id": "10000015-0000-4000-8000-000000000015",
+      "saldo": 1022.74,
+      "interes": 23.56,
+      "created_at": "2026-10-16T04:47:22.490544+00:00",
+      "cuota_total": 66.49,
+      "prestamo_id": "10000034-0000-4000-8000-000000000034",
+      "amortizacion": 42.93,
+      "numero_cuota": 31,
+      "fecha_vencimiento": "2029-05-15"
+    },
+    {
+      "id": "10000030-0000-4000-8000-000000000030",
+      "saldo": 978.86,
+      "interes": 22.61,
+      "created_at": "2026-10-16T04:47:22.490544+00:00",
+      "cuota_total": 66.49,
+      "prestamo_id": "10000034-0000-4000-8000-000000000034",
+      "amortizacion": 43.88,
+      "numero_cuota": 32,
+      "fecha_vencimiento": "2029-06-15"
+    },
+    {
+      "id": "10000007-0000-4000-8000-000000000007",
+      "saldo": 934.01,
+      "interes": 21.64,
+      "created_at": "2026-10-16T04:47:22.490544+00:00",
+      "cuota_total": 66.49,
+      "prestamo_id": "10000034-0000-4000-8000-000000000034",
+      "amortizacion": 44.85,
+      "numero_cuota": 33,
+      "fecha_vencimiento": "2029-07-15"
+    },
+    {
+      "id": "10000009-0000-4000-8000-000000000009",
+      "saldo": 888.17,
+      "interes": 20.65,
+      "created_at": "2026-10-16T04:47:22.490544+00:00",
+      "cuota_total": 66.49,
+      "prestamo_id": "10000034-0000-4000-8000-000000000034",
+      "amortizacion": 45.84,
+      "numero_cuota": 34,
+      "fecha_vencimiento": "2029-08-15"
+    },
+    {
+      "id": "1000004b-0000-4000-8000-00000000004b",
+      "saldo": 841.31,
+      "interes": 19.63,
+      "created_at": "2026-10-16T04:47:22.490544+00:00",
+      "cuota_total": 66.49,
+      "prestamo_id": "10000034-0000-4000-8000-000000000034",
+      "amortizacion": 46.86,
+      "numero_cuota": 35,
+      "fecha_vencimiento": "2029-09-15"
+    },
+    {
+      "id": "1000001b-0000-4000-8000-00000000001b",
+      "saldo": 793.42,
+      "interes": 18.6,
+      "created_at": "2026-10-16T04:47:22.490544+00:00",
+      "cuota_total": 66.49,
+      "prestamo_id": "10000034-0000-4000-8000-000000000034",
+      "amortizacion": 47.89,
+      "numero_cuota": 36,
+      "fecha_vencimiento": "2029-10-15"
+    },
+    {
+      "id": "1000003d-0000-4000-8000-00000000003d",
+      "saldo": 744.47,
+      "interes": 17.54,
+      "created_at": "2026-10-16T04:47:22.490544+00:00",
+      "cuota_total": 66.49,
+      "prestamo_id": "10000034-0000-4000-8000-000000000034",
+      "amortizacion": 48.95,
+      "numero_cuota": 37,
+      "fecha_vencimiento": "2029-11-15"
+    },
+    {
+      "id": "10000036-0000-4000-8000-000000000036",
+      "saldo": 694.44,
+      "interes": 16.46,
+      "created_at": "2026-10-16T04:47:22.490544+00:00",
+      "cuota_total": 66.49,
+      "prestamo_id": "10000034-0000-4000-8000-000000000034",
+      "amortizacion": 50.03,
+      "numero_cuota": 38,
+      "fecha_vencimiento": "2029-12-15"
+    },
+    {
+      "id": "10000046-0000-4000-8000-000000000046",
+      "saldo": 643.3,
+      "interes": 15.35,
+      "created_at": "2026-10-16T04:47:22.490544+00:00",
+      "cuota_total": 66.49,
+      "prestamo_id": "10000034-0000-4000-8000-000000000034",
+      "amortizacion": 51.14,
+      "numero_cuota": 39,
+      "fecha_vencimiento": "2030-01-15"
+    },
+    {
+      "id": "10000048-0000-4000-8000-000000000048",
+      "saldo": 591.03,
+      "interes": 14.22,
+      "created_at": "2026-10-16T04:47:22.490544+00:00",
+      "cuota_total": 66.49,
+      "prestamo_id": "10000034-0000-4000-8000-000000000034",
+      "amortizacion": 52.27,
+      "numero_cuota": 40,
+      "fecha_vencimiento": "2030-02-15"
+    },
+    {
+      "id": "1000001e-0000-4000-8000-00000000001e",
+      "saldo": 537.6,
+      "interes": 13.06,
+      "created_at": "2026-10-16T04:47:22.490544+00:00",
+      "cuota_total": 66.49,
+      "prestamo_id": "10000034-0000-4000-8000-000000000034",
+      "amortizacion": 53.43,
+      "numero_cuota": 41,
+      "fecha_vencimiento": "2030-03-15"
+    },
+    {
+      "id": "10000003-0000-4000-8000-000000000003",
+      "saldo": 482.99,
+      "interes": 11.88,
+      "created_at": "2026-10-16T04:47:22.490544+00:00",
+      "cuota_total": 66.49,
+      "prestamo_id": "10000034-0000-4000-8000-000000000034",
+      "amortizacion": 54.61,
+      "numero_cuota": 42,
+      "fecha_vencimiento": "2030-04-15"
+    },
+    {
+      "id": "1000003b-0000-4000-8000-00000000003b",
+      "saldo": 427.18,
+      "interes": 10.68,
+      "created_at": "2026-10-16T04:47:22.490544+00:00",
+      "cuota_total": 66.49,
+      "prestamo_id": "10000034-0000-4000-8000-000000000034",
+      "amortizacion": 55.81,
+      "numero_cuota": 43,
+      "fecha_vencimiento": "2030-05-15"
+    },
+    {
+      "id": "10000012-0000-4000-8000-000000000012",
+      "saldo": 370.13,
+      "interes": 9.44,
+      "created_at": "2026-10-16T04:47:22.490544+00:00",
+      "cuota_total": 66.49,
+      "prestamo_id": "10000034-0000-4000-8000-000000000034",
+      "amortizacion": 57.05,
+      "numero_cuota": 44,
+      "fecha_vencimiento": "2030-06-15"
+    },
+    {
+      "id": "1000001c-0000-4000-8000-00000000001c",
+      "saldo": 311.82,
+      "interes": 8.18,
+      "created_at": "2026-10-16T04:47:22.490544+00:00",
+      "cuota_total": 66.49,
+      "prestamo_id": "10000034-0000-4000-8000-000000000034",
+      "amortizacion": 58.31,
+      "numero_cuota": 45,
+      "fecha_vencimiento": "2030-07-15"
+    },
+    {
+      "id": "1000003e-0000-4000-8000-00000000003e",
+      "saldo": 252.22,
+      "interes": 6.89,
+      "created_at": "2026-10-16T04:47:22.490544+00:00",
+      "cuota_total": 66.49,
+      "prestamo_id": "10000034-0000-4000-8000-000000000034",
+      "amortizacion": 59.6,
+      "numero_cuota": 46,
+      "fecha_vencimiento": "2030-08-15"
+    },
+    {
+      "id": "1000000f-0000-4000-8000-00000000000f",
+      "saldo": 191.31,
+      "interes": 5.58,
+      "created_at": "2026-10-16T04:47:22.490544+00:00",
+      "cuota_total": 66.49,
+      "prestamo_id": "10000034-0000-4000-8000-000000000034",
+      "amortizacion": 60.91,
+      "numero_cuota": 47,
+      "fecha_vencimiento": "2030-09-15"
+    },
+    {
+      "id": "10000043-0000-4000-8000-000000000043",
+      "saldo": 129.05,
+      "interes": 4.23,
+      "created_at": "2026-10-16T04:47:22.490544+00:00",
+      "cuota_total": 66.49,
+      "prestamo_id": "10000034-0000-4000-8000-000000000034",
+      "amortizacion": 62.26,
+      "numero_cuota": 48,
+      "fecha_vencimiento": "2030-10-15"
+    },
+    {
+      "id": "10000020-0000-4000-8000-000000000020",
+      "saldo": 65.41,
+      "interes": 2.85,
+      "created_at": "2026-10-16T04:47:22.490544+00:00",
+      "cuota_total": 66.49,
+      "prestamo_id": "10000034-0000-4000-8000-000000000034",
+      "amortizacion": 63.64,
+      "numero_cuota": 49,
+      "fecha_vencimiento": "2030-11-15"
+    },
+    {
+      "id": "10000044-0000-4000-8000-000000000044",
+      "saldo": 0,
+      "interes": 1.45,
+      "created_at": "2026-10-16T04:47:22.490544+00:00",
+      "cuota_total": 66.86,
+      "prestamo_id": "10000034-0000-4000-8000-000000000034",
+      "amortizacion": 65.41,
+      "numero_cuota": 50,
+      "fecha_vencimiento": "2030-12-15"
+    }
+  ],
+  "agencias": [
+    {
+      "id": "10000002-0000-4000-8000-000000000002",
+      "nombre": "Chimbote",
+      "created_at": "2026-10-15T15:39:18.379947+00:00"
+    },
+    {
+      "id": "1000000e-0000-4000-8000-00000000000e",
+      "nombre": "Chiclayo",
+      "created_at": "2026-10-15T15:39:18.379947+00:00"
+    },
+    {
+      "id": "10000014-0000-4000-8000-000000000014",
+      "nombre": "Piura",
+      "created_at": "2026-10-15T16:23:10.650739+00:00"
+    },
+    {
+      "id": "10000019-0000-4000-8000-000000000019",
+      "nombre": "Tumbes",
+      "created_at": "2026-10-15T16:23:10.650739+00:00"
+    },
+    {
+      "id": "10000032-0000-4000-8000-000000000032",
+      "nombre": "Trujillo",
+      "created_at": "2026-10-15T15:39:18.379947+00:00"
+    }
+  ],
+  "asesores": [
+    {
+      "id": "10000040-0000-4000-8000-000000000040",
+      "activo": true,
+      "agencia_id": "10000002-0000-4000-8000-000000000002",
+      "created_at": "2026-10-15T16:31:06.046765+00:00",
+      "updated_at": "2026-10-15T16:31:06.046765+00:00",
+      "nombre_completo": "Carlos Mendoza Ramos"
+    },
+    {
+      "id": "10000042-0000-4000-8000-000000000042",
+      "activo": true,
+      "agencia_id": "10000032-0000-4000-8000-000000000032",
+      "created_at": "2026-10-15T16:34:02.83673+00:00",
+      "updated_at": "2026-10-15T16:34:02.83673+00:00",
+      "nombre_completo": "Ana Morales Delgado"
+    },
+    {
+      "id": "10000037-0000-4000-8000-000000000037",
+      "activo": true,
+      "agencia_id": "10000032-0000-4000-8000-000000000032",
+      "created_at": "2026-10-15T16:50:17.926386+00:00",
+      "updated_at": "2026-10-15T16:50:17.926386+00:00",
+      "nombre_completo": "Lucía Torres Valdivia"
+    },
+    {
+      "id": "1000003a-0000-4000-8000-00000000003a",
+      "activo": true,
+      "agencia_id": "1000000e-0000-4000-8000-00000000000e",
+      "created_at": "2026-10-15T16:50:51.540546+00:00",
+      "updated_at": "2026-10-15T16:50:51.540546+00:00",
+      "nombre_completo": "Jorge Silva Paredes"
+    },
+    {
+      "id": "1000003f-0000-4000-8000-00000000003f",
+      "activo": true,
+      "agencia_id": "10000014-0000-4000-8000-000000000014",
+      "created_at": "2026-10-15T16:50:51.540546+00:00",
+      "updated_at": "2026-10-15T16:50:51.540546+00:00",
+      "nombre_completo": "María Fernández Ruiz"
+    },
+    {
+      "id": "10000049-0000-4000-8000-000000000049",
+      "activo": true,
+      "agencia_id": "10000019-0000-4000-8000-000000000019",
+      "created_at": "2026-10-15T16:50:51.540546+00:00",
+      "updated_at": "2026-10-15T16:50:51.540546+00:00",
+      "nombre_completo": "Pedro Castillo Vega"
+    }
+  ],
+  "clientes": [
+    {
+      "id": "10000011-0000-4000-8000-000000000011",
+      "dni": "00001001",
+      "nombres": "CLIENTE DE PRUEBA",
+      "apellidos": "NUMERO 1",
+      "asesor_id": "10000037-0000-4000-8000-000000000037",
+      "condicion": "activo",
+      "created_at": "2026-10-15T19:43:38.201468+00:00",
+      "updated_at": "2026-10-15T19:43:38.201468+00:00",
+      "fecha_verificacion": "2026-10-15T19:43:37.854+00:00",
+      "fuente_verificacion": "Decolecta",
+      "resultado_verificacion": "Registro histórico ficticio sin evidencia completa"
+    },
+    {
+      "id": "10000010-0000-4000-8000-000000000010",
+      "dni": "00001002",
+      "nombres": "CLIENTE DE PRUEBA",
+      "apellidos": "NUMERO 2",
+      "asesor_id": "10000040-0000-4000-8000-000000000040",
+      "condicion": "activo",
+      "created_at": "2026-10-15T17:10:12.236199+00:00",
+      "updated_at": "2026-10-16T00:30:32.415072+00:00",
+      "fecha_verificacion": "2026-10-16T00:30:32.169+00:00",
+      "fuente_verificacion": "Decolecta",
+      "resultado_verificacion": "Registro histórico ficticio sin evidencia completa"
+    },
+    {
+      "id": "10000008-0000-4000-8000-000000000008",
+      "dni": "00001003",
+      "nombres": "CLIENTE DE PRUEBA",
+      "apellidos": "NUMERO 3",
+      "asesor_id": "10000037-0000-4000-8000-000000000037",
+      "condicion": "activo",
+      "created_at": "2026-10-16T02:46:43.607439+00:00",
+      "updated_at": "2026-10-16T02:50:19.897949+00:00",
+      "fecha_verificacion": "2026-10-16T02:50:19.452+00:00",
+      "fuente_verificacion": "Decolecta",
+      "resultado_verificacion": "Registro histórico ficticio sin evidencia completa"
+    },
+    {
+      "id": "1000002c-0000-4000-8000-00000000002c",
+      "dni": "00001004",
+      "nombres": "CLIENTE DE PRUEBA",
+      "apellidos": "NUMERO 4",
+      "asesor_id": "10000040-0000-4000-8000-000000000040",
+      "condicion": "fallecido",
+      "created_at": "2026-10-16T04:46:39.343385+00:00",
+      "updated_at": "2026-10-16T04:52:56.074226+00:00",
+      "fecha_verificacion": "2026-10-16T04:52:56.314+00:00",
+      "fuente_verificacion": "Decolecta",
+      "resultado_verificacion": "Registro histórico ficticio sin evidencia completa"
+    }
+  ],
+  "prestamos": [
+    {
+      "id": "10000038-0000-4000-8000-000000000038",
+      "tea": 0.3,
+      "monto": 1000,
+      "estado": "confirmado",
+      "asesor_id": "10000037-0000-4000-8000-000000000037",
+      "agencia_id": "10000032-0000-4000-8000-000000000032",
+      "cliente_id": "10000011-0000-4000-8000-000000000011",
+      "created_at": "2026-10-15T19:44:50.646418+00:00",
+      "plazo_meses": 2,
+      "confirmado_at": "2026-10-15T19:44:50.426+00:00",
+      "fecha_prestamo": "2026-10-15"
+    },
+    {
+      "id": "10000047-0000-4000-8000-000000000047",
+      "tea": 0.3,
+      "monto": 6000,
+      "estado": "confirmado",
+      "asesor_id": "10000037-0000-4000-8000-000000000037",
+      "agencia_id": "10000032-0000-4000-8000-000000000032",
+      "cliente_id": "10000011-0000-4000-8000-000000000011",
+      "created_at": "2026-10-15T19:53:08.577873+00:00",
+      "plazo_meses": 5,
+      "confirmado_at": "2026-10-15T19:53:08.371+00:00",
+      "fecha_prestamo": "2026-10-15"
+    },
+    {
+      "id": "10000034-0000-4000-8000-000000000034",
+      "tea": 0.3,
+      "monto": 2000,
+      "estado": "confirmado",
+      "asesor_id": "10000040-0000-4000-8000-000000000040",
+      "agencia_id": "10000002-0000-4000-8000-000000000002",
+      "cliente_id": "1000002c-0000-4000-8000-00000000002c",
+      "created_at": "2026-10-16T04:47:22.158748+00:00",
+      "plazo_meses": 50,
+      "confirmado_at": "2026-10-16T04:47:22.39+00:00",
+      "fecha_prestamo": "2026-10-15"
+    }
+  ]
+}

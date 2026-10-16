@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Next.js build output
+.next/
+out/
+build/
+dist/
+
+# Environment files
+.env*
+!.env.example
+
+# OS and IDE files
+.DS_Store
+Thumbs.db
+*.pem
+.vscode/
+.idea/
+
+# Credenciales de evaluación y respaldos
+docs/ESTADO_IMPLEMENTACION.md
+docs/respaldo*.json
+
+# Archivos generados
+*.tsbuildinfo
+.vercel/
