@@ -28,8 +28,8 @@ const sql=fs.readFileSync(new URL('../supabase/migrations/20261016054059_prestam
 await db.exec(sql);
 export const users={chimbote:snap.asesores.find(a=>a.nombre_completo.startsWith('Carlos')).id,trujillo:snap.asesores.find(a=>a.nombre_completo.startsWith('Lucía')).id};
 export const secret='solo-pruebas-locales-clave-de-firma';await db.query('insert into private.configuracion values($1,$2)',['identity_signing_secret',secret]);
-export async function asUser(uid,fn){return db.transaction(async tx=>{await tx.exec('set local role authenticated');await tx.query("select set_config('request.jwt.claims',$1,true)",[JSON.stringify({sub:uid,role:'authenticated'})]);return fn(tx);});}
-export async function rpc(name,args,uid=users.chimbote){const keys=Object.keys(args);return asUser(uid,async tx=>(await tx.query(`select public.${name}(${keys.map((k,i)=>k+'=> $'+(i+1)).join(',')}) as result`,Object.values(args))).rows[0].result);}
+export async function asUser(uid,fn,sessionId){return db.transaction(async tx=>{await tx.exec('set local role authenticated');await tx.query("select set_config('request.jwt.claims',$1,true)",[JSON.stringify({sub:uid,role:'authenticated',...(sessionId?{session_id:sessionId}:{})})]);return fn(tx);});}
+export async function rpc(name,args,uid=users.chimbote,sessionId){const keys=Object.keys(args);return asUser(uid,async tx=>(await tx.query(`select public.${name}(${keys.map((k,i)=>k+'=> $'+(i+1)).join(',')}) as result`,Object.values(args))).rows[0].result,sessionId);}
 export function proof(dni,uid=users.chimbote){const payload=JSON.stringify({dni,nombres:'CLIENTE',apellidos:'PRUEBA',asesor_id:uid,consultadoEn:new Date().toISOString()});return {p_payload:payload,p_firma:crypto.createHmac('sha256',secret).update(payload).digest('hex'),p_evidencia:{caducidad:'2030-12-31',original:true,no_fallecido:true,vigencia:'DNI original local',supervivencia:'Constancia oficial de prueba'}};}
 export async function runTests(){
 assert.equal((await db.query('select count(*)::int n from public.prestamos')).rows[0].n,3);
