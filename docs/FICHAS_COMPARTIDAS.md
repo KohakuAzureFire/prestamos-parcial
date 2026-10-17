@@ -1,3 +1,5 @@
+> Actualización: el listado Clientes ahora muestra solo titulares con préstamos confirmados en tu agencia. Los accesos a fichas y vínculos del grupo siguen compartidos. Ver OBSERVACIONES_CLIENTES_REVALIDACION.md.
+
 # Fichas compartidas y grupo de pagos
 
 ## Comportamiento

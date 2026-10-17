@@ -1,3 +1,9 @@
+# Revisión actual: clientes por agencia y revalidación
+
+Implementada en esta entrega. Consulta OBSERVACIONES_CLIENTES_REVALIDACION.md y las instrucciones de actualización. No requiere SQL adicional sobre la base ya sincronizada.
+
+El contenido siguiente describe la base y revisiones anteriores.
+
 # Estado de implementación del sistema de préstamos
 
 ## Revisión actual: fichas compartidas y desplegable

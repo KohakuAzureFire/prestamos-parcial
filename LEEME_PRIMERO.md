@@ -1,15 +1,18 @@
-# Sistema de préstamos actualizado
+# Agencia de préstamos — actualización
 
-Esta entrega completa las fichas compartidas entre agencias, los vínculos del propietario y sus empresas, los pagos de todo el grupo al consultar DNI/RUC10/RUC20, el desplegable de Solicitar préstamo y el plazo controlado de 1 a 60 meses. Conserva el monto con soles y centavos y las funciones anteriores de identidad, cronograma, contrato y cobranza.
+Revisión: listado de clientes por agencia, menú Revalidar datos y actualización SUNAT.
 
-## Instalar sobre tu carpeta actual
+Lee INSTRUCCIONES_ACTUALIZACION.md para copiar los cambios y publicarlos en GitHub.
+Conserva tu app/.env.local y app/node_modules: este ZIP no los contiene.
+No cambian dependencias; no necesitas volver a ejecutar npm.cmd ci.
 
-1. Detén el servidor (Ctrl+C).
-2. Conserva app/.env.local, app/node_modules, app/templates y .git.
-3. Reemplaza app/src y copia app/scripts del ZIP. Elimina app/.next. Actualiza docs y los archivos de instrucciones.
-4. Abre app/scripts/ACTUALIZAR_SISTEMA.sql en VS Code. Copia TODO EL CÓDIGO y ejecútalo en una consulta nueva del SQL Editor de Supabase. No pegues el nombre o la ruta del archivo. Este archivo contiene los ajustes anteriores y el actual; no hace falta ejecutar los demás por separado. Se puede repetir sin cambiar operaciones anteriores.
-5. Desde app ejecuta npm.cmd run dev. No necesitas reinstalar dependencias si conservas node_modules de esta base.
+La Supabase de prestamos-parcial ya se actualizó en esta conversación.
+Esta revisión NO requiere SQL adicional ni cambiar claves de Vercel.
+La publicación en GitHub la realiza el usuario; el ZIP no publica cambios por sí solo.
 
-El SQL nuevo no se ha aplicado al proyecto real desde este chat. El ZIP no contiene tus claves. No cambiaron package.json, package-lock.json ni las variables requeridas.
+Cambios: Clientes lista únicamente titulares con préstamos confirmados de la agencia;
+las fichas conservan sus vínculos compartidos; Revalidar datos despliega DNI/RUC10
+sin pantalla intermedia; SUNAT compara datos y registra la nueva consulta; se añaden
+fechas de revisión y consulta al bloque de identificación y mensajes diferenciados.
 
-Consulta INSTRUCCIONES_ACTUALIZACION.md y docs/FICHAS_COMPARTIDAS.md. Las pruebas se realizaron con datos ficticios en una base aislada. La aplicación que utilice tu Supabase real registra allí las operaciones que confirmes.
+Los scripts SQL se conservan para instalaciones que aún no recibieron los ajustes anteriores.
