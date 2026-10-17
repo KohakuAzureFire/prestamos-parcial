@@ -334,5 +334,5 @@ h1{font-size:32px!important;font-weight:750!important;letter-spacing:-.045em!imp
 @media(max-width:640px){.sunat-fields{grid-template-columns:1fr}.revalidation-menu{max-width:100%}.revalidation-menu .document-menu-options{min-width:0;width:min(280px,80vw)}}
 
 /* Ficha resumida y navegación contextual de cobros. */
-.profile-bottom-actions{display:flex;justify-content:flex-end;align-items:flex-start;flex-wrap:wrap;gap:12px;margin:24px 0}.profile-history-menu>summary{min-width:180px;white-space:nowrap}.profile-history-menu .document-menu-options{top:auto;bottom:calc(100% + 8px);min-width:230px}.payment-selected{scroll-margin-top:100px}.payment-selected:focus{outline:2px solid #00a1ad;outline-offset:3px}.profile-history>.card{margin-top:24px}
-@media(max-width:640px){.profile-bottom-actions>.btn,.profile-bottom-actions>.document-menu{width:100%}.profile-bottom-actions .document-menu>summary{width:100%}.payment-selected{scroll-margin-top:85px}}
+.profile-bottom-actions{display:flex;justify-content:flex-end;align-items:flex-start;flex-wrap:wrap;gap:12px;margin:24px 0}.profile-history-menu>summary{min-width:180px;white-space:nowrap}.profile-history-menu .document-menu-options{top:auto;bottom:calc(100% + 8px);min-width:230px}.payment-selected{scroll-margin-top:8px}.payment-selected:focus{outline:none}.profile-history>.card{margin-top:24px}
+@media(max-width:640px){.profile-bottom-actions>.btn,.profile-bottom-actions>.document-menu{width:100%}.profile-bottom-actions .document-menu>summary{width:100%}.payment-selected{scroll-margin-top:8px}}
