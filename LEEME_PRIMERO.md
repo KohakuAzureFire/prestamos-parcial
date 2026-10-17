@@ -1,18 +1,14 @@
-# Agencia de préstamos — actualización
+# Agencia de préstamos — ficha resumida y pagos
 
-Revisión: listado de clientes por agencia, menú Revalidar datos y actualización SUNAT.
+Lee INSTRUCCIONES_ACTUALIZACION.md para copiar los cambios y los tres commits de GitHub.
+Conserva tu app/.env.local y app/node_modules: no están incluidos en el ZIP.
+No cambian dependencias ni claves. No necesitas npm.cmd ci ni SQL adicional sobre
+la Supabase del proyecto ya sincronizada en esta conversación.
 
-Lee INSTRUCCIONES_ACTUALIZACION.md para copiar los cambios y publicarlos en GitHub.
-Conserva tu app/.env.local y app/node_modules: este ZIP no los contiene.
-No cambian dependencias; no necesitas volver a ejecutar npm.cmd ci.
+Esta entrega simplifica la ficha y separa sus historiales, retira la tabla de préstamos
+locales de la ficha, añade regreso contextual en Pagos y fija el préstamo cuando se
+entra desde su detalle. Al seleccionar un préstamo se desplaza hasta su titular.
+La condición de pago pasa a mostrar Sin atrasos en lugar de Habilitado.
 
-La Supabase de prestamos-parcial ya se actualizó en esta conversación.
-Esta revisión NO requiere SQL adicional ni cambiar claves de Vercel.
-La publicación en GitHub la realiza el usuario; el ZIP no publica cambios por sí solo.
-
-Cambios: Clientes lista únicamente titulares con préstamos confirmados de la agencia;
-las fichas conservan sus vínculos compartidos; Revalidar datos despliega DNI/RUC10
-sin pantalla intermedia; SUNAT compara datos y registra la nueva consulta; se añaden
-fechas de revisión y consulta al bloque de identificación y mensajes diferenciados.
-
-Los scripts SQL se conservan para instalaciones que aún no recibieron los ajustes anteriores.
+Publicación: el usuario sube los tres commits. Después verificaremos Supabase y Vercel.
+Los scripts SQL se conservan para instalaciones que no recibieron los ajustes anteriores.

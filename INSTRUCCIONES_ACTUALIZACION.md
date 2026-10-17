@@ -1,4 +1,4 @@
-# Actualizar esta versión: clientes por agencia y revalidación
+# Actualizar esta versión: ficha resumida y pagos con contexto
 
 Esta entrega parte de la versión publicada el 16/10/2026 (commit 9545072).
 La base Supabase del proyecto ya recibió ACTUALIZAR_SISTEMA el 17/10/2026 UTC.
@@ -14,21 +14,26 @@ cambiar claves ni instalar dependencias.
 4. Reemplaza docs, INSTRUCCIONES_ACTUALIZACION.md y LEEME_PRIMERO.md.
 5. Desde app ejecuta npm.cmd run dev. No necesitas npm.cmd ci.
 
-## Actualizar GitHub desde la web
+## Actualizar GitHub desde la web: tres commits
 
-1. Abre tu repositorio prestamos-parcial, rama main, y entra en app.
-2. Add file → Upload files. Desde la carpeta local app arrastra SOLO src completo.
-   Son menos de 100 archivos. No arrastres app dentro de app ni la carpeta del ZIP.
-3. Commit changes: «Ajustar clientes por agencia y actualización de identidad y SUNAT».
-4. En otra carga, actualiza docs y los dos archivos de instrucciones en la raíz.
-   Commit: «Actualizar guía de publicación y pruebas manuales».
-5. Si quieres mantener las pruebas del repositorio al día, dentro de app/tests
-   sube servidor-pruebas.mjs. Commit: «Actualizar servidor local de pruebas».
-6. No subas .env.local, node_modules, .next, .git ni .vercel. La subida web no aplica
-   automáticamente las exclusiones de .gitignore.
+Usa el contenido extraído de este ZIP, sin mezclarlo con carpetas generadas locales.
 
-Los archivos con la misma ruta se actualizan; no borres el repositorio.
-No cambian package.json ni package-lock.json.
+1. En GitHub entra en app → Add file → Upload files. Desde el app del ZIP selecciona
+   TODO excepto src y arrástralo. Son menos de 100 archivos en total.
+   Commit: «Actualizar recursos, documentación y pruebas».
+2. Mantente dentro de app y sube SOLO la carpeta src completa. También tiene menos
+   de 100 archivos, contando subcarpetas.
+   Commit: «Simplificar fichas y mejorar el flujo de pagos».
+3. Vuelve a la raíz y sube docs, .gitignore, INSTRUCCIONES_ACTUALIZACION.md y
+   LEEME_PRIMERO.md.
+   Commit: «Actualizar instrucciones de instalación y publicación».
+
+No arrastres app dentro de app. No subas la carpeta que contiene el proyecto ni el ZIP.
+No borres el repositorio: los archivos con la misma ruta se actualizan. Los que no
+cambiaron conservan el commit anterior; es normal.
+No subas .env.local, node_modules, .next, .git ni .vercel. La subida web no aplica
+las exclusiones de .gitignore automáticamente.
+No cambian package.json ni package-lock.json; no hace falta npm.cmd ci.
 
 ## Vercel y Supabase
 
@@ -39,21 +44,25 @@ No cambian package.json ni package-lock.json.
 - No ejecutes SQL para esta revisión. Los scripts del ZIP se conservan para
   instalaciones que aún no recibieron los ajustes anteriores.
 
-## Comprobaciones
+## Comprobaciones de esta revisión
 
-1. Clientes muestra titulares con al menos un préstamo confirmado de la agencia,
-   aunque el préstamo ya esté pagado. El registro o vínculo por sí solo no basta.
-2. Desde la ficha siguen accesibles las personas y empresas del grupo y sus datos
-   compartidos. Préstamos muestra solo la cartera local; Pagos conserva el grupo global.
-3. DNI + RUC10: «Revalidar datos» se despliega en la misma ficha. DNI abre identidad
-   directamente; SUNAT abre directamente la actualización del RUC. No hay selector intermedio.
-4. Solo DNI abre identidad; RUC20 abre «Actualizar datos SUNAT» directamente.
-5. Una persona aprobada/habilitada puede volver a revisar sus documentos. No se
-   rellenan automáticamente las confirmaciones de revisión presencial.
-6. SUNAT muestra datos actuales y valores anteriores si cambiaron. Sin cambios,
-   «Registrar consulta SUNAT» actualiza la fecha y el historial al guardar.
-7. Un fallo técnico permite reintentar sin cambiar la identidad ni guardar un rechazo.
-8. Comprueba fecha de última revisión DNI y consulta SUNAT dentro del bloque de
-   identificación ya existente. El domicilio fiscal debe ocupar una fila amplia.
+1. La ficha ya no contiene tablas de préstamos o historiales completos. Al final
+   aparecen Consultar para pagar y Ver historial. Conserva identidad, capital,
+   vínculos y, cuando corresponda, las alertas y autorización por antecedente.
+2. Solo DNI abre su historial directamente; DNI + RUC10 despliega DNI/RUC; RUC20
+   abre su historial SUNAT directamente. Todos regresan a la misma ficha.
+3. Condición de pago muestra Sin atrasos en vez de Habilitado, sin cambiar reglas.
+4. Desde una ficha, Consultar para pagar conserva documento fijo y muestra el grupo
+   de todas las agencias. Aparece Volver a la ficha del cliente, también si era empresa.
+5. La lista de préstamos no desplaza la pantalla automáticamente. Elegir préstamo
+   baja hasta el nombre del titular y deja cuotas y cobro debajo. Si la consulta devuelve
+   un solo préstamo, su selección automática también desplaza hasta ese encabezado.
+6. Préstamos → Ver detalle → Registrar pago abre ese préstamo con código y tipo fijos,
+   carga automática y Volver al detalle del préstamo. La identificación usa el UUID
+   completo para evitar coincidencias de códigos cortos.
+7. Cambiar la cantidad de cuotas no repite el desplazamiento. Se respeta la preferencia
+   del navegador de reducir animaciones.
+8. Pagos desde el menú conserva búsqueda editable, sin regreso contextual; al editar
+   la búsqueda se descartan los resultados y confirmaciones anteriores.
 
-Ver docs/OBSERVACIONES_CLIENTES_REVALIDACION.md para el detalle de esta revisión.
+Consulta docs/FICHA_RESUMIDA_Y_PAGOS.md para el alcance y las pruebas de esta revisión.

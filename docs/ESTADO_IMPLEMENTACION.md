@@ -1,3 +1,9 @@
+# Revisión actual: ficha resumida y pagos con contexto
+
+Consulta FICHA_RESUMIDA_Y_PAGOS.md. Esta entrega no requiere SQL adicional.
+
+El contenido siguiente describe revisiones anteriores.
+
 # Revisión actual: clientes por agencia y revalidación
 
 Implementada en esta entrega. Consulta OBSERVACIONES_CLIENTES_REVALIDACION.md y las instrucciones de actualización. No requiere SQL adicional sobre la base ya sincronizada.
