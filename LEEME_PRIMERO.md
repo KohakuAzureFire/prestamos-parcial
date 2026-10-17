@@ -1,16 +1,12 @@
-# Actualización de navegación — solo seis archivos
+# Actualización de sesiones
 
-Este ZIP NO contiene el proyecto completo. Aplica los cambios sobre tu última
-versión publicada de prestamos-parcial. No borres app ni src.
+Este paquete es un parche sobre el proyecto actual: contiene solo archivos cambiados.
 
-01_CODIGO: tres archivos dentro de app (Pagos.tsx, globals.css e historial/page.tsx).
-02_DOCUMENTACION: un archivo dentro de docs.
-03_INSTRUCCIONES: los dos archivos de instrucciones de la raíz.
+- Tiempo máximo sin actividad: **15 minutos**.
+- Contador en cabecera y aviso durante el último minuto.
+- Una sesión por cuenta, validada también en la base de datos.
+- No cambian las dependencias ni las variables de entorno.
 
-Lee 03_INSTRUCCIONES/INSTRUCCIONES_ACTUALIZACION.md dentro del ZIP para los pasos
-de los tres commits y cómo actualizar tu copia local. Una vez copiado al proyecto,
-ese archivo queda en la raíz como INSTRUCCIONES_ACTUALIZACION.md.
+Lee `INSTRUCCIONES_ACTUALIZACION.md` para copiar y subir los tres grupos. No borres carpetas actuales ni `.env.local`. Después de subir a GitHub hay que activar `app/scripts/control_sesiones.sql` y verificar Vercel antes de probar en producción.
 
-No requiere SQL, claves nuevas ni npm.cmd ci. Conserva tu .env.local y dependencias.
-No subas las carpetas numeradas a GitHub; sube solamente su contenido, como indica
-la guía. Después de publicar los tres commits verificaremos Supabase y Vercel.
+Detalles y pruebas: `docs/CONTROL_SESIONES.md`.
