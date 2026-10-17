@@ -1,68 +1,64 @@
-# Actualizar esta versión: ficha resumida y pagos con contexto
+# Corrección de regresos y desplazamiento — solo cambios
 
-Esta entrega parte de la versión publicada el 16/10/2026 (commit 9545072).
-La base Supabase del proyecto ya recibió ACTUALIZAR_SISTEMA el 17/10/2026 UTC.
-Los cambios nuevos de esta entrega son de aplicación: NO requieren SQL adicional,
-cambiar claves ni instalar dependencias.
+Este paquete se aplica sobre la última versión ya publicada (commit c782f16).
+No es un proyecto completo: contiene únicamente seis archivos modificados,
+agrupados en tres carpetas para publicar tres commits desde la web de GitHub.
 
-## Actualizar tu carpeta local
+## 1. Código: tres archivos
 
-1. Detén el servidor con Ctrl+C y extrae este ZIP en una carpeta aparte.
-2. Conserva app/.env.local, app/node_modules, app/templates y la carpeta .git.
-3. Reemplaza app/src completo con el de este ZIP. Retira app/.next para regenerar
-   la compilación. Copia app/tests si usas las pruebas; conserva sus dependencias.
-4. Reemplaza docs, INSTRUCCIONES_ACTUALIZACION.md y LEEME_PRIMERO.md.
-5. Desde app ejecuta npm.cmd run dev. No necesitas npm.cmd ci.
+- app/src/components/Pagos.tsx
+- app/src/app/globals.css
+- app/src/app/dashboard/clientes/[id]/historial/page.tsx
 
-## Actualizar GitHub desde la web: tres commits
+En GitHub, abre la RAÍZ de prestamos-parcial, rama main.
+Add file → Upload files. En tu computadora entra en 01_CODIGO y arrastra
+la carpeta app que hay DENTRO. Solo contiene los tres archivos anteriores.
+Commit: «Corregir enlaces de regreso y desplazamiento en pagos».
 
-Usa el contenido extraído de este ZIP, sin mezclarlo con carpetas generadas locales.
+No subas la carpeta 01_CODIGO: se usa solo para organizar el lote.
+No entres en app en GitHub para este lote: arrastrar app dentro crearía app/app.
 
-1. En GitHub entra en app → Add file → Upload files. Desde el app del ZIP selecciona
-   TODO excepto src y arrástralo. Son menos de 100 archivos en total.
-   Commit: «Actualizar recursos, documentación y pruebas».
-2. Mantente dentro de app y sube SOLO la carpeta src completa. También tiene menos
-   de 100 archivos, contando subcarpetas.
-   Commit: «Simplificar fichas y mejorar el flujo de pagos».
-3. Vuelve a la raíz y sube docs, .gitignore, INSTRUCCIONES_ACTUALIZACION.md y
-   LEEME_PRIMERO.md.
-   Commit: «Actualizar instrucciones de instalación y publicación».
+## 2. Documentación: un archivo
 
-No arrastres app dentro de app. No subas la carpeta que contiene el proyecto ni el ZIP.
-No borres el repositorio: los archivos con la misma ruta se actualizan. Los que no
-cambiaron conservan el commit anterior; es normal.
-No subas .env.local, node_modules, .next, .git ni .vercel. La subida web no aplica
-las exclusiones de .gitignore automáticamente.
-No cambian package.json ni package-lock.json; no hace falta npm.cmd ci.
+- docs/AJUSTES_REGRESO_Y_DESPLAZAMIENTO.md
 
-## Vercel y Supabase
+En GitHub vuelve a la RAÍZ. Add file → Upload files.
+Entra en 02_DOCUMENTACION y arrastra la carpeta docs que hay DENTRO.
+Commit: «Documentar ajustes de navegación y cobro».
 
-- La integración existente de main debe generar el despliegue automáticamente.
-  Espera a que aparezca Ready y comprueba que el commit sea el recién subido.
-- Abre https://prestamos-parcial.vercel.app y recarga la página.
-- Conserva las variables de producción que ya funcionan para DNI y RUC.
-- No ejecutes SQL para esta revisión. Los scripts del ZIP se conservan para
-  instalaciones que aún no recibieron los ajustes anteriores.
+## 3. Instrucciones: dos archivos
 
-## Comprobaciones de esta revisión
+- INSTRUCCIONES_ACTUALIZACION.md
+- LEEME_PRIMERO.md
 
-1. La ficha ya no contiene tablas de préstamos o historiales completos. Al final
-   aparecen Consultar para pagar y Ver historial. Conserva identidad, capital,
-   vínculos y, cuando corresponda, las alertas y autorización por antecedente.
-2. Solo DNI abre su historial directamente; DNI + RUC10 despliega DNI/RUC; RUC20
-   abre su historial SUNAT directamente. Todos regresan a la misma ficha.
-3. Condición de pago muestra Sin atrasos en vez de Habilitado, sin cambiar reglas.
-4. Desde una ficha, Consultar para pagar conserva documento fijo y muestra el grupo
-   de todas las agencias. Aparece Volver a la ficha del cliente, también si era empresa.
-5. La lista de préstamos no desplaza la pantalla automáticamente. Elegir préstamo
-   baja hasta el nombre del titular y deja cuotas y cobro debajo. Si la consulta devuelve
-   un solo préstamo, su selección automática también desplaza hasta ese encabezado.
-6. Préstamos → Ver detalle → Registrar pago abre ese préstamo con código y tipo fijos,
-   carga automática y Volver al detalle del préstamo. La identificación usa el UUID
-   completo para evitar coincidencias de códigos cortos.
-7. Cambiar la cantidad de cuotas no repite el desplazamiento. Se respeta la preferencia
-   del navegador de reducir animaciones.
-8. Pagos desde el menú conserva búsqueda editable, sin regreso contextual; al editar
-   la búsqueda se descartan los resultados y confirmaciones anteriores.
+En GitHub, desde la RAÍZ, Add file → Upload files.
+Entra en 03_INSTRUCCIONES y arrastra sus DOS ARCHIVOS, no la carpeta.
+Commit: «Actualizar instrucciones para publicar solo cambios».
 
-Consulta docs/FICHA_RESUMIDA_Y_PAGOS.md para el alcance y las pruebas de esta revisión.
+## Actualizar tu copia local
+
+Detén el servidor si está abierto. Copia app desde 01_CODIGO sobre el app
+existente, aceptando reemplazar archivos. Copia docs desde 02_DOCUMENTACION
+sobre docs. Copia los dos archivos de 03_INSTRUCCIONES a la raíz del proyecto.
+NO elimines app, src ni otras carpetas: este paquete solo contiene cambios.
+Conserva .env.local, node_modules y todos los archivos no incluidos.
+Puedes retirar app/.next y ejecutar npm.cmd run dev desde app.
+No necesitas npm.cmd ci: no cambian dependencias.
+
+## Publicación
+
+Después de los tres commits, avisa para verificar GitHub, Supabase y Vercel.
+La integración de Vercel puede desplegar main automáticamente con cada commit.
+Esta corrección no requiere SQL adicional, cambiar claves ni modificar Supabase.
+Nunca subas .env.local, node_modules, .next, .git ni .vercel.
+
+## Qué comprobar
+
+- En Pagos desde ficha: «← Volver a la ficha del cliente», arriba del título,
+  sin recuadro, con la misma apariencia que «← Volver a clientes».
+- En Pagos desde detalle: «← Volver al detalle del préstamo», mismo estilo.
+- En historial de DNI/RUC: regreso con flecha encima del título, a la misma ficha.
+- Al elegir préstamo, el recuadro del titular queda junto al borde superior del
+  contenido, con margen de 8 px y sin contorno celeste adicional.
+- Aplica en ficha, detalle y Pagos general. Elegir cantidad de cuotas no repite
+  el desplazamiento. El foco se conserva para accesibilidad, sin dibujar el borde.

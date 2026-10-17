@@ -1,14 +1,16 @@
-# Agencia de préstamos — ficha resumida y pagos
+# Actualización de navegación — solo seis archivos
 
-Lee INSTRUCCIONES_ACTUALIZACION.md para copiar los cambios y los tres commits de GitHub.
-Conserva tu app/.env.local y app/node_modules: no están incluidos en el ZIP.
-No cambian dependencias ni claves. No necesitas npm.cmd ci ni SQL adicional sobre
-la Supabase del proyecto ya sincronizada en esta conversación.
+Este ZIP NO contiene el proyecto completo. Aplica los cambios sobre tu última
+versión publicada de prestamos-parcial. No borres app ni src.
 
-Esta entrega simplifica la ficha y separa sus historiales, retira la tabla de préstamos
-locales de la ficha, añade regreso contextual en Pagos y fija el préstamo cuando se
-entra desde su detalle. Al seleccionar un préstamo se desplaza hasta su titular.
-La condición de pago pasa a mostrar Sin atrasos en lugar de Habilitado.
+01_CODIGO: tres archivos dentro de app (Pagos.tsx, globals.css e historial/page.tsx).
+02_DOCUMENTACION: un archivo dentro de docs.
+03_INSTRUCCIONES: los dos archivos de instrucciones de la raíz.
 
-Publicación: el usuario sube los tres commits. Después verificaremos Supabase y Vercel.
-Los scripts SQL se conservan para instalaciones que no recibieron los ajustes anteriores.
+Lee 03_INSTRUCCIONES/INSTRUCCIONES_ACTUALIZACION.md dentro del ZIP para los pasos
+de los tres commits y cómo actualizar tu copia local. Una vez copiado al proyecto,
+ese archivo queda en la raíz como INSTRUCCIONES_ACTUALIZACION.md.
+
+No requiere SQL, claves nuevas ni npm.cmd ci. Conserva tu .env.local y dependencias.
+No subas las carpetas numeradas a GitHub; sube solamente su contenido, como indica
+la guía. Después de publicar los tres commits verificaremos Supabase y Vercel.
