@@ -30,7 +30,7 @@ La búsqueda global de Pagos conserva sus reglas para cobrar entre agencias.
 
 Al seleccionar un préstamo, manualmente o por resultado único, se mueve el foco y
 se desplaza hasta el nombre del titular. La cantidad de cuotas no vuelve a mover la
-pantalla. Respeta prefers-reduced-motion y deja margen para la cabecera. Cambiar la
+pantalla. Respeta prefers-reduced-motion y usa margen superior de 8 px. Espera la animación de entrada antes de medir y no reserva altura para una cabecera fija, porque la cabecera no lo es. Cambiar la
 búsqueda sigue borrando los resultados anteriores y la confirmación de dinero recibido.
 
 La etiqueta visual habilitado pasa a Sin atrasos. El valor almacenado y las condiciones
@@ -38,9 +38,7 @@ de elegibilidad permanecen iguales. Estar sin atrasos no acredita identidad ni c
 
 ## Publicación y validación
 
-No hay cambios de SQL, de dependencias ni de variables de entorno. El usuario publica
-los tres commits indicados en INSTRUCCIONES_ACTUALIZACION.md. Después se revisarán
-Supabase y el despliegue Vercel. No se publica ni se modifica producción con este ZIP.
+El flujo de ficha resumida y pagos con contexto ya está publicado. Esta sincronización documental no cambia SQL, dependencias ni variables. La revisión posterior de sesiones sí necesitó su propio SQL, ya aplicado. Sigue las instrucciones actuales de `../INSTRUCCIONES_ACTUALIZACION.md` para la documentación y consulta `ESTADO_IMPLEMENTACION.md` para la publicación verificada.
 
 Verificación: ESLint, compilación Next/TypeScript y pruebas en navegador con dos agencias
 y datos ficticios aislados. Casos: ficha compacta en los tres tipos, selección correcta

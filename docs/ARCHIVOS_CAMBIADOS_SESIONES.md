@@ -1,10 +1,10 @@
 # Archivos exactos de esta actualización
 
-Solo hay **16 archivos**. No se incluyen carpetas completas ni archivos sin cambios.
+Este inventario corresponde al paquete de sesiones ya publicado en el código `5723a13`: contenía **16 archivos**. Se conserva para identificar sus cambios; no es el inventario de esta actualización documental. Las instrucciones actuales están en `../INSTRUCCIONES_ACTUALIZACION.md`.
 
 ## Commit 1: `feat: preparar control de sesiones en base de datos`
 
-Subir el contenido de `01_BASE_DATOS_Y_PRUEBAS` a la raíz del repositorio:
+El paquete publicado agrupó el contenido de `01_BASE_DATOS_Y_PRUEBAS` a la raíz del repositorio:
 
 - `app/scripts/control_sesiones.sql` — nuevo.
 - `app/tests/sesiones.test.mjs` — nuevo: pruebas del control de sesiones.
@@ -13,7 +13,7 @@ Subir el contenido de `01_BASE_DATOS_Y_PRUEBAS` a la raíz del repositorio:
 
 ## Commit 2: `feat: agregar contador de inactividad y sesion unica`
 
-Subir el contenido de `02_CODIGO` a la raíz del repositorio:
+El paquete publicado agrupó el contenido de `02_CODIGO` a la raíz del repositorio:
 
 - `app/src/app/api/sesion/route.ts` — nuevo: inicio, consulta, actividad y cierre.
 - `app/src/app/dashboard/layout.tsx` — contador después de la fecha.
@@ -26,11 +26,11 @@ Subir el contenido de `02_CODIGO` a la raíz del repositorio:
 
 ## Commit 3: `docs: documentar activacion y pruebas de sesiones`
 
-Subir el contenido de `03_DOCUMENTACION` a la raíz del repositorio:
+El paquete publicado agrupó el contenido de `03_DOCUMENTACION` a la raíz del repositorio:
 
 - `docs/CONTROL_SESIONES.md` — nuevo.
 - `docs/ARCHIVOS_CAMBIADOS_SESIONES.md` — este archivo, nuevo.
 - `INSTRUCCIONES_ACTUALIZACION.md` — actualizado.
 - `LEEME_PRIMERO.md` — actualizado.
 
-Conserva los demás archivos del repositorio. En local copia el contenido de los tres grupos sobre tu proyecto, manteniendo sus rutas; no borres carpetas. No se modificaron `package.json`, `package-lock.json` ni las variables de entorno.
+La subida de esos tres grupos ya se completó. El SQL de sesiones está aplicado y la publicación se verificó el 17 de octubre de 2026. Ese paquete no cambió `package.json`, `package-lock.json` ni las variables de entorno. No es necesario repetir sus commits o scripts para actualizar documentación.

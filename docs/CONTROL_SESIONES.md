@@ -18,11 +18,13 @@ No se agregan dependencias ni variables de entorno. Se conserva `.env.local`.
 
 ## Activación coordinada
 
-1. Subir los tres grupos del ZIP a GitHub, conservando las rutas indicadas.
-2. Avisar que la subida terminó. Después se aplicará **solo** `app/scripts/control_sesiones.sql` al Supabase existente y se verificará Vercel.
-3. Volver a iniciar sesión en los navegadores. Las sesiones anteriores a esta actualización no están registradas en el nuevo control.
+La activación ya se completó el 17 de octubre de 2026 en el proyecto existente. Se aplicó `app/scripts/control_sesiones.sql` mediante la migración `20261017072218_control_sesiones_inactividad_y_sesion_unica`. La versión de GitHub contrastada es `5723a13`; Vercel reportó el despliegue exitoso y se verificaron login público, rechazo de la API sin sesión y redirección de rutas protegidas.
 
-**La versión nueva requiere el SQL nuevo.** Si Vercel publica automáticamente antes de aplicar SQL, el acceso mostrará un error de control de sesiones hasta completar la activación. Programar estos pasos juntos cuando no se estén registrando operaciones. No ejecutar nuevamente los scripts antiguos de actualización como sustituto de este archivo.
+Después de activar este control las sesiones antiguas necesitan un nuevo ingreso, porque todavía no tienen registro en la tabla de control. La comprobación de permisos confirmó RLS activo, acceso directo a la tabla privada denegado y ejecución de la función pública permitida solo a usuarios autenticados. La migración conservó las operaciones existentes; en la verificación había 11 préstamos y 6 pagos, como dato de ese momento.
+
+Para una instalación nueva, aplica el script de sesiones después de los ajustes de fichas y pagos. El código requiere ese SQL antes de poder iniciar una sesión operativa. No reapliques un SQL acumulado anterior después del control de sesiones porque puede reemplazar su autorización central. Consulta el orden de `ESTADO_IMPLEMENTACION.md`.
+
+Esta actualización de textos no necesita ejecutar el script otra vez ni cambiar `.env.local`.
 
 ## Pruebas reproducibles
 
@@ -37,3 +39,5 @@ npm run build
 El test de sesiones usa PostgreSQL en memoria y los datos de prueba; no conecta con Supabase real. Comprueba sesión única, inactividad, renovación por actividad, consultas que no renuevan, cierre antiguo que no afecta al nuevo, autorización de negocio, rechazo de una sesión de otra cuenta y ejecución repetida del SQL sin pérdida de datos.
 
 Prueba manual: ingresar en dos navegadores con la misma cuenta. El primero debe mostrar el motivo de cierre y no poder registrar operaciones; el segundo debe seguir funcionando. Dejar una sesión sin interacción durante 14 minutos para ver el aviso; continuar debe renovar el contador. Dejar transcurrir 15 minutos debe devolver al inicio de sesión.
+
+La prueba de dos navegadores, el aviso, la renovación, el vencimiento y el cierre local se ejecutó en el entorno aislado. La verificación pública de producción no utiliza credenciales ni confirma préstamos o cobros. Las consultas automáticas cada 15 segundos comprueban vigencia, sin simular actividad. La renovación por interacción se limita a un envío cada diez segundos y las pestañas se sincronizan sin guardar tokens en el mecanismo de sincronización.

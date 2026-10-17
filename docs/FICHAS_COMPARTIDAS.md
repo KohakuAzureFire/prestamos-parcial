@@ -1,5 +1,3 @@
-> Actualización: el listado Clientes ahora muestra solo titulares con préstamos confirmados en tu agencia. Los accesos a fichas y vínculos del grupo siguen compartidos. Ver OBSERVACIONES_CLIENTES_REVALIDACION.md.
-
 # Fichas compartidas y grupo de pagos
 
 ## Comportamiento
@@ -8,9 +6,9 @@ La persona conserva un único registro por DNI; su RUC10 se agrega a ese registr
 
 Las agencias que registraron o concedieron un préstamo a un miembro del grupo pueden consultar las fichas de ese propietario y sus empresas. Comparten nombres, documentos, vínculos, verificación, historial y capital global. Las fichas de grupos ajenos no aparecen mediante sus identificadores. Una persona que solo es representante no adquiere por ese vínculo el límite ni los préstamos de la empresa; su ficha solo se enlaza si la agencia tiene acceso a ella.
 
-Todas las fichas usan los mismos bloques: titular, identificación, condición de pago, capital, personas y empresas vinculadas, préstamos de la agencia e historial aplicable. Persona: DNI y RUC10 si tiene. Empresa: razón social, RUC20, propietario y representante. Las fichas del grupo se pueden abrir desde el bloque de vínculos.
+Todas las fichas usan los mismos bloques: titular, identificación, condición de pago, capital y personas y empresas vinculadas. Los préstamos se consultan en Préstamos y los historiales se abren mediante Ver historial, fuera de la ficha. Persona: DNI y RUC10 si tiene. Empresa: razón social, RUC20, propietario y representante. Las fichas del grupo se pueden abrir desde el bloque de vínculos.
 
-«Préstamos en tu agencia» sigue mostrando únicamente los préstamos del titular de esa ficha en la agencia actual. Los préstamos de otra agencia no se incorporan a la cartera local al ver una ficha o registrar un pago.
+La ficha ya no muestra «Préstamos en tu agencia». La sección Préstamos conserva exclusivamente la cartera de la agencia actual. Clientes lista solo titulares con préstamos confirmados locales, incluidos los ya pagados; la existencia de un vínculo compartido o un pago ajeno no incorpora al titular al listado.
 
 Consultar para pagar por DNI, RUC10 o cualquier RUC20 del propietario devuelve los mismos préstamos pendientes de todo el grupo entre agencias. El código PR- sigue consultando solo un préstamo. Cada deuda conserva titular, documento, agencia y cuotas; el cobro sigue siendo individual.
 
@@ -22,12 +20,9 @@ Plazo muestra 0 inicialmente y permite solo dígitos enteros hasta 60; para cont
 
 ## Instalar
 
-1. Detén el servidor local (Ctrl+C).
-2. Descomprime el ZIP aparte. Conserva en tu proyecto app/.env.local, app/node_modules, app/templates y .git.
-3. Elimina app/src y app/.next. Copia app/src y app/scripts del ZIP. Actualiza docs, las instrucciones y app/README.md. Si utilizas las pruebas, copia app/tests conservando sus dependencias.
-4. En VS Code abre app/scripts/ACTUALIZAR_SISTEMA.sql. Dentro del archivo pulsa Ctrl+A y Ctrl+C para copiar TODO el código. No copies solo el nombre ni la ruta del archivo.
-5. En el SQL Editor de tu proyecto Supabase abre una consulta nueva, pega el código completo y pulsa Run. El resultado esperado es Success, sin filas devueltas. Este único archivo incluye los ajustes anteriores y la revisión actual; no hace falta ejecutar los otros scripts por separado. Es repetible y no modifica préstamos, contratos, importes ni pagos existentes. No se aplicó al proyecto real desde este chat.
-6. Desde app ejecuta npm.cmd run dev. No hay dependencias ni variables nuevas; no necesitas npm.cmd ci si conservas las dependencias de la versión anterior.
+En la instalación existente ya se aplicaron las revisiones de fichas y pagos y, posteriormente, el control de sesiones. La sincronización documental no necesita SQL adicional. Copia solo los archivos entregados conservando los demás; no elimines `app/src`, `docs`, `.env.local` ni las dependencias. Sigue `../INSTRUCCIONES_ACTUALIZACION.md`.
+
+Para una instalación nueva, consulta el orden de los scripts en `ESTADO_IMPLEMENTACION.md`. El SQL acumulado de fichas no contiene el control de sesiones y no debe reaplicarse como una actualización posterior a este.
 
 ## Pruebas
 

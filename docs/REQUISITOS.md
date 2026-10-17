@@ -31,11 +31,11 @@ El registro en hojas de cálculo provoca errores de identidad y dificulta conoce
 
 ## Funciones de la entrega
 
-Se atiende a personas naturales con DNI, personas naturales con negocio (RUC 10) y empresas (RUC 20). DNI y RUC 10 comparten ficha; la empresa conserva titular propio y se vincula al propietario responsable del límite global. Clientes lista solo a quienes fueron registrados en la agencia actual o recibieron un préstamo allí; Préstamos lista solo operaciones originadas en esa agencia. Sus búsquedas respetan estos límites. La verificación y los saldos globales se reutilizan para evaluar nuevos préstamos, sin habilitar la consulta ordinaria de carteras ajenas.
+Se atiende a personas naturales con DNI, personas naturales con negocio (RUC 10) y empresas (RUC 20). DNI y RUC 10 comparten ficha; la empresa conserva titular propio y se vincula al propietario responsable del límite global. Clientes lista solo a los titulares con préstamos confirmados en la agencia actual, incluidos los ya pagados; Préstamos lista solo operaciones originadas en esa agencia. Sus búsquedas respetan estos límites. La verificación y los saldos globales se reutilizan para evaluar nuevos préstamos, sin habilitar la consulta ordinaria de carteras ajenas.
 
 | Área | En esta entrega | Para después |
 | --- | --- | --- |
-| Acceso | Iniciar y cerrar sesión sin cuentas de demostración visibles. | Administrar cuentas y recuperar contraseñas. |
+| Acceso | Iniciar y cerrar sesión, controlar 15 minutos de inactividad y mantener una sesión por cuenta, sin credenciales de demostración visibles. | Administrar cuentas y recuperar contraseñas. |
 | Clientes | Consultar ficha e historial de verificación; registrar o revalidar desde el flujo del préstamo. | Otros documentos de identidad y cambios de propietario. |
 | Préstamos | Registrar, controlar el capital pendiente y consultar cartera propia. | Editar, anular o refinanciar préstamos confirmados. |
 | Cronograma | Cuotas mensuales, desglose de interés y capital, guardado y PDF. | Reprogramaciones y amortización extraordinaria. |
@@ -64,19 +64,19 @@ Los préstamos anteriores requieren capital, cronograma y pagos conciliados. La 
 
 | Pantalla | Contenido y acciones |
 | --- | --- |
-| Inicio de sesión | Correo, contraseña y acceso. Sin panel, botones ni credenciales de demostración. La agencia proviene de la cuenta. |
-| Préstamos | Solo cartera de la agencia actual. Activos por defecto y filtro Activos, Cancelados o Todos. Código, DNI, cliente, fecha, monto original, plazo, estado y Ver detalle; sin columna Deuda pendiente ni botón Nuevo préstamo. Selector DNI exacto, RUC exacto o Código de préstamo con validación de formato. |
-| Clientes | Listado y búsqueda limitados a clientes registrados en la agencia actual o con préstamos otorgados allí. Muestra DNI, nombre, verificación y condición de pago. Cobrar un préstamo ajeno no incorpora al cliente al listado. Sin botón Validar cliente ni búsqueda global. |
-| Ficha del cliente | Identidad, caducidad, evidencia e historial de revisión, condición de pago y capital global. Sin selector manual de condición. Permite iniciar Solicitar préstamo o Revalidar DNI en el flujo correspondiente. |
-| Nuevo préstamo | Paso 1: comprobar DNI; reutilizar ficha vigente, revalidar al existente o preparar borrador del nuevo. Paso 2: monto y plazo. Paso 3: confirmar conjuntamente cliente nuevo, evidencia, préstamo y cronograma. La revalidación del existente se guarda aparte, con aviso explícito, aunque no concluya el préstamo. |
+| Inicio de sesión | Correo, contraseña y acceso. Sin credenciales de demostración. La agencia proviene de la cuenta. La sesión anterior se reemplaza al iniciar en otro navegador; la cabecera muestra el tiempo restante sin actividad. |
+| Préstamos | Solo cartera de la agencia actual. Activos por defecto y filtro Activos, Cancelados o Todos. Código, documento del titular, cliente o razón social, fecha, monto original, plazo, estado y Ver detalle; sin columna Deuda pendiente ni botón Nuevo préstamo. Selector DNI exacto, RUC exacto o Código de préstamo con validación de formato. |
+| Clientes | Listado y búsqueda limitados a titulares con préstamos confirmados en la agencia actual, incluidos los ya pagados. Filtros Todos, Personas y Empresas; DNI para personas y RUC para empresas, nombre, verificación y condición de pago. Cobrar un préstamo ajeno no incorpora al cliente al listado. Sin botón Validar cliente ni búsqueda global. |
+| Ficha del cliente | Identidad compartida, datos SUNAT cuando corresponda, condición de pago, capital global y personas y empresas vinculadas. Solicitar préstamo y Revalidar datos ofrecen DNI/RUC 10 en la misma ficha. Consultar para pagar abre el grupo; Ver historial abre las revisiones en una página aparte. No contiene la tabla Préstamos en tu agencia ni selectores manuales de condición. |
+| Nuevo préstamo | Paso 1: elegir DNI o RUC 10/20, comprobar identidad y representación, reutilizar ficha vigente o preparar borrador del nuevo. El tipo queda fijo en los pasos 2 y 3. Paso 2: monto y plazo. Paso 3: confirmar conjuntamente cliente nuevo, evidencia, préstamo y cronograma. La revalidación del existente se guarda aparte aunque no concluya el préstamo. |
 | Detalle del préstamo | Tres cuadros: Total a pagar, Total pagado y Saldo por pagar, en una fila en escritorio y adaptables en móvil. Estado junto al título; TEA, TEM e interés total en Datos del préstamo. Cronograma e historial de cobros. Registrar pago abre Pagos con las cuotas cargadas automáticamente. |
-| Pagos | Selector DNI exacto, RUC exacto o Código de préstamo para cobrar en cualquiera de las cinco agencias. DNI de ocho números; código con prefijo PR- fijo y ocho caracteres hexadecimales. Por DNI se elige entre préstamos con saldo; por código se carga uno. Conserva agencia de origen y registra agencia de cobro, sin listado global. |
+| Pagos | Selector DNI exacto, RUC exacto o Código de préstamo para cobrar en cualquiera de las cinco agencias. DNI de ocho números; código con prefijo PR- fijo y ocho caracteres hexadecimales. Por DNI o RUC se reúne el grupo del propietario y sus empresas entre agencias; por código se carga un préstamo. Desde ficha el documento queda fijo; desde detalle quedan fijos el código y el préstamo. Conserva agencia de origen y registra agencia de cobro, sin ofrecer una cartera completa sin búsqueda dirigida. |
 
-El menú del asesor contiene Préstamos, Clientes, Nuevo préstamo, Pagos y Cerrar sesión. Los accesos desde ficha o detalle llevan a esos mismos procesos, sin formularios de negocio duplicados.
+El menú del asesor contiene Préstamos, Clientes, Nuevo préstamo, Pagos y Cerrar sesión. Configuración aparece solo a quien tiene el permiso específico de mora. Los accesos desde ficha o detalle llevan a esos mismos procesos, sin formularios de negocio duplicados.
 
 ## Recorrido del cliente nuevo y del cliente existente
 
-Nuevo préstamo: ingresar DNI → comprobar si existe en las cinco agencias → reutilizar ficha vigente, revalidar al existente o preparar datos del nuevo → completar monto y plazo → revisar cronograma → confirmar. El nuevo permanece como borrador en memoria hasta el paso 3: no se registra ni aparece en Clientes antes de confirmar. La detección por DNI no es un buscador global y una identidad vigente no repite consulta externa por cambiar de agencia.
+Nuevo préstamo: elegir DNI o RUC → comprobar si existe en las cinco agencias → reutilizar ficha vigente, revalidar al existente o preparar datos del nuevo → completar monto y plazo → revisar cronograma → confirmar. El nuevo permanece como borrador en memoria hasta el paso 3: no se registra ni aparece en Clientes antes de confirmar. La detección por DNI no es un buscador global y una identidad vigente no repite consulta externa por cambiar de agencia.
 
 Cliente del listado propio: Clientes → abrir ficha → Solicitar préstamo. Cliente de otra agencia: Nuevo préstamo → ingresar DNI y recuperar ficha. Si requiere revalidación, Guardar verificación y continuar actualiza su identidad para las cinco agencias aunque no termine el préstamo; no genera crédito ni elimina mora. Una verificación rechazada o fallecimiento acreditado no se omiten. La respuesta verbal no sustituye la comprobación por DNI.
 
@@ -87,11 +87,11 @@ Cobranza desde el menú: Pagos → elegir DNI exacto, RUC exacto o Código de pr
 | Concepto | Estados y regla |
 | --- | --- |
 | Verificación de identidad | Pendiente, Aprobada, Caducada o Rechazada. Aprobada exige identidad confiable, documento vigente y evidencia suficiente de las condiciones exigidas. |
-| Condición de pago del cliente | Habilitado si no tiene cuotas vencidas impagas; Moroso si tiene atraso menor de 12 meses; Extrajudicial si al menos una cuota impaga cumple 12 meses de atraso. Son estados automáticos, con prioridad de Extrajudicial sobre Moroso. |
+| Condición de pago del cliente | Sin atrasos (valor interno habilitado) si no tiene cuotas vencidas impagas; Moroso si tiene atraso menor de 12 meses; Extrajudicial si al menos una cuota impaga cumple 12 meses de atraso. Son estados automáticos del grupo, con prioridad de Extrajudicial sobre Moroso; un historial incompleto se identifica como Pendiente de conciliación. |
 | Préstamo | Activo mientras quede deuda contractual pendiente; Cancelado por pago total cuando todas sus cuotas estén pagadas. Cancelado no significa anulado. |
 | Cuota | Pendiente antes de vencer o durante su fecha de vencimiento; Vencida desde el día siguiente si no está pagada; Pagada únicamente si existe un cobro confirmado que la cubra. |
 
-La condición de pago no cambia la verificación de identidad. Un cliente puede tener verificación Aprobada y condición Moroso, o condición Habilitado y DNI Caducado. En ambos casos se bloquea un nuevo préstamo. Cambiar un saldo nunca borra la fecha, la fuente o la evidencia de una verificación.
+La condición de pago no cambia la verificación de identidad. Un cliente puede tener verificación Aprobada y condición Moroso, o condición Sin atrasos y DNI Caducado. En ambos casos se bloquea un nuevo préstamo. Cambiar un saldo nunca borra la fecha, la fuente o la evidencia de una verificación.
 
 Fallecido deja de ser una opción editable de condición financiera. La información acreditada sobre fallecimiento pertenece a la verificación de identidad y bloquea nuevos préstamos; el asesor no declara ni revierte ese hecho mediante un selector. La revisión de un DNI físico, por sí sola, no acredita la condición de no fallecido.
 
@@ -160,7 +160,11 @@ Como asesor de ventas, quiero iniciar sesión con mi cuenta autorizada, para ope
 
 - **CA05. Login limpio:** Se eliminan el panel y los accesos rápidos de cuentas de demostración. No se muestran ni precargan contraseñas de prueba.
 
-- **CA06. Resultado:** Se abre Préstamos con la cartera propia, el asesor y su agencia identificados. Las contraseñas no se conservan en texto plano.
+- **CA06. Resultado:** Se abre Préstamos con la cartera propia. La cabecera identifica nombre y rol, agencia, fecha de Perú y tiempo restante de sesión, en ese orden. Las contraseñas no se conservan en texto plano.
+
+- **CA07. Sesión única:** Un nuevo inicio válido reemplaza al anterior de esa cuenta. La base rechaza operaciones de la sesión anterior y la interfaz la detecta en el siguiente control, hasta 15 segundos con conexión. Varias pestañas del mismo navegador comparten sesión.
+
+- **CA08. Inactividad:** El tiempo máximo es 15 minutos sin interacción. Teclado, puntero y desplazamiento renuevan la actividad con envíos limitados; las consultas automáticas no la renuevan. El contador usa la referencia del servidor y una sesión vencida no se reactiva con el mismo identificador.
 
 ### HU-02 Cerrar sesión
 
@@ -170,13 +174,17 @@ Como asesor de ventas, quiero cerrar mi sesión, para impedir que otra persona o
 
 - **CA01. Opción disponible:** Cerrar sesión está visible durante una sesión activa.
 
-- **CA02. Finalización:** La sesión se invalida y se vuelve al acceso. Volver atrás o entrar a una ruta protegida exige autenticarse otra vez.
+- **CA02. Finalización:** Se invalida la sesión actual y se vuelve al acceso. Volver atrás o abrir una ruta protegida exige autenticarse otra vez. Cerrar una sesión antigua no revoca una sesión posterior en otra computadora.
 
-- **CA03. Borradores:** Se advierte antes de salir, recargar o cerrar sesión con datos sin confirmar. El cliente nuevo en borrador se descarta al abandonar y no aparece en Clientes. Una revalidación existente ya guardada y las operaciones confirmadas permanecen.
+- **CA03. Borradores:** Se advierte antes de abandonar o cerrar manualmente con datos sin confirmar. Al vencer la sesión o ser reemplazada, el cierre es obligatorio y los borradores se pierden. Las verificaciones ya guardadas y las operaciones confirmadas permanecen.
 
 ## Épica Gestionar préstamos y cobranza
 
 Las HU-03 a HU-08 comparten identidad, préstamos, cronogramas y pagos. La condición financiera se deriva de las obligaciones del cliente y no se cambia manualmente. Los datos contractuales confirmados permanecen sin edición; los pagos se registran como nuevas operaciones.
+
+- **CA04. Aviso de vencimiento:** El contador se vuelve ámbar en los últimos dos minutos y rojo en el último. Durante el último minuto se ofrece Continuar sesión o Cerrar sesión. Continuar solo renueva una sesión que siga válida.
+
+- **CA05. Cierre obligatorio:** La inactividad, una sesión reemplazada o una cuenta sin acceso bloquean las operaciones y devuelven al inicio con su motivo.
 
 ### HU-03 Validar y registrar cliente
 
@@ -196,9 +204,13 @@ Como asesor de ventas, quiero verificar la identidad y vigencia del DNI, para re
 
 - **CA06. Caducidad automática:** El DNI es vigente hasta su fecha de caducidad inclusive; desde el día siguiente se bloquea un nuevo préstamo. Una revalidación requiere evidencia del documento renovado, no solo pulsar Habilitar.
 
-- **CA07. Fallo o rechazo:** Un DNI inexistente, una condición no admisible o una consulta inconclusa impiden aprobar. Se informa el motivo y se permite reintentar, sin dar por válida una identidad por el solo formato.
+- **CA07. Fallo o rechazo:** Un documento inexistente o una consulta inconclusa impiden completar esa verificación. Un error técnico o de disponibilidad no se guarda como rechazo de identidad. Se permite reintentar; el formato por sí solo no acredita identidad.
 
-- **CA08. Revalidación independiente:** Guardar verificación y continuar actualiza al cliente existente aunque no finalice otro préstamo, con aviso previo. Se conservan fuente, resultado, caducidad, evidencia, fecha, asesor y agencia; el cambio se comparte entre las cinco agencias sin borrar historial ni eliminar mora. Pagar no exige renovar DNI.
+- **CA08. Revalidación independiente:** Guardar una verificación existente actualiza la misma ficha y conserva historial, fuente, evidencia, fecha, asesor y agencia aunque no finalice otro préstamo. Desde ficha se consulta automáticamente el documento fijo y se vuelve a la ficha al guardar. La acción sigue disponible con datos vigentes; no elimina mora ni requiere crear un préstamo.
+
+- **CA09. SUNAT y alcance:** Actualizar datos SUNAT compara nombre o razón social, estado, condición y domicilio con lo guardado. Permite guardar una consulta firmada aunque no haya cambios o el RUC esté observado; conserva fecha e historial. Los datos del proveedor no se editan manualmente. No equivale a revalidar DNI, propiedad ni facultades.
+
+- **CA10. Representación:** En RUC 20 el propietario puede firmar si tiene facultades, o puede acudir otro representante. El propietario ausente debe tener identidad previa aprobada y vigente; no recibe verificación presencial nueva. El firmante debe estar presente. Se revisan propiedad/designación y facultades con tipo y referencia breve; un mismo documento puede acreditar ambas, con dos confirmaciones separadas.
 
 ### HU-04 Registrar préstamo
 
@@ -208,21 +220,23 @@ Como asesor de ventas, quiero registrar el monto y plazo de un cliente elegible,
 
 - **CA01. Cliente previo:** Se reutiliza el cliente de HU-03 o de su ficha. No se vuelven a escribir DNI y nombre ni se abre un buscador general dentro del formulario del préstamo.
 
-- **CA02. Elegibilidad automática:** Al iniciar y al confirmar se exige verificación Aprobada, DNI vigente, sin fallecimiento acreditado, sin mora ni estado extrajudicial y con historial conciliado. El asesor no puede anular estos bloqueos manualmente.
+- **CA02. Elegibilidad automática:** Al iniciar y confirmar se exige identidad aprobada y vigente, ausencia de mora, historial conciliado y capital disponible. El antecedente extrajudicial requiere autorización registrada. La modalidad DNI no exige ACTIVO/HABIDO de un RUC 10 asociado; solicitar por RUC sí exige consulta válida ACTIVO/HABIDO y, en empresa, identidad y facultades del propietario y firmante.
 
 - **CA03. Datos de sesión:** La fecha es la del día de operación en Perú. Agencia de origen y asesor se obtienen de la sesión y no son editables.
 
-- **CA04. Monto:** Valor numérico positivo, con hasta dos decimales. Se admite menos de S/ 1 000 para pruebas; no se permite cero ni un monto negativo.
+- **CA04. Monto:** Campo inicial 0.00 con soles y centavos separados por un punto fijo. Solo admite dígitos; mínimo S/ 0.01 y máximo el capital disponible del propietario, hasta S/ 10 000. No acepta signos, letras ni más de dos cifras de centavos; cero impide continuar. El servidor repite la validación.
 
-- **CA05. Capital global:** El capital pendiente de todos los préstamos del cliente en las cinco agencias más el monto solicitado no supera S/ 10 000. Se descuenta solo la amortización de capital efectivamente pagada; no todo el importe cobrado. No se suman los montos originales como si nunca se amortizaran.
+- **CA05. Capital global:** El capital pendiente del propietario y todas sus empresas vinculadas entre agencias más la nueva solicitud no supera S/ 10 000. Solo la amortización efectivamente pagada libera cupo; los intereses no lo liberan. Un representante sin vínculo de propiedad no aporta su límite al grupo.
 
 - **CA06. Concurrencia:** La validación de elegibilidad y capital se repite al confirmar mediante una operación indivisible que evita exceder el límite con solicitudes simultáneas.
 
-- **CA07. Plazo y tasa:** Plazo entero de 1 a 60 meses y TEA fija del 30 % visible. No se acepta un plazo decimal ni se agrega 30 % fijo a cualquier duración.
+- **CA07. Plazo y tasa:** Campo inicial 0 y entrada solo de dígitos enteros hasta 60. Para continuar se exige de 1 a 60 meses; no se admiten signos ni decimales. La TEA fija del 30 % es visible y no se suma como un porcentaje plano a cualquier duración.
 
 - **CA08. Confirmación conjunta:** Revisar el paso 3 no guarda datos. Al confirmar se guardan cliente nuevo, verificación, préstamo y cuotas en una sola transacción; cualquier fallo revierte todo. En el existente se conserva su ficha y la revalidación ya guardada. La clave de operación evita duplicados por doble clic o reintentos. Si la consulta firmada del nuevo supera 30 minutos, se exige volver al paso 1.
 
 - **CA09. Resultado protegido:** El préstamo confirmado pertenece a la agencia de la sesión y solo se consulta por acceso ordinario desde ella. El cliente aparece también en su listado de Clientes, sin duplicar la ficha ni trasladar préstamos anteriores. No se editan o anulan condiciones en este sprint; los pagos se registran por HU-07.
+
+- **CA10. Pasos y regreso:** El tipo de cliente se elige solo en el paso 1, que no muestra Volver. En los pasos 2 y 3 queda fijo. Volver del cronograma conserva condiciones; volver desde condiciones a identificación requiere confirmar el descarte cuando corresponde. Hay una sola acción Continuar a condiciones y no se añade Consultar clientes dentro del flujo.
 
 ### HU-05 Generar y entregar cronograma
 
@@ -242,7 +256,7 @@ Como asesor de ventas, quiero generar y entregar el cronograma, para que el clie
 
 - **CA06. Consistencia:** Se guarda el cronograma mostrado junto con el préstamo. Consultarlo o registrar pagos no lo recalcula con otra tasa o fecha; el estado de cobro se muestra por separado.
 
-- **CA07. PDF:** Después de confirmar se descarga un PDF legible con identificación, parámetros y todas las cuotas. Reintentar una descarga fallida no genera otro préstamo.
+- **CA07. Descarga e impresión:** Después de confirmar, Cronograma ofrece descargar PDF o imprimir desde una vista protegida. Contrato ofrece Word o impresión y guardado como PDF desde el navegador. Reintentar una descarga no crea otro préstamo.
 
 - **CA08. Caso financiero:** Para S/ 1 000 a seis meses con la TEM definida, las primeras cinco cuotas son S/ 179,80 y la última S/ 179,77. Capital amortizado S/ 1 000, interés total S/ 78,77 y total programado S/ 1 078,77.
 
@@ -256,19 +270,19 @@ Como asesor de ventas, quiero consultar clientes y la cartera de mi agencia, par
 
 - **CA01. Cartera propia:** Préstamos muestra exclusivamente operaciones originadas en la agencia de la sesión, de más recientes a más antiguas. El control también se aplica en el acceso directo al detalle y en las consultas al servidor.
 
-- **CA02. Listado y filtros:** Activos por defecto; filtros Activos, Cancelados o Todos. Búsqueda por selector DNI exacto, RUC exacto o Código de préstamo, limitada a la cartera propia. Columnas: código, DNI, cliente, fecha, monto original, plazo, estado Activo o Cancelado y Ver detalle. Sin columna Deuda pendiente ni botón Nuevo préstamo.
+- **CA02. Listado y filtros:** Activos por defecto; filtros Activos, Cancelados o Todos y tipo Todos, Personas o Empresas. Búsqueda por DNI exacto, RUC exacto o Código de préstamo en la cartera propia. Documento muestra DNI en personas y RUC en empresas; se conservan fecha, monto original, plazo, estado y Ver detalle, sin columna Deuda pendiente.
 
-- **CA03. Clientes de la agencia:** El listado y su búsqueda muestran solo clientes registrados en la agencia actual o con algún préstamo otorgado allí, conservando el vínculo aunque el préstamo se cancele. Muestra DNI, nombre, verificación y condición de pago, sin Validar cliente ni edición manual. Haber pagado aquí un préstamo ajeno no incorpora al cliente al listado; no hay búsqueda global de clientes en esta pantalla.
+- **CA03. Clientes de la agencia:** Listado y búsqueda muestran solo titulares con algún préstamo confirmado en la agencia, incluidos los ya pagados. Un registro sin préstamo local, una empresa vinculada sin cartera local o un representante sin préstamo propio no se incorporan por ese motivo. Cobrar un préstamo ajeno tampoco incorpora al titular.
 
-- **CA04. Ficha y privacidad de cartera:** Solo se abre ordinariamente la ficha de un cliente vinculado a la agencia. La ficha única muestra vigencia del DNI, historial de verificación, condición de pago y capital pendiente y disponible globales. El detalle de préstamos sigue limitado a la agencia propia. Nuevo préstamo recupera por DNI la ficha ajena solo para atender esa solicitud; los saldos globales no permiten explorar carteras ajenas.
+- **CA04. Ficha y privacidad de cartera:** DNI y RUC 10 comparten una ficha; cada RUC 20 conserva ficha propia vinculada al propietario. Las agencias con acceso al grupo ven identidad y vínculos compartidos, sin ampliar su cartera de préstamos. La ficha resumida muestra identificación, condición de pago, capital y vínculos; los historiales se abren aparte. No incluye la tabla Préstamos en tu agencia.
 
-- **CA05. Continuar atención:** Solicitar préstamo lleva a HU-04 con ese cliente. Si corresponde revalidar, se abre HU-03 conservando el contexto. Estas acciones son accesos al flujo de atención, no edición de la ficha desde el listado.
+- **CA05. Continuar atención:** Solicitar préstamo despliega Personal DNI y Negocio RUC 10 cuando existen ambos documentos; con una sola modalidad entra directamente. Sin capital o elegibilidad queda bloqueado. Revalidar datos ofrece DNI o RUC 10 en la ficha; RUC 20 abre SUNAT. Consultar para pagar conserva el titular y Ver historial ofrece DNI/RUC según corresponda.
 
 - **CA06. Resumen del detalle:** Tres cuadros principales: Total a pagar (cuotas originales y mora pactada), Total pagado (cobros confirmados) y Saldo por pagar (diferencia). Se presentan en una fila en escritorio y se adaptan en móvil. El estado va junto al título; TEA, TEM e interés total programado en Datos del préstamo. El capital pendiente se consulta en el resumen del cliente. El interés no se suma otra vez como cargo adicional.
 
-- **CA07. Cuotas y acceso al cobro:** Cada cuota muestra importe, interés, capital, vencimiento y estado. El historial identifica fecha, importe, asesor y agencia de cobro. Registrar pago abre HU-07 con el préstamo y las cuotas cargados automáticamente, sin pulsar Consultar cuotas. La carga no confirma un pago; no se marca Pagada o No pagada sin una operación.
+- **CA07. Cuotas y acceso al cobro:** Cada cuota muestra importe, interés, capital, vencimiento y estado. Registrar pago abre Pagos con el préstamo y sus cuotas cargados automáticamente, con código y tipo fijos y regreso al mismo detalle. Se desplaza al titular seleccionado; la carga no confirma el cobro.
 
-- **CA08. Cobro entre agencias:** Un préstamo ajeno no aparece en la cartera ni se abre por acceso ordinario. Se localiza específicamente en Pagos por DNI o código, con los datos necesarios para cobrar y conservando su agencia de origen.
+- **CA08. Cobro entre agencias:** Un préstamo ajeno no aparece en la cartera local ni se abre por su detalle ordinario. Pagos lo localiza por DNI, RUC o código para cobrar, conserva su agencia de origen y muestra las obligaciones del grupo del propietario cuando se consulta por documento.
 
 - **CA09. Documento y resultados vacíos:** Se recupera el PDF guardado sin alterar el préstamo. Una búsqueda sin coincidencias informa el resultado sin mostrar otros clientes ni registros ajenos a los permisos.
 
@@ -280,13 +294,13 @@ Como asesor de ventas, quiero registrar el pago de cuotas de un préstamo, inclu
 
 #### Criterios de aceptación
 
-- **CA01. Localización:** Pagos ofrece el selector DNI exacto, RUC exacto o Código de préstamo y el botón Consultar cuotas. Consulta obligaciones de cualquiera de las cinco agencias: por DNI muestra préstamos con saldo de ese cliente para elegir uno; por código carga el préstamo específico, identificando su agencia de origen. No ofrece cartera global para explorar. Desde Registrar pago en el detalle ejecuta la consulta automáticamente y conserva el buscador disponible.
+- **CA01. Localización:** Pagos general permite DNI, RUC o código. DNI, RUC 10 o RUC 20 consultan las obligaciones del mismo propietario y sus empresas entre agencias; el representante por sí solo no une grupos. Desde ficha el documento queda fijo y desde detalle el préstamo queda fijo por su UUID autorizado. Ambos consultan automáticamente y ofrecen regreso al origen, sin Cambiar cliente.
 
 - **CA02. Datos de revisión:** Se muestran titular, código, agencia de origen, deuda y cuotas pendientes del préstamo. No se exige DNI vigente ni ausencia de mora para aceptar el pago de una obligación existente.
 
 - **CA03. Selección:** Se selecciona una o varias cuotas completas consecutivas, comenzando por la pendiente más antigua del préstamo. Se admite cubrir la próxima cuota programada sin recalcularla; no se omiten cuotas anteriores. No se incluyen abonos parciales ni pagos extraordinarios a capital.
 
-- **CA04. Importe y confirmación:** El importe se obtiene sumando las cuotas seleccionadas y su mora pactada calculada a la fecha de Perú y su mora pactada calculada a la fecha de Perú y no se escribe libremente. Se revisa el resumen y se confirma solo cuando el asesor ha recibido el dinero. No es una integración bancaria ni una casilla reversible.
+- **CA04. Importe y confirmación:** El importe se obtiene sumando las cuotas seleccionadas y su mora pactada calculada a la fecha de Perú y no se escribe libremente. Se revisa el resumen y se confirma solo cuando el asesor ha recibido el dinero. No es una integración bancaria ni una casilla reversible.
 
 - **CA05. Trazabilidad:** Se genera identificador de pago y se guardan importe, fecha y hora, asesor, agencia de cobro, préstamo y aplicación por cuota. La agencia de origen permanece inalterada. Se emite una constancia recuperable del pago registrado.
 
@@ -300,6 +314,10 @@ Como asesor de ventas, quiero registrar el pago de cuotas de un préstamo, inclu
 
 - **CA10. Relación con la agencia:** Cobrar un préstamo de otra agencia registra la agencia que recibió el dinero, pero no cambia la agencia de origen ni incorpora por sí solo al cliente al listado de Clientes de la agencia de cobro.
 
+- **CA11. Cambio de consulta:** Solo Pagos general permite editar documento o tipo. Cualquier cambio limpia resultados, selección de préstamo, cuotas y confirmación de dinero recibido; las respuestas antiguas se descartan. Desde ficha o detalle se conservan los campos fijos y el enlace de regreso al mismo origen.
+
+- **CA12. Desplazamiento y revisión:** Elegir préstamo o cargar un resultado único desplaza y enfoca el recuadro del titular con margen superior de 8 px. La lista con varios resultados no fuerza el desplazamiento. Cambiar cantidad de cuotas no repite el movimiento; se respeta reducir animaciones y permanecen los indicadores de foco de controles.
+
 ### HU-08 Actualizar estados automáticamente
 
 Como asesor de ventas, quiero que el sistema determine la deuda y condición del cliente, para impedir nuevos préstamos cuando tenga cuotas atrasadas sin cambiar estados manualmente.
@@ -308,13 +326,13 @@ Como asesor de ventas, quiero que el sistema determine la deuda y condición del
 
 - **CA01. Fecha de referencia:** Se usa la fecha de Perú. Una cuota impaga con vencimiento de hoy aún no está vencida; entra en mora al día siguiente.
 
-- **CA02. Condición global:** Se consideran los préstamos del cliente en las cinco agencias. Extrajudicial tiene prioridad si alguna cuota impaga cumple 12 meses desde su vencimiento; en otro caso, con alguna cuota vencida es Moroso; sin cuotas vencidas es Habilitado financieramente.
+- **CA02. Condición global:** Se consideran la persona y sus empresas vinculadas entre agencias. Extrajudicial tiene prioridad a los doce meses de la cuota impaga más antigua; con atrasos menores es Moroso y sin cuotas vencidas se muestra Sin atrasos, cuyo valor interno es habilitado. Un historial incompleto se identifica como Pendiente de conciliación.
 
 - **CA03. Alcance de la etiqueta:** Extrajudicial es la clasificación automática del caso académico; no inicia un trámite jurídico. No se necesita registrar manualmente un mes sin pago ni seleccionar el estado.
 
 - **CA04. Actualización efectiva:** El cálculo se realiza después de cada pago y en el cambio diario de fecha. Consultar o confirmar un préstamo revalida la situación actual aunque la tarea diaria no se haya ejecutado todavía.
 
-- **CA05. Regularización:** Pagar una cuota recalcula el estado con las que continúen impagas. Puede pasar de Extrajudicial a Moroso o a Habilitado según corresponda. El antecedente extrajudicial se conserva y exige autorización registrada para nuevos préstamos. El antecedente extrajudicial se conserva y exige autorización registrada para nuevos préstamos. Se conserva la trazabilidad del atraso y del pago; no se borra la evidencia de identidad.
+- **CA05. Regularización:** Pagar una cuota recalcula el estado con las que continúen impagas. Puede pasar de Extrajudicial a Moroso o a Sin atrasos según corresponda. El antecedente extrajudicial se conserva y exige autorización registrada para nuevos préstamos. Se conserva la trazabilidad del atraso y del pago; no se borra la evidencia de identidad.
 
 - **CA06. Independencia de identidad:** La condición financiera no cambia el resultado de verificación. Al regularizarse la deuda, una identidad aprobada y vigente sigue aprobada. Si el DNI caducó, continúa bloqueado para nuevas colocaciones hasta revalidar.
 
@@ -326,7 +344,7 @@ Como asesor de ventas, quiero que el sistema determine la deuda y condición del
 
 ## Criterios de finalización del incremento
 
-Las ocho HU cumplen sus criterios y el flujo integrado conserva los datos al cerrar sesión. El despliegue debe verificarse con la versión integrada antes de declarar completada la entrega. Todos los integrantes pueden demostrar registro, consulta por agencia, cobro entre agencias y actualización automática de estados. No se presentan como implementadas funciones que solo estén descritas en este documento.
+Las ocho HU describen el incremento integrado y sus comprobaciones. Al cerrar sesión se conservan los datos confirmados, no los borradores. El despliegue debe verificarse con la versión integrada antes de declarar completada la entrega. Todos los integrantes pueden demostrar registro, consulta por agencia, cobro entre agencias y actualización automática de estados. No se presentan como implementadas funciones que solo estén descritas en este documento.
 
 ## Casos de verificación de la entrega
 
@@ -351,13 +369,18 @@ Las ocho HU cumplen sus criterios y el flujo integrado conserva los datos al cer
 | Abandono y confirmación del nuevo | Continuar a condiciones y revisar el cronograma no crean cliente ni evidencia. Cancelar salida conserva el borrador; salir o recargar lo descarta. Confirmar guarda ficha, revisión, préstamo y cuotas; un fallo intermedio no deja registros parciales. |
 | Revalidación sin nuevo préstamo | Guardar una revisión de un cliente existente actualiza la misma ficha y su historial para las agencias autorizadas. Abandonar luego el paso 2 no deshace esa revisión ni crea un préstamo. |
 | Reintento y DNI concurrente | Repetir la confirmación devuelve el mismo préstamo. Si otro asesor registró ese DNI durante el borrador, se reutiliza la ficha vigente sin sobrescribir evidencia; de necesitar revisión, se vuelve al paso 1. |
+| Sesión e inactividad | El contador aparece después de la fecha; el aviso surge en el último minuto, Continuar renueva una sesión válida y a los 15 minutos sin actividad se exige nuevo ingreso. |
+| Sesión reemplazada | Iniciar la misma cuenta en otro navegador bloquea al anterior; cerrar el anterior no cierra al nuevo. |
+| SUNAT y modalidades | RUC observado bloquea solicitar por ese RUC, pero no un préstamo personal DNI elegible ni el pago de deudas. Un fallo técnico no se guarda como rechazo. |
+| Pagos con contexto | Desde ficha o detalle los campos quedan fijos y el regreso conserva el origen; en Pagos general cambiar documento o tipo elimina resultados anteriores. |
+| Ficha e historiales | La ficha queda resumida, los vínculos respetan permisos y Ver historial abre DNI, RUC o su menú sin tabla de préstamos en la ficha. |
 
 
 ## Ampliación de identidad contratos y cobranza
 
 ### Atención por DNI y RUC
 
-Se mantiene el flujo Cliente, Condiciones y Cronograma. El paso 1 ofrece DNI o RUC; RUC 10 conserva la ficha de su DNI. Para RUC 20 se identifica por separado al propietario para el límite y al representante que firma. Se validan once números, prefijo 10 o 20 y dígito verificador; la consulta externa exige coincidencia, ACTIVO y HABIDO. Un RUC observado no impide pagar deudas existentes.
+Se mantiene el flujo Cliente, Condiciones y Cronograma. El paso 1 ofrece DNI o RUC; RUC 10 conserva la ficha de su DNI. Para RUC 20 se identifica por separado al propietario para el límite y al representante que firma. Se validan once números, prefijo 10 o 20 y dígito verificador; la consulta externa debe coincidir con el número solicitado y exige ACTIVO y HABIDO para una nueva solicitud por RUC. Un RUC observado no impide pagar deudas existentes.
 
 ### Propiedad y capital global
 
@@ -365,7 +388,7 @@ Para una empresa se registra evidencia documental de propiedad y de representaci
 
 ### Contrato descargable e impresión
 
-El detalle del préstamo confirmado permite descargar el contrato en Word y abrir una vista de impresión o guardar como PDF desde el navegador. La plantilla conserva el texto, estructura y diseño del Word del profesor; completa cliente, documento, representante, fecha y agencia. Un anexo incluye monto, plazo, tasas, totales, vencimientos y las personas vinculadas. El cronograma se descarga por separado. Los préstamos nuevos congelan sus datos contractuales de identidad.
+El detalle del préstamo confirmado permite descargar el contrato en Word y abrir una vista de impresión o guardar como PDF desde el navegador. La plantilla conserva el texto, estructura y diseño del Word del profesor; completa cliente, documento, representante, fecha y agencia. Un anexo incluye monto, plazo, tasas, totales, vencimientos y las personas vinculadas. El cronograma tiene descarga PDF e impresión separadas; los menús Cronograma y Contrato agrupan sus acciones en el detalle. Los préstamos nuevos congelan sus datos contractuales de identidad.
 
 ### Mora y aplicación de pagos
 
@@ -388,3 +411,21 @@ La plantilla original se conserva en Contrato_profesor.docx. Se identificaron de
 Revalidar identidad desde la ficha consulta automáticamente el DNI fijo, permite reintentar si falla y requiere confirmar la revisión antes de guardar. Al guardar vuelve a la ficha. No se crea una pantalla/plantilla independiente ni se inicia un préstamo.
 
 En RUC 20 se distingue quién firma y la asistencia del propietario. Un propietario ausente conserva su identidad previamente aprobada y vigente, sin una verificación presencial nueva; si falta esa verificación, queda pendiente revisión y no se confirma la solicitud. El firmante debe estar presente y tener identidad y facultades verificadas. La referencia de propiedad y la de facultades documentan las personas y asistencia. No se confunde la vinculación al límite global con responsabilidad personal por deuda de la sociedad.
+
+### Fichas compartidas listados y pagos con contexto
+
+Clientes muestra titulares con préstamos confirmados en la agencia actual, incluidos los ya pagados. El acceso permitido a una ficha vinculada no la incorpora al listado local. DNI y RUC 10 comparten identidad; RUC 20 conserva razón social y ficha independiente. El bloque Personas y empresas vinculadas permite abrir las fichas autorizadas en ambas direcciones. La ficha termina con Consultar para pagar y Ver historial; la cartera local se consulta en Préstamos y las revisiones se muestran en su página propia.
+
+Por DNI, RUC 10 o RUC 20, Pagos reúne las mismas obligaciones del propietario y sus empresas en todas las agencias. Se selecciona y cobra un préstamo a la vez, sin mezclar cuotas. Desde ficha se fija su documento y se vuelve a esa misma ficha; desde detalle se fija el UUID del préstamo autorizado y se vuelve a ese mismo detalle. En ambos casos no aparece Cambiar cliente. La entrada general mantiene búsqueda editable y limpia inmediatamente la atención anterior al cambiarla.
+
+### Control de sesiones y continuidad
+
+La cabecera muestra nombre y rol, agencia, fecha de Perú y contador de sesión. El cierre se produce a los 15 minutos sin interacción o al reemplazar la sesión con un inicio posterior. El aviso del último minuto permite continuar mientras la sesión siga válida. La validación del servidor y de la base protege préstamos y pagos aun si una pantalla permanece abierta; la consulta periódica no renueva la actividad.
+
+Las operaciones confirmadas permanecen al cerrar la sesión; los borradores sin guardar se descartan. Si se interrumpe la respuesta de una confirmación, debe revisarse el préstamo o el historial de pagos antes de iniciar otra operación. Las claves de idempotencia protegen el reintento de la misma operación; no convierten una nueva solicitud independiente en el mismo cobro.
+
+### Alcance de la verificación y funciones pendientes
+
+La consulta de nombres por DNI no consulta automáticamente vigencia ni fallecimiento oficial. La fecha de caducidad y las casillas documentan la revisión presencial del asesor. SUNAT se consulta al ejecutar el flujo correspondiente; no existe un barrido periódico externo que actualice todos los RUC. Un fallo técnico no se registra como rechazo de identidad ni impide cobrar deudas existentes; una nueva solicitud que necesite esa consulta espera un resultado válido.
+
+Se mantienen fuera del incremento los abonos parciales, refinanciación, reversos, gestión judicial, documentos extranjeros y prefijos RUC distintos de 10 y 20, evaluación automática de riesgo por monto/plazo y aprobación documental remota de un propietario no verificado. La vinculación académica para el límite no constituye por sí misma garantía personal de la deuda de una sociedad.

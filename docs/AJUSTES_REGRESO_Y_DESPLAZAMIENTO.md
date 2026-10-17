@@ -24,6 +24,4 @@ Se verifican enlaces de regreso, posición superior del recuadro y ausencia de c
 selección desde ficha/detalle/general, cambio de cuotas sin otro desplazamiento,
 pago con préstamo fijo, aislamiento por agencia e historiales DNI/RUC.
 
-Distribución: paquete de solo cambios con seis archivos en tres lotes. No reemplazar
-el proyecto completo por esas carpetas. INSTRUCCIONES_ACTUALIZACION.md describe los
-archivos, directorios de GitHub y mensajes de commit. No hay SQL adicional.
+Distribución: esta corrección de código ya está publicada. La entrega actual solo sincroniza documentación; copia los archivos de INSTRUCCIONES_ACTUALIZACION.md sin sustituir carpetas completas. No se necesita SQL adicional para la documentación.

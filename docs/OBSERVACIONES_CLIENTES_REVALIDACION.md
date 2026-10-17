@@ -13,8 +13,7 @@ propio. La búsqueda y los filtros se aplican a ese listado, no al grupo compart
 La lectura se pagina para evitar perder titulares por el límite de respuesta de Supabase.
 
 La ficha y relaciones_cliente no se restringen: siguen mostrando los vínculos permitidos,
-la identidad compartida y el capital global. Préstamos en tu agencia conserva su cartera
-local. Consultar para pagar continúa reuniendo el grupo en todas las agencias.
+la identidad compartida y el capital global. La sección Préstamos conserva la cartera local; su tabla ya no se repite en la ficha. Consultar para pagar continúa reuniendo el grupo en todas las agencias.
 
 ## Revalidación
 
@@ -53,3 +52,7 @@ dos agencias, cartera local, navegación al grupo, menú DNI/RUC, evidencia DNI 
 SUNAT sin cambios y con cambios firmados, doble clic, guardar un estado observado, fallo técnico,
 consulta global de pagos y distribución en escritorio/móvil. No se crean préstamos reales
 ni se usan claves de producción en las pruebas.
+
+La consulta de nombres por DNI no actualiza una condición oficial de fallecimiento ni acredita vigencia documental por sí sola. Se registra caducidad y revisión presencial con referencias generadas. SUNAT se actualiza al consultar y guardar expresamente; no existe un proceso periódico externo. Revalidar continúa disponible aunque los datos anteriores estén aprobados o vigentes.
+
+Una observación del RUC 10 bloquea una nueva solicitud por ese RUC, pero no la modalidad personal por DNI si cumple identidad, pagos, historial y cupo. En RUC 20 se comprueban el RUC de la empresa y las identidades y facultades correspondientes. La identidad observada de un propietario afecta las solicitudes que requieren esa identidad; el representante no aporta por sí solo su límite al grupo. Los errores técnicos no equivalen a observaciones acreditadas ni bloquean el cobro de deudas existentes.
