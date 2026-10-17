@@ -1,10 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
 import Brand from '@/components/Brand';
 import Icon from '@/components/Icon';
+import { mensajesSesion } from '@/lib/sesion';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -15,6 +16,11 @@ export default function LoginPage() {
   const router = useRouter();
   const supabase = createClient();
 
+  useEffect(() => {
+    const motivo = new URLSearchParams(window.location.search).get('sesion');
+    if (motivo) queueMicrotask(() => setError(mensajesSesion[motivo] || 'Vuelve a iniciar sesión.'));
+  }, []);
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -24,8 +30,16 @@ export default function LoginPage() {
     if (error) {
       setError('Credenciales inválidas. Verifique su correo y contraseña.');
     } else {
-      router.push('/dashboard');
-      router.refresh();
+      try {
+        const response = await fetch('/api/sesion', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ accion: 'iniciar' }) });
+        const estado = await response.json();
+        if (!response.ok || !estado.ok) throw new Error(estado.mensaje || mensajesSesion[estado.motivo] || 'No se pudo iniciar la sesión.');
+        router.push('/dashboard');
+        router.refresh();
+      } catch (err) {
+        await supabase.auth.signOut({ scope: 'local' });
+        setError(err instanceof Error ? err.message : 'No se pudo iniciar la sesión.');
+      }
     }
     setLoading(false);
   };

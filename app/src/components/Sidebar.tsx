@@ -1,8 +1,8 @@
 'use client';
 import { useState } from 'react';
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
-import { createClient } from '@/lib/supabase/client';
+import { usePathname } from 'next/navigation';
+import { cerrarSesion } from '@/lib/sesion';
 import { Asesor } from '@/types/database';
 import Brand from './Brand';
 import Icon from './Icon';
@@ -14,13 +14,13 @@ const navItems = [
  {href:'/dashboard/pagos',label:'Pagos',icon:'wallet'},
 ];
 export default function Sidebar({configuraMora=false}: Props) {
- const pathname=usePathname(); const router=useRouter(); const supabase=createClient();
+ const pathname=usePathname();
  const [open,setOpen]=useState(false); const [error,setError]=useState(''); const [leaving,setLeaving]=useState(false);
  const salirDelBorrador=(e:React.MouseEvent)=>{if(document.body.dataset.borrador==='true'){if(!confirm('¿Salir de este proceso? Los datos sin confirmar se perderán.')){e.preventDefault();return;}document.body.dataset.borrador='false';}setOpen(false);};
  const handleLogout=async()=>{
   if((document.body.dataset.borrador==='true')&&!confirm('¿Cerrar sesión? Los datos sin confirmar se perderán.'))return;
   setLeaving(true);setError('');
-  try {const {error}=await supabase.auth.signOut(); if(error)throw error; router.push('/login');router.refresh();}
+  try {await cerrarSesion();}
   catch {setError('No se pudo cerrar sesión. Inténtalo otra vez.');setLeaving(false);}
  };
  return <>
