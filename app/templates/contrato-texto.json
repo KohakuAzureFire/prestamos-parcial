@@ -1,0 +1,304 @@
+[
+  {
+    "tipo": "titulo",
+    "texto": "CONTRATO DE MUTUO DINERARIO Nº {{CODIGO}}"
+  },
+  {
+    "tipo": "parrafo",
+    "texto": "Conste por el presente documento CONTRATO PRIVADO DE MUTUO DINERARIO que celebran de una parte Prestamos Castillo, con RUC Nº 10190981245, representada por Edward Fernando Castillo Robles, conforme facultades de representación inscritas en el Registro de Personas Jurídicas de la Oficina Registral – Sede Nº V Trujillo;  quien adelante se le denominará “EFS”; y, de la otra parte, EL CLIENTE {{CLIENTE}}, con {{DOCUMENTO}}{{REPRESENTACION}}. "
+  },
+  {
+    "tipo": "titulo",
+    "texto": "CLÁUSULA PRIMERA.- DE LOS OTORGANTES "
+  },
+  {
+    "tipo": "parrafo",
+    "texto": "A) EFS, es una persona jurídica inscrita en el “Registro de empresas y personas que efectúan operaciones financieras o de cambio de moneda”, la cual se dedica a la concesión de préstamos fuera del sistema bancario, entre otros, los cuales se encuentran especificados en su objeto social, conforme Escritura Pública de Constitución societaria, de fecha 27 de diciembre de 2019. B) EL CLIENTE, persona natural o jurídica que requiere uno o más servicios que presta EFS. "
+  },
+  {
+    "tipo": "titulo",
+    "texto": "CLÁUSULA SEGUNDA.- OBJETO "
+  },
+  {
+    "tipo": "parrafo",
+    "texto": "EL CLIENTE solicita un préstamo dinerario a EFS, brindando información y documentación; por lo que, EL CLIENTE declara que recibe la información del préstamo a la firma del presente documento, en señal de conformidad por haber recibido el monto total del préstamo solicitado. "
+  },
+  {
+    "tipo": "titulo",
+    "texto": "CLÁUSULA TERCERA.- MODALIDAD DE DESEMBOLSO  "
+  },
+  {
+    "tipo": "parrafo",
+    "texto": "La entrega el total de dinero es de manera presencial en las agencias de EFS y se dejará constancia a través de este documento donde EL CLIENTE declara haber recibido conforme. "
+  },
+  {
+    "tipo": "titulo",
+    "texto": "CLÁUSULA CUARTA.- INTERESES "
+  },
+  {
+    "tipo": "parrafo",
+    "texto": "EFS aplica las normas generales del Código Civil y se respetan los límites fijados para el pago de intereses hasta la cancelación total del préstamo, siendo la tasa máxima del interés convencional compensatorio o moratorio, la fijada por el Banco Central de Reserva del Perú. "
+  },
+  {
+    "tipo": "parrafo",
+    "texto": "En caso de incumplimiento, EL CLIENTE cancelará adicionalmente a los intereses moratorios y/o la penalidad pactada por los días de retraso. Los pagos se aplicarán a la deuda en el orden siguiente: las cuotas vencidas y de la cuota vigente. En caso de incumplimiento, total o parcial, de cualquiera de las obligaciones a cargo de EL CLIENTE incurrirán en mora automáticamente, sin necesidad de aviso judicial. "
+  },
+  {
+    "tipo": "parrafo",
+    "texto": "En ningún caso la terminación anticipada de servicios o resolución de contrato dará lugar a la devolución de los conceptos por comisión, o gastos por servicio que hayan sido cobrados y efectivamente prestados. "
+  },
+  {
+    "tipo": "titulo",
+    "texto": "CLÁUSULA QUINTA.- DE LAS MODIFICACIONES UNILATERALES "
+  },
+  {
+    "tipo": "parrafo",
+    "texto": "EFS y EL CLIENTE acuerdan expresamente que ante cambios en las condiciones del mercado, régimen regulatorio, cambios en la economía nacional o internacional, crisis financiera, cambios en el mercado o la competencia, políticas de gobierno que impacte de forma negativa a EFS, hechos fortuitos o causas de fuerza mayor, guerra, comunismo, terrorismo o análogos, EFS podrá variar las intereses, condiciones, gastos, penalidades pactadas con motivo del presente contrato, por ende la TCEA y otros aspectos contractuales legalmente permitidos, debiendo ser comunicado a EL CLIENTE, siendo que si no está de acuerdo, es causal de resolución del presente contrato previo pago del total de la obligación a la fecha, debiendo comunicarlo en el lapso de 72 horas, mediante i) comunicación física a EFS, manifestando su disconformidad y voluntad expresa de resolver el contrato y ii) proceder al pago de todo el saldo deudor, liquidación que mantuviere pendiente y practicará EFS, de no ejercer EL CLIENTE su derecho, se entiende que acepta tales modificaciones.  "
+  },
+  {
+    "tipo": "parrafo",
+    "texto": "Lo descrito en el párrafo precedente no aplica para modificaciones en beneficio de EL CLIENTE.  "
+  },
+  {
+    "tipo": "titulo",
+    "texto": "CLÁUSULA SEXTA.- REUTILIZACIÓN DE CAPITAL CANCELADO Y AMPLIACIÓN DE PRESTAMO "
+  },
+  {
+    "tipo": "parrafo",
+    "texto": "EFS podrá, conforme a sus políticas internas y normativa aplicable, otorgarle a EL CLIENTE, cuando este los solicite o acepte, nuevos préstamos, así como ampliaciones de préstamo, según corresponda, para lo cual EL CLIENTE tendrá que pagar las obligaciones derivadas del Préstamo originalmente solicitado.  "
+  },
+  {
+    "tipo": "titulo",
+    "texto": "CLÁUSULA SÉPTIMA.- DE LAS COMUNICACIONES "
+  },
+  {
+    "tipo": "parrafo",
+    "texto": "EL CLIENTE tiene la obligación de declarar sus datos personales reales, personales y vigentes; por lo que, EFS no se responsabiliza por variaciones en los mismos. En el caso que EL CLIENTE cambie algún dato personal, deberá comunicarlo inmediatamente a EFS, debiendo apersonarse a la oficina en la que fue atendido, llenando un “formulario de actualización de datos”, a partir de lo cual entra en vigencia dicha información, surtiendo los efectos legales, para cualquier información que EFS requiera remitir a EL CLIENTE. "
+  },
+  {
+    "tipo": "parrafo",
+    "texto": "Si el cliente requiere información de modo físico, deberá apersonarse a la oficina de EFS, y, a su costo, se le entregará la documentación requerida. "
+  },
+  {
+    "tipo": "titulo",
+    "texto": "CLÁUSULA OCTAVA.- PLAZO Y MEDIO DE PAGO "
+  },
+  {
+    "tipo": "parrafo",
+    "texto": "El Préstamo será cancelado por EL CLIENTE con el pago total de la obligación adeudada, en los plazos y montos pactados; con la frecuencia que se señala en su cronograma de pagos "
+  },
+  {
+    "tipo": "parrafo",
+    "texto": "Las formas de pago por las que EL CLIENTE podrá efectuar los pagos serán:  "
+  },
+  {
+    "tipo": "parrafo",
+    "texto": "Pagos en efectivo, en la agencia de su preferencia. "
+  },
+  {
+    "tipo": "parrafo",
+    "texto": "Pago con billetera digital"
+  },
+  {
+    "tipo": "parrafo",
+    "texto": "Deposito Bancario"
+  },
+  {
+    "tipo": "parrafo",
+    "texto": "En cuanto EL CLIENTE realice el abono a la cuenta de EFS, deberá poner en conocimiento con EFS, presentando su voucher o constancia de pago original; caso contrario, EFS no se responsabiliza por la actualización inmediata de la deuda de EL CLIENTE. "
+  },
+  {
+    "tipo": "parrafo",
+    "texto": "Si el cliente realiza abonos mediante transferencias interbancaria, debe considerar para el pago de su cuota, los intereses calculados desde la fecha efectiva de ingreso del abono en las cuentas de EFS. "
+  },
+  {
+    "tipo": "parrafo",
+    "texto": "Las partes acuerdan que se considerará como cumplida la obligación de EL CLIENTE a EFS una vez que éste último haya recibido efectivamente el dinero, esa mención aplica para el cálculo de cualquier pago sobre cuotas, liquidaciones u otros. "
+  },
+  {
+    "tipo": "titulo",
+    "texto": "CLÁUSULA NOVENA.-  SOBRE EL ORIGEN DEL DINERO "
+  },
+  {
+    "tipo": "parrafo",
+    "texto": "EL CLIENTE declara que la información sobre el origen de sus ingresos proporcionada a EFS es real, estando obligado a prestar la información y documentación que EFS le requiera en cualquier oportunidad, en el marco de las políticas de prevención de lavado de activos y financiamiento del terrorismo. "
+  },
+  {
+    "tipo": "titulo",
+    "texto": "CLÁUSULA DÉCIMA.-  MODALIDADES DE LA CONTRATACIÓN "
+  },
+  {
+    "tipo": "parrafo",
+    "texto": "EFS, le puede otorgar el mutuo dinerario en la siguientes modalidades. "
+  },
+  {
+    "tipo": "parrafo",
+    "texto": "Mutuo dinerario con pagaré incompleto (en adelante “EL PAGARÉ”) como garantía ante incumplimiento de pago, para lo cual se anexará EL PAGARÉ, el cual podrá ser ejecutado por cualquiera de las causales de resolución contractual, por el total del monto de liquidación que practique EFS. "
+  },
+  {
+    "tipo": "parrafo",
+    "texto": "Mutuo dinerario con contrato de servicio de intermediación (en adelante “EL CONTRATO”), mediante el cual autoriza a EFS, de forma previa y expresa, hacer el traspaso en su nombre y representación, del crédito vigente a EL CLIENTE. "
+  },
+  {
+    "tipo": "titulo",
+    "texto": "CLÁUSULA DÉCIMO PRIMERA.- RESOLUCIÓN CONTRACTUAL "
+  },
+  {
+    "tipo": "parrafo",
+    "texto": "EFS podrá resolver de pleno derecho este contrato y dar por vencidos todos los plazos de las obligaciones directas e indirectas de EL CLIENTE derivadas del préstamo, vencidas o no; y, exigir el pago íntegro de lo adeudado, conforme a la liquidación total que se efectúe, y en su caso, iniciar las acciones judiciales y/o ejercer los derechos que le asisten como acreedor, siendo las siguientes causales: "
+  },
+  {
+    "tipo": "parrafo",
+    "texto": "Incumpla el pago de una o más de una cuota de su préstamo. "
+  },
+  {
+    "tipo": "parrafo",
+    "texto": "Por voluntad de EL CLIENTE, debiendo comunicar su decisión a EFS por cualquiera de los canales de comunicación, procediendo a activar el contrato de intermediación cancelando el monto total liquidado por EFS. "
+  },
+  {
+    "tipo": "parrafo",
+    "texto": "En el caso de incumplir las obligaciones descritas en la cláusula quinta del presente contrato, o por advertirse falsedad en la declaración Jurada o la declaración de origen del dinero y garantía descritas en la cláusula novena y décimo sexta. "
+  },
+  {
+    "tipo": "parrafo",
+    "texto": "Cuando EL CLIENTE tenga otros contratos anteriores, paralelos o sucesivos con EFS; y, en uno o más de ellos haya recaído en incumplimiento de pago, revalorización en perjuicio de EFS, gravando la garantía con una carga posterior al préstamo, manipulado o inutilizando de manera tendenciosa la garantía que impida su libre comercialización "
+  },
+  {
+    "tipo": "parrafo",
+    "texto": "Otras que sean permitidas por Ley, y que EFS pueda llegar a implementar comunicando oportunamente a EL CLIENTE. "
+  },
+  {
+    "tipo": "titulo",
+    "texto": "CLÁUSULA DÉCIMO SEGUNDA.- PROTECCIÓN DE DATOS "
+  },
+  {
+    "tipo": "parrafo",
+    "texto": "EFS es responsable de los datos de carácter personal que sean suministrados por EL CLIENTE, pudiendo incluirlas en su Base de Datos administrativa y comercial; así, desde la suscripción del presente contrato, EL CLIENTE expresa su consentimiento para el tratamiento de los mismos, o que se faciliten por medios electrónicos o manuales. "
+  },
+  {
+    "tipo": "parrafo",
+    "texto": "EL CLIENTE podrá ejercer los derechos que corresponden conforme a la Ley nº 29733, tales como: acceso, rectificación, oposición y cancelación de los datos personales. EFS adoptará las medidas necesarias para no revelar información alguna, salvo en situaciones expresamente establecidas conforme a Ley. "
+  },
+  {
+    "tipo": "titulo",
+    "texto": "CLÁUSULA DÉCIMO TERCERA.- COMPETENCIA TERRITORIAL "
+  },
+  {
+    "tipo": "parrafo",
+    "texto": "Las partes se someten a la jurisdicción y competencia de los jueces y tribunales del lugar donde se celebra el contrato. Sin perjuicio de ello, EFS podrá cursar las comunicaciones y notificaciones a los diferentes domicilios que EL CLIENTE u otros intervinientes hayan señalado en el presente contrato y sus modificaciones posteriores, los cuales deberán haber sido comunicados a EFS, conforme a la cláusula séptima, dentro de la misma ciudad y dentro del área urbana. "
+  },
+  {
+    "tipo": "parrafo",
+    "texto": "Las partes firman el presente documento, por duplicado, en señal de total conformidad. "
+  },
+  {
+    "tipo": "parrafo",
+    "texto": "EL CLIENTE declara que se le informa y exhibe de forma previa. "
+  },
+  {
+    "tipo": "parrafo",
+    "texto": "{{AGENCIA}}, {{FECHA_LARGA}}"
+  },
+  {
+    "tipo": "tabla",
+    "filas": [
+      [
+        "\n\n\n",
+        "",
+        "",
+        ""
+      ],
+      [
+        "Firma\n{{DOCUMENTO_FIRMA}}",
+        "Huella",
+        "Huella",
+        "PRESTAMOS CASTILLO\nGerente General"
+      ]
+    ]
+  },
+  {
+    "tipo": "titulo",
+    "texto": "Condiciones particulares del préstamo"
+  },
+  {
+    "tipo": "parrafo",
+    "texto": "Este anexo identifica las condiciones registradas del préstamo y acompaña el cronograma de pagos entregado por separado. El texto del contrato corresponde al modelo proporcionado para el parcial."
+  },
+  {
+    "tipo": "tabla",
+    "filas": [
+      [
+        "Número de préstamo",
+        "{{CODIGO}}"
+      ],
+      [
+        "Titular",
+        "{{CLIENTE}}"
+      ],
+      [
+        "Documento",
+        "{{DOCUMENTO}}"
+      ],
+      [
+        "Propietario para el límite global",
+        "{{PROPIETARIO}}"
+      ],
+      [
+        "Representante que firma",
+        "{{FIRMANTE}}"
+      ],
+      [
+        "Agencia de origen",
+        "{{AGENCIA}}"
+      ],
+      [
+        "Fecha de desembolso",
+        "{{FECHA}}"
+      ],
+      [
+        "Capital entregado",
+        "{{MONTO}}"
+      ],
+      [
+        "Plazo",
+        "{{PLAZO}} meses"
+      ],
+      [
+        "Tasa efectiva anual compensatoria",
+        "30 %"
+      ],
+      [
+        "Tasa efectiva mensual",
+        "2,210445 %"
+      ],
+      [
+        "Interés original total",
+        "{{INTERES_TOTAL}}"
+      ],
+      [
+        "Total programado sin mora",
+        "{{TOTAL}}"
+      ],
+      [
+        "Primer vencimiento",
+        "{{PRIMER_VENCIMIENTO}}"
+      ],
+      [
+        "Último vencimiento",
+        "{{ULTIMO_VENCIMIENTO}}"
+      ],
+      [
+        "Tasa efectiva anual moratoria",
+        "{{TASA_MORA}}"
+      ],
+      [
+        "Base anual de mora",
+        "{{BASE_MORA}} días"
+      ]
+    ]
+  },
+  {
+    "tipo": "parrafo",
+    "texto": "La mora, si existe una tasa pactada, se calcula por días sobre el capital vencido impago: capital × [(1 + tasa anual)^(días / base) − 1]. Los pagos cubren cuotas completas consecutivas desde la más antigua, incluyendo capital, interés original y mora de las cuotas seleccionadas. No se agregan penalidades."
+  }
+]

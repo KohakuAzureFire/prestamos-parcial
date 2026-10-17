@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  outputFileTracingIncludes: {'/api/prestamos/*/contrato': ['./templates/contrato.docx']},
 
   turbopack: {
     rules: {
