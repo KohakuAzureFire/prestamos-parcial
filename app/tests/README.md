@@ -1,33 +1,36 @@
 # Pruebas de operaciones
 
-Desde esta carpeta ejecuta `npm install` y `npm test`. Usa PostgreSQL en memoria (PGlite) con RLS, roles y pgcrypto. No se conecta a Supabase ni requiere sus claves. Los datos del archivo fixtures.json son ficticios.
+Las suites usan PostgreSQL en memoria mediante PGlite, roles, RLS y pgcrypto. Los datos de `fixtures.json` y la tasa del 12 % son ficticios; no conectan con Supabase real ni requieren sus claves. Se probaron con Node.js 24.
 
-Se prueba la migración completa salvo la extensión pg_cron, las restricciones de cartera por agencia, identidad firmada, capital global, operación idempotente, cobros entre agencias, rechazo de selección obsoleta, caducidad, umbrales de mora y cierre de deuda.
+## Preparación y ejecución
 
-PGlite serializa transacciones: el caso de selección obsoleta verifica el rechazo que protege contra dos cobros sobre la misma cuota, pero no es una prueba de carga concurrente en el proyecto remoto.
+Desde `app/tests`:
 
-La suite también comprueba la migración de clientes por agencia: ficha única, búsqueda dirigida, revalidación compartida, pagos que no incorporan al cliente y préstamos locales que sí lo incorporan. No modifica Supabase real.
+```powershell
+npm.cmd ci
+npm test
+```
 
-La suite borradores.test.mjs carga la migración final y verifica alta diferida, firma, rollback de errores intermedios, reintentos y revalidación independiente. Se ejecuta junto con la suite de agencias mediante npm test.
+`npm test` ejecuta `agencias.test.mjs`, `borradores.test.mjs` y `ruc.test.mjs`: cartera por agencia, identidad, alta conjunta, rollback, firmas, capital global, pagos, mora e idempotencia.
 
+Las siguientes suites se ejecutan **aparte desde `app`**:
 
-## Ampliación por RUC
+| Comando | Comprobación principal |
+| --- | --- |
+| `node tests/modalidad.test.mjs` | Préstamo personal por DNI con RUC 10 asociado, modalidad contractual y cupo compartido. |
+| `node tests/revalidacion-pagos.test.mjs` | Revalidación RUC firmada, consulta global, cobro cruzado y exclusión del representante como propietario. |
+| `node tests/fichas-grupo.test.mjs` | Identidad y vínculos compartidos, permisos, cartera local y pagos equivalentes por DNI/RUC 10/RUC 20. |
+| `node tests/sesiones.test.mjs` | Inactividad, actividad válida, sondeo sin renovación, sesión reemplazada y cierre antiguo que no revoca la nueva. |
+| `node tests/contrato.test.mjs` | Word, campos variables y escape XML; solo escribe salida si se configura `CONTRATO_PRUEBA_SALIDA`. |
 
-`npm test` incluye `ruc.test.mjs`: DNI/RUC10, RUC20 y propietario, firmas, rollback, límite compartido, mora por días, configuración congelada, cotización, regularización y rehabilitación con permisos. Usa PGlite aislado, sin escribir en Supabase real. La tasa del 12 % de los ejemplos es ficticia y se usa solo en pruebas.
+PGlite serializa transacciones: probar selección obsoleta no equivale a una prueba de carga concurrente remota. Cada suite prepara su propia base; no se aplica el SQL de sesiones indiscriminadamente a pruebas antiguas sin identificador de sesión.
 
-Desde `app`, `node tests/contrato.test.mjs` con Node 24 comprueba el Word y el escape de caracteres. Solo escribe un archivo si se indica `CONTRATO_PRUEBA_SALIDA`.
+## Comprobación en navegador
 
+Los casos funcionales están en `docs/REQUISITOS.md`, desde la raíz del repositorio: identidad, representación, pasos, límites, fichas, documentos, pagos con contexto y sesiones. Comprueba escritorio y móvil, regreso al origen, limpieza de resultados y desplazamiento al préstamo seleccionado.
 
-## Modalidad personal con RUC10
+Para sesiones, usa dos navegadores independientes: el segundo inicio debe bloquear al anterior; cerrar el anterior no debe cerrar el nuevo. Comprueba aviso, Continuar sesión y vencimiento. Los sondeos automáticos no deben prolongar la sesión.
 
-Con Node 24, desde `app`, ejecuta `node tests/modalidad.test.mjs`. Carga el ajuste de `scripts/habilitar_modalidad_personal.sql` en PGlite. Verifica modalidad DNI con RUC10 observado, contrato DNI, capital compartido entre agencias, rechazo de empresas por DNI, idempotencia por modalidad y permisos anon. `ruc.test.mjs` también carga este ajuste para verificar la regresión del flujo de negocio. Ninguna prueba modifica Supabase real.
+Desde `app/tests`, `node servidor-pruebas.mjs --serve` levanta el servicio aislado en `127.0.0.1:54329`, con tokens y sesiones ficticios. Su ruta `/__sesion` permite simular antigüedad para pruebas; no existe en la aplicación publicada. Este servicio no sustituye al proveedor externo ni se despliega a producción.
 
-
-## Revalidación y pagos globales
-
-Con Node 24, desde `app`, ejecuta `node tests/revalidacion-pagos.test.mjs`. Comprueba consulta global por propietario entre agencias, cartera local, cobro cruzado, exclusión del representante, revalidación RUC firmada e idempotente sin préstamo, permisos y validación de importes. `ruc.test.mjs` también carga el ajuste nuevo como regresión.
-
-
-## Fichas compartidas y grupo
-
-Con Node 24, desde app: `node tests/fichas-grupo.test.mjs`. Carga el SQL acumulado y prueba la misma ficha e historial entre agencias, acceso al grupo atendido sin exponer grupos ajenos, cartera local, equivalencia de pagos por DNI/RUC10/RUC20, separación de representantes y repetición del SQL sin modificar contratos o préstamos.
+Una edición exclusivamente documental se verifica comparando Markdown y Word, enlaces, criterios y paginación; no necesita registrar préstamos o cobros.
