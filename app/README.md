@@ -1,3 +1,9 @@
+# Revisión actual: clientes por agencia y revalidación
+
+Implementada en esta entrega. Consulta ../docs/OBSERVACIONES_CLIENTES_REVALIDACION.md y las instrucciones de actualización. No requiere SQL adicional sobre la base ya sincronizada.
+
+El contenido siguiente describe la base y revisiones anteriores.
+
 # Aplicación de préstamos
 
 Sigue ../INSTRUCCIONES_ACTUALIZACION.md. Copia src y scripts, conserva .env.local, node_modules y templates y elimina .next.
