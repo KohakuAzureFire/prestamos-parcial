@@ -1,5 +1,7 @@
 import type { CSSProperties } from 'react';
 const paths: Record<string, string> = {
+  chevron: 'M6 9l6 6 6-6',
+  print: 'M6 9V3h12v6 M6 18H3V9h18v9h-3 M6 14h12v7H6z M17 12h1',
   mail: 'M3 5h18v14H3z M3 5l9 7 9-7',
   lock: 'M5 10h14v11H5z M8 10V6a4 4 0 0 1 8 0v4 M12 14v3',
   user: 'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8 M4 21v-2a7 7 0 0 1 14 0v2z',

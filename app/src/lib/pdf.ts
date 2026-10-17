@@ -9,7 +9,8 @@ export function generarPDF(
   prestamo: Prestamo & { clientes: Cliente; agencias: Agencia; cuotas: Cuota[] }
 ): void {
   const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-  const { clientes: cliente, agencias: agencia, cuotas } = prestamo;
+  const { agencias: agencia, cuotas } = prestamo;
+  const cliente=prestamo.identidad_contrato?.nombres?prestamo.identidad_contrato:prestamo.clientes;
 
   // Header
   doc.setFillColor(15, 23, 42);
@@ -32,7 +33,7 @@ export function generarPDF(
     startY: 56, theme: 'plain',
     body: [
       ['Cliente', `${cliente.nombres} ${cliente.apellidos}`],
-      ['DNI', cliente.dni],
+      [cliente.ruc?'RUC':'DNI', cliente.ruc||cliente.dni||'—'],
       ['Código del préstamo', 'PR-'+prestamo.id.slice(0,8).toUpperCase()],
       ['Agencia de origen', agencia.nombre],
       ['Fecha', formatFecha(new Date(prestamo.fecha_prestamo.slice(0,10)+'T00:00:00'))],
@@ -46,7 +47,7 @@ export function generarPDF(
   autoTable(doc, {
     startY: y + 4,
     head: [['N°', 'Vencimiento', 'Cuota', 'Interés', 'Amortización', 'Saldo']],
-    body: cuotas
+    body: [...cuotas]
       .sort((a, b) => a.numero_cuota - b.numero_cuota)
       .map(c => [
         c.numero_cuota,
@@ -90,6 +91,6 @@ export function generarPDF(
     );
   }
 
-  const nombreArchivo = `cronograma_${cliente.dni}_${prestamo.id.slice(0, 8)}.pdf`;
+  const nombreArchivo = `cronograma_${cliente.ruc||cliente.dni}_${prestamo.id.slice(0, 8)}.pdf`;
   doc.save(nombreArchivo);
 }

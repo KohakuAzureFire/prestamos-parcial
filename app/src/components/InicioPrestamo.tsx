@@ -1,0 +1,10 @@
+'use client';
+import type {ReglaMora} from '@/lib/operaciones';
+import {useState} from 'react';
+import VerificarCliente from './VerificarCliente';
+import VerificarRuc from './VerificarRuc';
+export default function InicioPrestamo({agencia,asesor,limite,dniInicial='',rucInicial='',mora}:{agencia:string;asesor:string;limite:number;dniInicial?:string;rucInicial?:string;mora?:ReglaMora}){
+ const [tipo,setTipo]=useState(rucInicial?'ruc':'dni');const [identificando,setIdentificando]=useState(true);
+ const entrarCondiciones=()=>setIdentificando(false),volverIdentidad=()=>setIdentificando(true);
+ return <>{identificando&&<header className="page-heading loan-entry-heading"><div><h1>Nuevo préstamo</h1><p>Identifica al cliente y verifica sus datos antes de definir las condiciones.</p></div></header>}{identificando?<section className="card"><div className="form-group"><label className="form-label" htmlFor="documento-cliente">Tipo de cliente</label><select id="documento-cliente" className="form-input" value={tipo} onChange={e=>{if(document.body.dataset.borrador==='true'&&!confirm('Hay datos sin confirmar. ¿Cambiar el tipo de cliente y descartarlos?'))return;document.body.dataset.borrador='false';setTipo(e.target.value);}}><option value="dni">Persona natural · DNI</option><option value="ruc">Persona con negocio o empresa · RUC</option></select></div></section>:<section className="card client-type-fixed"><span className="form-label">Tipo de cliente</span><strong>{tipo==='dni'?'Persona natural · DNI':'Persona con negocio o empresa · RUC'}</strong><small>Para cambiarlo, vuelve al paso 1.</small></section>}{tipo==='dni'?<VerificarCliente encabezadoExterno onCondiciones={entrarCondiciones} onIdentificar={volverIdentidad} mora={mora} nuevo dniInicial={dniInicial} agencia={agencia} asesor={asesor} limite={limite}/>:<VerificarRuc encabezadoExterno onCondiciones={entrarCondiciones} onIdentificar={volverIdentidad} mora={mora} rucInicial={rucInicial} agencia={agencia} asesor={asesor} limite={limite}/>}</>;
+}

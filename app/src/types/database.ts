@@ -20,7 +20,12 @@ export interface Asesor {
 
 export interface Cliente {
   id: string;
-  dni: string;
+  dni: string | null;
+  ruc?: string | null;
+  razon_social?: string | null;
+  tipo_cliente?: 'natural' | 'juridica';
+  estado_ruc?: string | null;
+  condicion_ruc?: string | null;
   nombres: string;
   apellidos: string;
   condicion: CondicionCliente;
@@ -33,6 +38,7 @@ export interface Cliente {
 }
 
 export interface Prestamo {
+  identidad_contrato?: {nombres:string;apellidos:string;dni?:string|null;ruc?:string|null;modalidad?:string}|null;
   id: string;
   cliente_id: string;
   agencia_id: string;

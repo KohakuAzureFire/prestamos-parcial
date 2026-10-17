@@ -1,0 +1,25 @@
+import {createHmac} from 'node:crypto';
+import {NextRequest,NextResponse} from 'next/server';
+import {createClient} from '@/lib/supabase/server';
+import {consultarRuc} from '@/lib/sunat';
+import {validarRuc} from '@/lib/ruc';
+export const dynamic='force-dynamic';
+export async function GET(request:NextRequest){
+ const s=await createClient();const {data:{user}}=await s.auth.getUser();
+ if(!user)return NextResponse.json({ok:false,mensaje:'Inicia sesión nuevamente.'},{status:401});
+ const {data:a}=await s.from('asesores').select('activo').eq('id',user.id).maybeSingle();
+ if(!a?.activo)return NextResponse.json({ok:false,mensaje:'Cuenta sin autorización.'},{status:403});
+ const secret=process.env.IDENTITY_SIGNING_SECRET;
+ if(!secret)return NextResponse.json({ok:false,mensaje:'La verificación necesita configuración del servidor.'},{status:503});
+ const ruc=request.nextUrl.searchParams.get('numero')||'';
+ if(!validarRuc(ruc))return NextResponse.json({ok:false,mensaje:'RUC inválido. Revisa los 11 dígitos y el dígito verificador.'},{status:400});
+ try{const d=await consultarRuc(ruc);const payload=JSON.stringify({...d,tipo:'ruc',asesor_id:user.id,consultadoEn:new Date().toISOString()});
+ let registro=null;
+ if(ruc.startsWith('20')){
+  const {data:c,error:ec}=await s.from('clientes_resumen').select('id,evidencia_propiedad,evidencia_poder').eq('ruc',ruc).maybeSingle();
+  if(ec)throw new Error('No se pudieron recuperar las referencias documentales. Intenta nuevamente.');
+  if(c){const {data:rel,error:er}=await s.rpc('relaciones_cliente',{p_cliente:c.id});if(er)throw new Error('No se pudieron recuperar las personas vinculadas.');registro={propietario_dni:rel?.propietario?.dni||'',representante_dni:rel?.representante?.dni||rel?.propietario?.dni||'',evidencia_propiedad:c.evidencia_propiedad,evidencia_poder:c.evidencia_poder};}
+ }
+ return NextResponse.json({ok:true,...d,registro,payload,firma:createHmac('sha256',secret).update(payload).digest('hex')},{headers:{'Cache-Control':'no-store'}});
+ }catch(e){return NextResponse.json({ok:false,mensaje:e instanceof Error?e.message:'No se pudo consultar el RUC.'},{status:502,headers:{'Cache-Control':'no-store'}});}
+}

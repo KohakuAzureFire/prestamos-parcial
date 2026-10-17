@@ -1,7 +1,8 @@
 'use client';
 import {useEffect} from 'react';
-export function useBorradorGuard(pendiente:boolean){
+export function useBorradorGuard(pendiente:boolean,activo=true){
  useEffect(()=>{
+  if(!activo)return;
   let permitido=false;document.body.dataset.borrador=String(pendiente);
   const salir=(e:BeforeUnloadEvent)=>{if(pendiente&&!permitido){e.preventDefault();e.returnValue='';}};
   const navegar=(e:MouseEvent)=>{
@@ -14,5 +15,5 @@ export function useBorradorGuard(pendiente:boolean){
   };
   window.addEventListener('beforeunload',salir);document.addEventListener('click',navegar,true);
   return()=>{document.body.dataset.borrador='false';window.removeEventListener('beforeunload',salir);document.removeEventListener('click',navegar,true);};
- },[pendiente]);
+ },[pendiente,activo]);
 }

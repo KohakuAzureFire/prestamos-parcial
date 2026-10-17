@@ -264,3 +264,66 @@ h1{font-size:32px!important;font-weight:750!important;letter-spacing:-.045em!imp
 .loan-search>select{width:260px;min-width:260px}.review-agency{display:block;margin-top:6px;color:var(--text-secondary);font-size:12px}@media(max-width:760px){.loan-search>select{min-width:0;width:auto;flex:1}}
 
 .draft-review{display:inline;margin-left:8px;background:none;border:0;text-decoration:underline;cursor:pointer;font:inherit}.draft-review:disabled{opacity:.5;cursor:wait}
+
+/* Mantener legibles los importes al incorporar el desglose de mora. */
+.schedule-card .table-wrapper table { min-width: 860px; }
+.schedule-card .table-wrapper th, .schedule-card .table-wrapper td { white-space: nowrap; }
+.client-ruc-card { margin-bottom: 24px; }
+
+/* Revisión de atención presencial y documentos */
+.client-type-fixed{display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;margin-bottom:24px}
+.client-type-fixed .form-label{margin:0}.client-type-fixed small{color:var(--text-secondary,#64748b)}
+.verification-embedded{margin-top:28px}.verification-embedded .page-heading{margin-bottom:18px}
+.verification-embedded .verification-title{font-size:20px;line-height:1.35;margin:0 0 8px}
+.verification-embedded .identity-lookup-card h2{font-size:16px}
+.identity-presence{margin-top:22px;padding:20px;background:#f5f9fc;border:1px solid #dae5ee;border-radius:10px}
+.identity-presence h2{margin-bottom:8px}.identity-presence .form-group{max-width:420px;margin-top:18px}
+.identity-presence .form-checkbox{display:flex;align-items:flex-start;gap:10px;margin-top:16px;line-height:1.5}
+.identity-presence input[type=checkbox]{flex-shrink:0;margin-top:4px}
+.verification-page .loan-actions{margin-top:24px;justify-content:flex-end}
+.loan-actions-end{justify-content:flex-end!important;margin-top:24px}
+.document-actions-wrapper{position:relative}.document-actions{display:flex;gap:10px;flex-wrap:wrap}
+.document-menu{position:relative}.document-menu>summary{list-style:none;width:180px;min-width:180px;box-sizing:border-box;justify-content:center;cursor:pointer}
+.document-menu>summary::-webkit-details-marker{display:none}
+.document-menu>summary:focus-visible{outline:3px solid #74d7dd;outline-offset:3px}
+.btn-document-contract{background:#173653;color:#fff;border:1px solid #173653}
+.btn-document-contract:hover{background:#244b6c;color:#fff}
+.document-menu-options{position:absolute;top:calc(100% + 8px);right:0;min-width:210px;padding:6px;background:#fff;border:1px solid #d9e5ef;border-radius:10px;box-shadow:0 10px 30px #102a4324;z-index:30}
+.document-menu-options>a,.document-menu-options>button{display:flex;align-items:center;gap:10px;width:100%;padding:12px;border:0;border-radius:6px;color:#173653;background:transparent;font:inherit;font-size:14px;text-align:left;text-decoration:none;cursor:pointer}
+.document-menu-options>a:hover,.document-menu-options>button:hover,.document-menu-options>a:focus-visible,.document-menu-options>button:focus-visible{background:#eaf5f7;outline:2px solid #00a1ad;outline-offset:-2px}
+.document-menu-options button:disabled{opacity:.6;cursor:wait}
+@media(max-width:540px){.document-actions{width:100%}.document-menu{flex:1}.document-menu>summary{min-width:0;width:100%}.document-actions-wrapper{width:100%}.identity-presence{padding:14px}.document-menu-options{min-width:180px}}
+
+/* Encabezado único del alta y atención mediante representante */
+.loan-entry-heading{margin-bottom:24px}
+.loan-entry-heading+.card{margin-bottom:24px}
+.company-attendance .evidence-grid{margin-top:18px}
+.company-attendance .page-subtitle{margin-top:14px}
+.signer-attendance .form-checkbox{display:flex;align-items:flex-start;gap:10px;line-height:1.5}
+.signer-attendance input[type=checkbox]{flex-shrink:0;margin-top:4px}
+
+/* Listados coherentes y referencias documentales breves */
+.document-lines{display:flex;flex-direction:column;gap:5px;font-size:14px;line-height:1.4;white-space:nowrap}
+.client-identity .document-lines{margin:10px 0;font-size:14px;color:#173653}
+.directory-tools{display:flex;flex-direction:column;gap:18px;margin-bottom:22px}
+.directory-search{display:flex;gap:12px;align-items:center}.directory-search>input{flex:1;min-width:0}.directory-search>select{width:220px}
+.loan-type-filter{display:flex;align-items:center;gap:14px;margin:0 0 14px}.loan-type-filter .form-label{margin:0;white-space:nowrap}.loan-type-filter select{width:240px}
+.company-documentation fieldset{border:1px solid #dae5ee;border-radius:10px;padding:18px;margin:22px 0 0;min-width:0}
+.company-documentation legend{padding:0 8px;font-weight:600;color:#173653}
+.document-reference-row{display:grid;grid-template-columns:minmax(180px,1fr) minmax(0,1.4fr);gap:18px}
+.company-documentation .form-checkbox{display:flex;align-items:flex-start;gap:10px;line-height:1.5;margin-top:14px}
+.company-documentation input[type=checkbox]{margin-top:4px;flex-shrink:0}
+.shared-reference{margin:14px 0;padding:12px;background:#eef8f8;border-radius:6px;color:#285263}
+@media(max-width:640px){.directory-search{flex-wrap:wrap}.directory-search>input,.directory-search>select{width:100%;flex-basis:100%}.loan-type-filter{align-items:stretch;flex-direction:column;gap:8px}.loan-type-filter select{width:100%}.document-reference-row{grid-template-columns:1fr}.company-documentation fieldset{padding:12px}}
+/* Las tablas de cobro se desplazan dentro de su tarjeta en pantallas estrechas. */
+.payment-grid>.card{min-width:0}
+.money-input{display:flex;align-items:center;gap:0;min-height:46px;border:1px solid var(--border);border-radius:6px;background:#fff;max-width:100%;overflow:hidden}
+.money-input:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px #00a4ae14}
+.money-input input{border:0;outline:0;background:transparent;color:#1f3c57;font:inherit;font-variant-numeric:tabular-nums;padding:11px 0;min-width:0}
+.money-input #monto{flex:1;text-align:right;padding-left:14px}
+.money-input #monto-centavos{width:2.8em;flex:none;padding-right:14px}
+.money-decimal{color:#1f3c57;font-variant-numeric:tabular-nums}
+.money-input-error{border-color:#c43e3e}
+.shared-profile>.card{margin-block:22px}.shared-profile .client-identity .badge{display:inline-flex}.profile-identification .loan-meta{grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}.profile-identification .loan-meta>div{padding:0;border:0}.profile-capital{margin-block:22px}.profile-links h2{margin-bottom:10px}.profile-links .page-subtitle{margin-bottom:18px}.loan-request-menu{position:relative}.loan-request-menu .document-menu-options{min-width:210px;z-index:20}@media(max-width:640px){.profile-identification .loan-meta{grid-template-columns:1fr}.profile-links .table-wrapper{max-width:100%}.shared-profile .section-heading{flex-wrap:wrap}}
+.loan-request-menu>summary{min-width:210px;white-space:nowrap}
+.shared-profile .client-ruc-card td:nth-child(2),.shared-profile .client-ruc-card td:nth-child(3),.shared-profile .client-ruc-card td:nth-child(4),.shared-profile>section:last-child td:nth-child(3){white-space:nowrap}

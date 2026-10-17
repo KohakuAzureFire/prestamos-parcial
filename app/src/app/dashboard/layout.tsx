@@ -19,11 +19,12 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
   if (!asesor?.activo) redirect('/login?error=cuenta');
 
+  const {data:permisos}=await supabase.rpc('permisos_operacion');
   const agencia=asesor?.agencias?.nombre || 'Agencia asignada';
   const agenciaLabel=/^agencia\b/i.test(agencia)?agencia:`Agencia ${agencia}`;
   return (
     <div className="app-shell">
-      <Sidebar asesor={asesor} />
+      <Sidebar asesor={asesor} configuraMora={!!permisos?.configura_mora} />
       <div className="app-workspace">
         <header className="app-topbar">
 
