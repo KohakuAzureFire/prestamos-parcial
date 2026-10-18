@@ -1,6 +1,6 @@
 # Pruebas de operaciones
 
-Las suites usan PostgreSQL en memoria mediante PGlite, roles, RLS y pgcrypto. Los datos de `fixtures.json` y la tasa del 12 % son ficticios; no conectan con Supabase real ni requieren sus claves. Se probaron con Node.js 24.
+Las suites usan PostgreSQL en memoria mediante PGlite, roles, RLS y pgcrypto. Los datos de `fixtures.json` son ficticios; no conectan con Supabase real ni requieren sus claves. Se probaron con Node.js 24.
 
 ## Preparación y ejecución
 
@@ -11,7 +11,9 @@ npm.cmd ci
 npm test
 ```
 
-`npm test` ejecuta `agencias.test.mjs`, `borradores.test.mjs` y `ruc.test.mjs`: cartera por agencia, identidad, alta conjunta, rollback, firmas, capital global, pagos, mora e idempotencia.
+`npm test` ejecuta `agencias.test.mjs`, `borradores.test.mjs` y `ruc.test.mjs`: cartera por agencia, identidad, alta conjunta, rollback, firmas, capital global, pagos sin recargos, atrasos e idempotencia.
+
+`ruc.test.mjs` aplica el retiro final y comprueba que no queden columnas, funciones o parámetros de recargos, que el importe atrasado sea la cuota original y que el aviso de Pagos dependa de deuda pendiente del RUC exacto. También comprueba la reaplicación del SQL.
 
 Las siguientes suites se ejecutan **aparte desde `app`**:
 

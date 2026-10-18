@@ -27,23 +27,24 @@ Para verificar código: `npm.cmd run lint` y `npm.cmd run build`. Para servir la
 
 ## Base de datos
 
-El Supabase existente ya tiene aplicados los ajustes funcionales y el control de sesiones. No requiere SQL por esta consolidación documental.
+Esta actualización prepara el retiro de cargos por atraso. En el proyecto existente se aplica únicamente `supabase/migrations/20261018210722_retirar_cargos_y_ajustar_contrato.sql`, coordinado con la publicación del código. No reapliques los scripts antiguos sobre la base actualizada.
 
 Para otra instalación sobre el esquema inicial compatible:
 
-1. Aplicar las migraciones de `supabase/migrations` en orden cronológico.
+1. Aplicar las migraciones históricas de `supabase/migrations` anteriores a `20261018`, en orden cronológico.
 2. Aplicar `scripts/habilitar_modalidad_personal.sql`.
 3. Aplicar `scripts/revalidacion_y_pagos_globales.sql`.
 4. Aplicar `scripts/fichas_compartidas_y_grupo_pago.sql`.
-5. Aplicar al final `scripts/control_sesiones.sql`.
+5. Aplicar `scripts/control_sesiones.sql`.
+6. Aplicar al final `supabase/migrations/20261018210722_retirar_cargos_y_ajustar_contrato.sql`.
 
 Las migraciones presuponen el esquema inicial; las pruebas lo construyen explícitamente. `scripts/ACTUALIZAR_SISTEMA.sql` es una alternativa acumulada de los ajustes previos de modalidad, fichas y pagos, pero no incluye sesiones. No lo reapliques después del control de sesiones: reemplazaría su autorización central. `docs/archivo/007_no_aplicada.sql` es histórico y no se ejecuta.
 
-Los permisos especiales se asignan administrativamente en `private.permisos_operacion`: `autoriza_credito` y `configura_mora`. Son independientes, no editables directamente desde el navegador y no se conceden automáticamente. El responsable define tasa moratoria y base; se conservan las pactadas en cada préstamo.
+El permiso `autoriza_credito` se asigna administrativamente en `private.permisos_operacion`; no es editable desde el navegador ni se concede automáticamente. No existe configuración de recargos por atraso. Las migraciones y scripts antiguos se conservan como etapas de instalación e historial; el retiro final elimina sus campos, parámetros y funciones obsoletos.
 
 ## Contrato y consultas
 
-`docs/Contrato_profesor.docx` conserva el original; `templates/contrato.docx` y `templates/contrato-texto.json` alimentan descarga e impresión. Conserva esas plantillas. Las menciones del original a EFS/Préstamos Castillo, una cláusula décimo sexta ausente o módulos fuera del sprint no crean funciones ni cargos en la aplicación.
+`docs/Contrato_profesor.docx` conserva el original; `templates/contrato.docx` y `templates/contrato-texto.json` alimentan descarga e impresión. La plantilla generada termina en las firmas, sin anexo de condiciones, y aplica únicamente el interés compensatorio del cronograma. Conserva esas plantillas. Las menciones del original a EFS/Préstamos Castillo, una cláusula décimo sexta ausente o módulos fuera del sprint no crean funciones ni cargos en la aplicación.
 
 La consulta DNI obtiene nombres; caducidad y presencia se acreditan mediante revisión del asesor. SUNAT se actualiza al consultar y guardar, sin proceso periódico externo. Las respuestas requieren proveedor y firma configurados. Un error técnico no se guarda como rechazo de identidad.
 
