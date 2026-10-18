@@ -4,11 +4,15 @@ import fs from 'node:fs';
 import assert from 'node:assert/strict';
 import { randomUUID } from 'node:crypto';
 try {
+ for(const n of fs.readdirSync(new URL('../supabase/migrations/',import.meta.url)).sort().filter(n=>!n.startsWith('20261018')&&!n.startsWith('20261016054059')&&!n.startsWith('20261016060800')))await db.exec(fs.readFileSync(new URL('../supabase/migrations/'+n,import.meta.url),'utf8'));
+ for(const n of ['habilitar_modalidad_personal.sql','revalidacion_y_pagos_globales.sql','fichas_compartidas_y_grupo_pago.sql'])await db.exec(fs.readFileSync(new URL('../scripts/'+n,import.meta.url),'utf8'));
+
  await db.exec(`create table auth.sessions(id uuid primary key,user_id uuid,created_at timestamptz);
  create function auth.jwt() returns jsonb language sql stable as $$select nullif(current_setting('request.jwt.claims',true),'')::jsonb$$;
  grant execute on function auth.jwt() to authenticated;`);
  const sql=fs.readFileSync(new URL('../scripts/control_sesiones.sql',import.meta.url),'utf8');
  await db.exec(sql);
+ await db.exec(fs.readFileSync(new URL('../supabase/migrations/20261018210722_retirar_cargos_y_ajustar_contrato.sql',import.meta.url),'utf8'));
  const uid=users.chimbote, sid=randomUUID(), otra=randomUUID();
  async function llamar(s,accion='estado',usuario=uid) { return db.transaction(async tx=>{
   await tx.exec('set local role authenticated');
@@ -18,7 +22,7 @@ try {
  async function protegido(s) { return db.transaction(async tx=>{
   await tx.exec('set local role authenticated');
   await tx.query("select set_config('request.jwt.claims',$1,true)",[JSON.stringify({sub:uid,session_id:s})]);
-  return tx.query('select id from public.prestamos');
+  await tx.query("select public.tiene_deuda_pendiente_ruc('20601030013')");return tx.query('select id from public.prestamos');
  }); }
  await db.query("insert into auth.sessions values($1,$2,clock_timestamp()-interval '1 minute')",[sid,uid]);
  assert.equal((await llamar(sid)).ok,false);
@@ -41,6 +45,7 @@ try {
  assert.equal((await llamar(otra)).ok,true,'Cerrar sesión antigua no cierra la nueva');
  assert.equal((await llamar(otra,'iniciar',users.trujillo)).ok,false,'No se puede usar sesión de otra cuenta');
  await db.exec(sql);
+ await db.exec(fs.readFileSync(new URL('../supabase/migrations/20261018210722_retirar_cargos_y_ajustar_contrato.sql',import.meta.url),'utf8'));
  assert.equal((await llamar(otra)).ok,true,'Reaplicar SQL conserva la sesión');
  await llamar(otra,'cerrar');
  assert.equal((await llamar(otra,'iniciar')).motivo,'cerrada');

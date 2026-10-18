@@ -5,6 +5,9 @@ for(const n of ['20261016072244_clientes_agencia_y_busquedas.sql','2026101608034
 await db.exec(fs.readFileSync(new URL('../scripts/habilitar_modalidad_personal.sql',import.meta.url),'utf8'));
 await db.exec(fs.readFileSync(new URL('../scripts/revalidacion_y_pagos_globales.sql',import.meta.url),'utf8'));
 await db.exec(fs.readFileSync(new URL('../scripts/fichas_compartidas_y_grupo_pago.sql',import.meta.url),'utf8'));
+const retiro=fs.readFileSync(new URL('../supabase/migrations/20261018210722_retirar_cargos_y_ajustar_contrato.sql',import.meta.url),'utf8');
+await db.exec(retiro);
+await db.exec(retiro); // Reaplicar conserva pagos y esquema.
 export const rucValido=base=>{const pesos=[5,4,3,2,7,6,5,4,3,2];const d=11-base.split('').reduce((s,n,i)=>s+Number(n)*pesos[i],0)%11;return base+(d===10?0:d===11?1:d);};
 const persona=(dni,uid=users.chimbote)=>{const p=proof(dni,uid);return {dni,borrador:{consulta:{dni,payload:p.p_payload,firma:p.p_firma},evidencia:p.p_evidencia}};};
 const consulta=(ruc,uid=users.chimbote,estado='ACTIVO',condicion='HABIDO')=>{const d={tipo:'ruc',ruc,razon_social:'EMPRESA PRUEBA & HIJOS',estado,condicion,direccion:'AVENIDA PRUEBA 123',asesor_id:uid,consultadoEn:new Date().toISOString()};const payload=JSON.stringify(d);return {...d,payload,firma:crypto.createHmac('sha256',secret).update(payload).digest('hex')};};
@@ -32,33 +35,40 @@ assert.equal((await rpc('buscar_cuotas',{p_busqueda:r20,p_tipo:'ruc'},users.truj
 const payment=await rpc('registrar_pago_cotizado',{p_prestamo:loan20,p_cantidad:1,p_clave:crypto.randomUUID(),p_primera:qs[0].id,p_total:Number(qs[0].cuota_total),p_fecha:hoy},users.trujillo);
 st=await rpc('resumen_cliente',{p_cliente:empresa.id});assert.equal(Number(st.capital_pendiente),9000-Number(qs[0].amortizacion));
 assert.equal((await asUser(users.trujillo,tx=>tx.query('select id from public.clientes where id=$1',[empresa.id]))).rows.length,0);
-const receipt=await rpc('constancia_pago',{p_pago:payment},users.trujillo);assert.equal(receipt.ruc,r20);assert.equal(Number(receipt.cuotas[0].interes_moratorio),0);
-// Mora configurada solo para nuevos préstamos; cambio de fecha invalida cotización.
-await assert.rejects(rpc('configurar_mora',{p_tasa:.12,p_base:365,p_motivo:'Regla de prueba local aprobada'}),/No tiene permiso/);
-await db.query('insert into private.permisos_operacion values($1,true,true)',[users.chimbote]);await rpc('configurar_mora',{p_tasa:.12,p_base:365,p_motivo:'Tasa ficticia únicamente para prueba local'});
-const nuevaSolicitud={p_tipo:'ruc',p_datos:crearDatos(third,'00000304'),p_monto:1000,p_meses:2,p_clave:crypto.randomUUID(),p_tasa:.12,p_base:365};
-await assert.rejects(rpc('confirmar_prestamo_cotizado',{...nuevaSolicitud,p_tasa:null,p_base:360}),/condiciones de mora cambiaron/);
+const receipt=await rpc('constancia_pago',{p_pago:payment},users.trujillo);assert.equal(receipt.ruc,r20);assert.equal('interes_moratorio' in receipt.cuotas[0],false);
+// El atraso conserva el importe original de la cuota y bloquea nuevos créditos.
+await db.query('insert into private.permisos_operacion(asesor_id,autoriza_credito) values($1,true)',[users.chimbote]);
+const nuevaSolicitud={p_tipo:'ruc',p_datos:crearDatos(third,'00000304'),p_monto:1000,p_meses:2,p_clave:crypto.randomUUID()};
 const nuevo=await rpc('confirmar_prestamo_cotizado',nuevaSolicitud);
-let np=(await db.query('select * from public.prestamos where id=$1',[nuevo])).rows[0];assert.equal(Number(np.tasa_moratoria_anual),.12);assert.equal(np.base_mora,365);assert.equal((await db.query('select tasa_moratoria_anual from public.prestamos where id=$1',[loan10])).rows[0].tasa_moratoria_anual,null);
+let np=(await db.query('select * from public.prestamos where id=$1',[nuevo])).rows[0];
 await db.query("update public.cuotas set fecha_vencimiento=public.fecha_peru()-30 where prestamo_id=$1 and numero_cuota=1",[nuevo]);
-let cobro=(await rpc('buscar_cuotas',{p_busqueda:third,p_tipo:'ruc'})).find(p=>p.id===nuevo);assert.equal(Number(cobro.cuotas[0].interes_moratorio),Math.round(Number(cobro.cuotas[0].amortizacion)*(Math.pow(1.12,30/365)-1)*100)/100);assert.equal(cobro.fecha_cotizacion,hoy);
-const total=Number(cobro.cuotas[0].cuota_total)+Number(cobro.cuotas[0].interes_moratorio);const pa={p_prestamo:nuevo,p_cantidad:1,p_clave:crypto.randomUUID(),p_primera:cobro.cuotas[0].id,p_total:total,p_fecha:hoy};
+let cobro=(await rpc('buscar_cuotas',{p_busqueda:third,p_tipo:'ruc'})).find(p=>p.id===nuevo);assert.equal('interes_moratorio' in cobro.cuotas[0],false);assert.equal(cobro.fecha_cotizacion,hoy);
+const total=Number(cobro.cuotas[0].cuota_total);const pa={p_prestamo:nuevo,p_cantidad:1,p_clave:crypto.randomUUID(),p_primera:cobro.cuotas[0].id,p_total:total,p_fecha:hoy};
 await assert.rejects(rpc('registrar_pago_cotizado',{...pa,p_total:total-1}),/importe o la fecha/);
-await assert.rejects(rpc('registrar_pago',{p_prestamo:nuevo,p_cantidad:1,p_clave:crypto.randomUUID(),p_primera:pa.p_primera}),/importe de mora/);
 const pay=await rpc('registrar_pago_cotizado',pa,users.trujillo);assert.equal(await rpc('registrar_pago_cotizado',pa,users.trujillo),pay);
-const rec=await rpc('constancia_pago',{p_pago:pay});assert.equal(Number(rec.cuotas[0].interes_moratorio),Number(cobro.cuotas[0].interes_moratorio));
+const rec=await rpc('constancia_pago',{p_pago:pay});assert.equal(Number(rec.cuotas[0].importe),Number(cobro.cuotas[0].cuota_total));
 let sit=await rpc('resumen_cliente',{p_cliente:np.cliente_id});assert.equal(sit.condicion_pago,'habilitado','Pagar vencidas regulariza sin adelantar futuras');
 // Extrajudicial, antecedente y autorización registrada por responsable designado.
 await db.query("update public.cuotas set fecha_vencimiento=(public.fecha_peru()-interval '12 months')::date where prestamo_id=$1 and numero_cuota=2",[nuevo]);
 sit=await rpc('resumen_cliente',{p_cliente:np.cliente_id});assert.equal(sit.condicion_pago,'extrajudicial');assert.ok(sit.requiere_autorizacion);
 await assert.rejects(rpc('rehabilitar_cliente',{p_cliente:np.cliente_id,p_motivo:'Evaluación de prueba local favorable'}),/regularice/);
-cobro=(await rpc('buscar_cuotas',{p_busqueda:third,p_tipo:'ruc'})).find(p=>p.id===nuevo);const ult=cobro.cuotas.find(c=>!c.pagada);await rpc('registrar_pago_cotizado',{p_prestamo:nuevo,p_cantidad:1,p_clave:crypto.randomUUID(),p_primera:ult.id,p_total:Number(ult.cuota_total)+Number(ult.interes_moratorio),p_fecha:hoy},users.trujillo);
+cobro=(await rpc('buscar_cuotas',{p_busqueda:third,p_tipo:'ruc'})).find(p=>p.id===nuevo);const ult=cobro.cuotas.find(c=>!c.pagada);await rpc('registrar_pago_cotizado',{p_prestamo:nuevo,p_cantidad:1,p_clave:crypto.randomUUID(),p_primera:ult.id,p_total:Number(ult.cuota_total),p_fecha:hoy},users.trujillo);
 sit=await rpc('resumen_cliente',{p_cliente:np.cliente_id});assert.equal(sit.condicion_pago,'habilitado');assert.equal(sit.elegible,false);assert.ok(sit.antecedente_extrajudicial);
 await assert.rejects(rpc('rehabilitar_cliente',{p_cliente:np.cliente_id,p_motivo:'Evaluación de prueba local favorable'},users.trujillo),/No tiene permiso/);
 await rpc('rehabilitar_cliente',{p_cliente:np.cliente_id,p_motivo:'Evaluación de prueba local favorable'});sit=await rpc('resumen_cliente',{p_cliente:np.cliente_id});assert.equal(sit.elegible,true);assert.ok(sit.antecedente_extrajudicial);assert.equal((await db.query('select operador from private.rehabilitaciones order by created_at desc limit 1')).rows[0].operador,users.chimbote);
 assert.equal((await db.query('select estado_deuda from public.prestamos where id=$1',[nuevo])).rows[0].estado_deuda,'cancelado');
 // Un RUC observado no impide cobrar y no cambia el capital de origen.
 await db.query("update public.clientes set estado_ruc='BAJA' where id=$1",[empresa.id]);qs=(await rpc('buscar_cuotas',{p_busqueda:r20,p_tipo:'ruc'})).find(p=>p.id===loan20).cuotas.filter(c=>!c.pagada);await rpc('registrar_pago_cotizado',{p_prestamo:loan20,p_cantidad:1,p_clave:crypto.randomUUID(),p_primera:qs[0].id,p_total:Number(qs[0].cuota_total),p_fecha:hoy},users.trujillo);
-await rpc('configurar_mora',{p_tasa:.13,p_base:360,p_motivo:'Nueva regla ficticia local para comprobar reintentos'});assert.equal(await rpc('confirmar_prestamo_cotizado',nuevaSolicitud),nuevo,'El reintento confirmado conserva el préstamo aunque cambie la configuración');
-console.log('PASS: RUC 10/20, firmas, rollback, propietario y representante, capital compartido, RLS interagencia, mora diaria, cotización, regularización y autorización con antecedente.');
+assert.equal(await rpc('confirmar_prestamo_cotizado',nuevaSolicitud),nuevo,'El reintento confirmado conserva el préstamo sin duplicar la operación');
+assert.equal(await rpc('tiene_deuda_pendiente_ruc',{p_ruc:rucValido('2000000999')}),false,'RUC nuevo no tiene deuda');
+assert.equal(await rpc('tiene_deuda_pendiente_ruc',{p_ruc:third}),false,'Préstamo pagado no activa el aviso');
+const sinPrestamo=rucValido('2000000998');
+await db.transaction(async tx=>{await tx.query("select set_config('request.jwt.claims',$1,true)",[JSON.stringify({sub:users.chimbote,role:'authenticated'})]);await tx.query("insert into public.clientes(nombres,apellidos,tipo_cliente,ruc,propietario_id,representante_id,asesor_id) values('EMPRESA SIN PRESTAMOS','','juridica',$1,$2,$2,$3)",[sinPrestamo,c.id,users.chimbote]);});
+assert.equal(await rpc('tiene_deuda_pendiente_ruc',{p_ruc:sinPrestamo}),false,'Una ficha sin préstamos no hereda el aviso por la deuda del propietario');
+assert.equal(await rpc('tiene_deuda_pendiente_ruc',{p_ruc:r10},users.trujillo),true,'Deuda exacta consultable desde otra agencia');
+const columnas=(await db.query("select column_name from information_schema.columns where table_schema in ('public','private') and column_name ~* 'mora|moratorio'")).rows;
+assert.deepEqual(columnas,[]);
+assert.equal((await db.query("select count(*)::int n from pg_proc p join pg_namespace n on n.oid=p.pronamespace where n.nspname in ('public','private') and p.proname ~* 'mora|moratorio'")).rows[0].n,0);
+assert.equal((await db.query("select count(*)::int n from public.parametros_negocio where clave ~* 'mora'")).rows[0].n,0);
+console.log('PASS: RUC 10/20, firmas, rollback, propietario y representante, capital compartido, RLS interagencia, atraso sin cargos, cotización, regularización y autorización con antecedente.');
 if(!process.argv.includes('--serve'))await db.close();
