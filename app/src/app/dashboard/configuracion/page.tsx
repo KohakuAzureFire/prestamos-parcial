@@ -1,3 +1,2 @@
-export const dynamic='force-dynamic';
-import {notFound} from 'next/navigation';import {createClient} from '@/lib/supabase/server';import ConfiguracionMora from '@/components/ConfiguracionMora';
-export default async function Configuracion(){const s=await createClient();const {data:p}=await s.rpc('permisos_operacion');if(!p?.configura_mora)notFound();const {data:reglas,error}=await s.from('parametros_negocio').select('clave,valor').in('clave',['tasa_moratoria_anual','base_mora']);if(error)throw new Error('No se pudo cargar la configuración.');return <div className="animate-fade-in"><div className="page-heading"><div><h1>Configuración</h1><p>Condiciones de los préstamos nuevos</p></div></div><ConfiguracionMora tasa={reglas?.find(p=>p.clave==='tasa_moratoria_anual')?.valor??null} base={Number(reglas?.find(p=>p.clave==='base_mora')?.valor||360)}/></div>;}
+import {notFound} from 'next/navigation';
+export default function Configuracion(){notFound();}

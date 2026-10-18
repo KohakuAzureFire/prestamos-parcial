@@ -7,8 +7,8 @@ export default async function Nuevo({searchParams}:{searchParams:Promise<{client
  const {cliente_id,dni,ruc,modalidad}=await searchParams;
  const s=await createClient();const {data:{user}}=await s.auth.getUser();if(!user)redirect('/login');
  const {data:a}=await s.from('asesores').select('*,agencias(nombre)').eq('id',user.id).single();if(!a)throw new Error('No se pudo identificar la agencia.');
- const {data:parametros}=await s.from('parametros_negocio').select('clave,valor').in('clave',['capital_maximo','tasa_moratoria_anual','base_mora']);const limite=Number(parametros?.find(p=>p.clave==='capital_maximo')?.valor||10000);const mora={tasa:parametros?.find(p=>p.clave==='tasa_moratoria_anual')?.valor??null,base:Number(parametros?.find(p=>p.clave==='base_mora')?.valor||360)};
- const comunes={mora,agencia:a.agencias.nombre,asesor:a.nombre_completo,limite};
+ const {data:parametros}=await s.from('parametros_negocio').select('clave,valor').eq('clave','capital_maximo');const limite=Number(parametros?.[0]?.valor||10000);
+ const comunes={agencia:a.agencias.nombre,asesor:a.nombre_completo,limite};
  // Desde una ficha se conserva la identidad seleccionada y se verifica el cupo antes de elegir modalidad.
  if(cliente_id){
   const {data:c,error}=await s.from('clientes_resumen').select('*').eq('id',cliente_id).maybeSingle();if(error)throw new Error('No se pudo recuperar la ficha.');if(!c)notFound();

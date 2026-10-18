@@ -265,8 +265,8 @@ h1{font-size:32px!important;font-weight:750!important;letter-spacing:-.045em!imp
 
 .draft-review{display:inline;margin-left:8px;background:none;border:0;text-decoration:underline;cursor:pointer;font:inherit}.draft-review:disabled{opacity:.5;cursor:wait}
 
-/* Mantener legibles los importes al incorporar el desglose de mora. */
-.schedule-card .table-wrapper table { min-width: 860px; }
+/* Importes legibles y tablas adaptadas al contenido. */
+.schedule-card .table-wrapper table { min-width: 720px; }
 .schedule-card .table-wrapper th, .schedule-card .table-wrapper td { white-space: nowrap; }
 .client-ruc-card { margin-bottom: 24px; }
 

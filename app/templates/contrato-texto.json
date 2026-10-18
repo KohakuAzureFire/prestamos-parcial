@@ -37,11 +37,11 @@
   },
   {
     "tipo": "parrafo",
-    "texto": "EFS aplica las normas generales del Código Civil y se respetan los límites fijados para el pago de intereses hasta la cancelación total del préstamo, siendo la tasa máxima del interés convencional compensatorio o moratorio, la fijada por el Banco Central de Reserva del Perú. "
+    "texto": "El préstamo aplica una tasa efectiva anual compensatoria de 30 %, conforme al cronograma de pagos entregado a EL CLIENTE. "
   },
   {
     "tipo": "parrafo",
-    "texto": "En caso de incumplimiento, EL CLIENTE cancelará adicionalmente a los intereses moratorios y/o la penalidad pactada por los días de retraso. Los pagos se aplicarán a la deuda en el orden siguiente: las cuotas vencidas y de la cuota vigente. En caso de incumplimiento, total o parcial, de cualquiera de las obligaciones a cargo de EL CLIENTE incurrirán en mora automáticamente, sin necesidad de aviso judicial. "
+    "texto": "Los pagos cubren cuotas completas consecutivas desde la más antigua pendiente, incluyendo el capital y el interés compensatorio del cronograma. El atraso no genera recargos ni penalidades. "
   },
   {
     "tipo": "parrafo",
@@ -215,90 +215,5 @@
         "PRESTAMOS CASTILLO\nGerente General"
       ]
     ]
-  },
-  {
-    "tipo": "titulo",
-    "texto": "Condiciones particulares del préstamo"
-  },
-  {
-    "tipo": "parrafo",
-    "texto": "Este anexo identifica las condiciones registradas del préstamo y acompaña el cronograma de pagos entregado por separado. El texto del contrato corresponde al modelo proporcionado para el parcial."
-  },
-  {
-    "tipo": "tabla",
-    "filas": [
-      [
-        "Número de préstamo",
-        "{{CODIGO}}"
-      ],
-      [
-        "Titular",
-        "{{CLIENTE}}"
-      ],
-      [
-        "Documento",
-        "{{DOCUMENTO}}"
-      ],
-      [
-        "Propietario para el límite global",
-        "{{PROPIETARIO}}"
-      ],
-      [
-        "Representante que firma",
-        "{{FIRMANTE}}"
-      ],
-      [
-        "Agencia de origen",
-        "{{AGENCIA}}"
-      ],
-      [
-        "Fecha de desembolso",
-        "{{FECHA}}"
-      ],
-      [
-        "Capital entregado",
-        "{{MONTO}}"
-      ],
-      [
-        "Plazo",
-        "{{PLAZO}} meses"
-      ],
-      [
-        "Tasa efectiva anual compensatoria",
-        "30 %"
-      ],
-      [
-        "Tasa efectiva mensual",
-        "2,210445 %"
-      ],
-      [
-        "Interés original total",
-        "{{INTERES_TOTAL}}"
-      ],
-      [
-        "Total programado sin mora",
-        "{{TOTAL}}"
-      ],
-      [
-        "Primer vencimiento",
-        "{{PRIMER_VENCIMIENTO}}"
-      ],
-      [
-        "Último vencimiento",
-        "{{ULTIMO_VENCIMIENTO}}"
-      ],
-      [
-        "Tasa efectiva anual moratoria",
-        "{{TASA_MORA}}"
-      ],
-      [
-        "Base anual de mora",
-        "{{BASE_MORA}} días"
-      ]
-    ]
-  },
-  {
-    "tipo": "parrafo",
-    "texto": "La mora, si existe una tasa pactada, se calcula por días sobre el capital vencido impago: capital × [(1 + tasa anual)^(días / base) − 1]. Los pagos cubren cuotas completas consecutivas desde la más antigua, incluyendo capital, interés original y mora de las cuotas seleccionadas. No se agregan penalidades."
   }
 ]
