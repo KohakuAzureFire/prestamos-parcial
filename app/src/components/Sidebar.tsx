@@ -10,6 +10,7 @@ const navItems = [
  {href:'/dashboard/clientes',label:'Clientes',icon:'clients'},
  {href:'/dashboard/prestamos/nuevo',label:'Nuevo préstamo',icon:'plus'},
  {href:'/dashboard/pagos',label:'Pagos',icon:'wallet'},
+ {href:'/dashboard/representaciones',label:'Representación de empresas',icon:'shield'},
 ];
 export default function Sidebar() {
  const pathname=usePathname();

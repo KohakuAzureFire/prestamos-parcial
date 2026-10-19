@@ -1,14 +1,16 @@
 export const dynamic='force-dynamic';
 import Link from 'next/link';
+import type {Representacion} from '@/lib/representaciones';
 import VerificarCliente from '@/components/VerificarCliente';import InicioPrestamo from '@/components/InicioPrestamo';import VerificarRuc from '@/components/VerificarRuc';
 import FormularioPrestamo from '@/components/FormularioPrestamo';import LimiteAlcanzado from '@/components/LimiteAlcanzado';
 import {createClient} from '@/lib/supabase/server';import {notFound,redirect} from 'next/navigation';import {errorBusqueda} from '@/lib/busqueda';import {esEmpresa} from '@/lib/clientes';
-export default async function Nuevo({searchParams}:{searchParams:Promise<{cliente_id?:string;dni?:string;ruc?:string;modalidad?:string}>}){
- const {cliente_id,dni,ruc,modalidad}=await searchParams;
+export default async function Nuevo({searchParams}:{searchParams:Promise<{cliente_id?:string;dni?:string;ruc?:string;modalidad?:string;revision_id?:string}>}){
+ const {cliente_id,dni,ruc,modalidad,revision_id}=await searchParams;
  const s=await createClient();const {data:{user}}=await s.auth.getUser();if(!user)redirect('/login');
  const {data:a}=await s.from('asesores').select('*,agencias(nombre)').eq('id',user.id).single();if(!a)throw new Error('No se pudo identificar la agencia.');
  const {data:parametros}=await s.from('parametros_negocio').select('clave,valor').eq('clave','capital_maximo');const limite=Number(parametros?.[0]?.valor||10000);
  const comunes={agencia:a.agencias.nombre,asesor:a.nombre_completo,limite};
+ if(revision_id){const {data:rev,error}=await s.from('representaciones_resumen').select('*').eq('id',revision_id).eq('agencia_id',a.agencia_id).maybeSingle();if(error)throw new Error('No se pudo recuperar la revisión.');if(!rev)notFound();return <VerificarRuc {...comunes} rucInicial={rev.ruc} revisionInicial={rev as Representacion} autoConsultar/>;}
  // Desde una ficha se conserva la identidad seleccionada y se verifica el cupo antes de elegir modalidad.
  if(cliente_id){
   const {data:c,error}=await s.from('clientes_resumen').select('*').eq('id',cliente_id).maybeSingle();if(error)throw new Error('No se pudo recuperar la ficha.');if(!c)notFound();
