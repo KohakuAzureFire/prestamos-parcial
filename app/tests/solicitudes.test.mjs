@@ -1,5 +1,6 @@
 // Base aislada: nunca consulta producción ni consume Decolecta.
 import {db,users,rpc,asUser,proof,secret} from './operaciones.test.mjs';
+import ts from 'typescript';
 import fs from 'node:fs';import assert from 'node:assert/strict';import crypto from 'node:crypto';
 process.argv.push('--serve');const {rucValido}=await import('./ruc.test.mjs');
 try{
@@ -78,7 +79,19 @@ try{
  await assert.rejects(completar(sa,person('71000002')),/mismo propietario/);
  const falso=person(ausente);falso.borrador.evidencia.original=false;
  const antesCompletar=await count();await assert.rejects(completar(sa,falso));assert.deepEqual(await count(),antesCompletar);
- assert.equal(await completar(),idAus);
+ // Ejecutar la ruta real: el fixture SQL cons() incluía ruc y ocultaba su omisión en la API.
+ const source=fs.readFileSync(new URL('../src/app/api/solicitudes/[id]/propietario/route.ts',import.meta.url),'utf8');
+ const compiled=ts.transpileModule(source,{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText;
+ const route={exports:{}};
+ const fakeClient={auth:{getUser:async()=>({data:{user:{id:uid}}})},from:()=>({select:()=>({eq:()=>({maybeSingle:async()=>({data:sa})})})}),rpc:async(name,args)=>{try{return {data:await rpc(name,args,uid),error:null};}catch(e){return {error:{message:e.message}};}}};
+ const mocks={'node:crypto':crypto,'next/server':{NextResponse:{json:(data,init)=>Response.json(data,init)}},'@/lib/supabase/server':{createClient:async()=>fakeClient},'@/lib/sunat':{consultarRuc:async(r)=>({ruc:r,razon_social:'EMPRESA SOLICITUD PRUEBA',estado:'ACTIVO',condicion:'HABIDO'})}};
+ new Function('require','exports',compiled)((name)=>{if(!(name in mocks))throw new Error('Import no simulado: '+name);return mocks[name];},route.exports);
+ const previousSecret=process.env.IDENTITY_SIGNING_SECRET;process.env.IDENTITY_SIGNING_SECRET=secret;
+ let response;
+ try{response=await route.exports.POST(new Request('https://prueba.local/api/solicitudes/'+idAus+'/propietario',{method:'POST',headers:{origin:'https://prueba.local',host:'prueba.local','content-type':'application/json'},body:JSON.stringify({version:sa.version,propietario:person(ausente)})}),{params:Promise.resolve({id:idAus})});}
+ finally{if(previousSecret===undefined)delete process.env.IDENTITY_SIGNING_SECRET;else process.env.IDENTITY_SIGNING_SECRET=previousSecret;}
+ const result=await response.json();assert.equal(response.status,200,JSON.stringify(result));assert.equal(result.id,idAus);
+
  sa=(await db.query('select * from public.solicitudes_prestamo where id=$1',[idAus])).rows[0];
  assert.equal(sa.estado,'pendiente');assert.equal(sa.expediente.propietario.verificacion_pendiente,false);assert.ok(sa.propietario_id);assert.ok(sa.cliente_id);
  assert.equal(sa.representacion_id,JSON.parse(pendienteArgs.p_payload).id);assert.equal((await count()).prestamos,antesCompletar.prestamos);

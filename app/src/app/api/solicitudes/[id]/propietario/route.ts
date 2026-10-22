@@ -17,7 +17,7 @@ export async function POST(request:NextRequest,{params}:{params:Promise<{id:stri
   if(b.propietario?.dni!==sol.expediente.propietario.dni||!b.propietario?.borrador)throw new Error('Verifica presencialmente al propietario de esta solicitud.');
   const secret=process.env.IDENTITY_SIGNING_SECRET;if(!secret)throw new Error('Falta configuración de firma.');
   const d=await consultarRuc(sol.ruc);const payload=JSON.stringify({...d,tipo:'ruc',asesor_id:user.id,consultadoEn:new Date().toISOString()});
-  const {error}=await s.rpc('completar_propietario_solicitud',{p_id:id,p_version:b.version,p_propietario:b.propietario,p_consulta:{payload,firma:createHmac('sha256',secret).update(payload).digest('hex')}});
+  const {error}=await s.rpc('completar_propietario_solicitud',{p_id:id,p_version:b.version,p_propietario:b.propietario,p_consulta:{ruc:sol.ruc,payload,firma:createHmac('sha256',secret).update(payload).digest('hex')}});
   if(error)throw new Error(error.message);return NextResponse.json({ok:true,id},{headers});
  }catch(e){return NextResponse.json({mensaje:e instanceof Error?e.message:'No se pudo completar la verificación.'},{status:400,headers});}
 }
