@@ -86,3 +86,5 @@ Conserva únicamente `docs/REQUISITOS.md`, su Word, este README y `tests/README.
 Los campos numéricos rechazan letras, espacios, signos y decimales. Los asientos admiten letras y números y se muestran en mayúsculas. Notaría admite nombres con tildes, números y puntuación habitual y exige al menos una letra. El pegado inválido se rechaza completo conservando el valor anterior.
 
 Límites operativos de la interfaz: partida 12 dígitos; escritura 10; libro y folio 6; asiento 10 caracteres; notaría 80. Estos límites no afirman una longitud registral universal. Las referencias guardadas anteriormente se conservan sin recortarlas. Cada campo muestra su ayuda y las fechas se comprueban como fechas reales.
+
+Los botones «Corregir DNI del propietario» y «Corregir DNI del representante» aparecen como acciones discretas del encabezado de su tarjeta, con icono de lápiz, texto azul grisáceo y fondo transparente. En móvil se ubican debajo del título. Se conserva la restricción del propietario ya registrado y el comportamiento de corrección del DNI.
