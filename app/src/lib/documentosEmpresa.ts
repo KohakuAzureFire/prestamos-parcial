@@ -26,21 +26,31 @@ export interface RegistroEmpresa{propietario_dni:string;representante_dni:string
 // Los valores estructurados viven en el borrador. Se conserva el formato v1 al enviar.
 export interface CampoReferencia {id:string;etiqueta:string;tipo:'numero'|'asiento'|'fecha'|'texto';ejemplo?:string;max:number}
 export const camposReferencia:Record<string,readonly CampoReferencia[]>={
- partida:[{id:'partida',etiqueta:'N.º de partida',tipo:'numero',ejemplo:'12345678',max:20},{id:'asiento',etiqueta:'Asiento',tipo:'asiento',ejemplo:'A00001',max:20}],
- constitucion:[{id:'escritura',etiqueta:'N.º de escritura',tipo:'numero',ejemplo:'245',max:20},{id:'fecha',etiqueta:'Fecha de la escritura',tipo:'fecha',max:10},{id:'notaria',etiqueta:'Notaría',tipo:'texto',ejemplo:'Pérez',max:80}],
- acto:[{id:'partida',etiqueta:'N.º de partida',tipo:'numero',ejemplo:'12345678',max:20},{id:'fecha',etiqueta:'Fecha del acto constitutivo',tipo:'fecha',max:10}],
- matricula:[{id:'libro',etiqueta:'N.º de libro',tipo:'numero',ejemplo:'1',max:20},{id:'folio',etiqueta:'Folio',tipo:'numero',ejemplo:'12',max:20},{id:'asiento',etiqueta:'Asiento de titularidad',tipo:'asiento',ejemplo:'A00001',max:20}],
+ partida:[{id:'partida',etiqueta:'N.º de partida',tipo:'numero',ejemplo:'12345678',max:12},{id:'asiento',etiqueta:'Asiento',tipo:'asiento',ejemplo:'A00001',max:10}],
+ constitucion:[{id:'escritura',etiqueta:'N.º de escritura',tipo:'numero',ejemplo:'245',max:10},{id:'fecha',etiqueta:'Fecha de la escritura',tipo:'fecha',max:10},{id:'notaria',etiqueta:'Notaría',tipo:'texto',ejemplo:'Pérez',max:80}],
+ acto:[{id:'partida',etiqueta:'N.º de partida',tipo:'numero',ejemplo:'12345678',max:12},{id:'fecha',etiqueta:'Fecha del acto constitutivo',tipo:'fecha',max:10}],
+ matricula:[{id:'libro',etiqueta:'N.º de libro',tipo:'numero',ejemplo:'1',max:6},{id:'folio',etiqueta:'Folio',tipo:'numero',ejemplo:'12',max:6},{id:'asiento',etiqueta:'Asiento de titularidad',tipo:'asiento',ejemplo:'A00001',max:10}],
 };
 function fechaValida(v:string){
  if(!/^\d{4}-\d{2}-\d{2}$/.test(v)||v.startsWith('0000'))return false;
  const d=new Date(v+'T00:00:00Z');return !Number.isNaN(d.getTime())&&d.toISOString().slice(0,10)===v;
 }
+/** Valida también valores parciales antes de aceptar escritura o pegado. No modifica identificadores. */
+export function errorEntradaReferencia(c:CampoReferencia,v:string):string{
+ if(v.length>c.max)return `Máximo ${c.max} ${c.tipo==='numero'?'dígitos':'caracteres'}.`;
+ if(c.tipo==='numero'&&!/^\d*$/.test(v))return 'Ingresa solo números, sin espacios ni signos.';
+ if(c.tipo==='asiento'&&!/^[A-Za-z0-9]*$/.test(v))return 'Ingresa solo letras y números, sin espacios ni signos.';
+ if(c.tipo==='texto'&&!/^[\p{L}\p{M}\p{N} .,'’()&/ºª°-]*$/u.test(v))return 'Usa letras, números, espacios y signos habituales del nombre de la notaría.';
+ if(c.tipo==='fecha'&&v&&!fechaValida(v))return 'Ingresa una fecha válida.';
+ return '';
+}
 export function campoReferenciaValido(c:CampoReferencia,v:string){
- if(!v.trim()||v.length>c.max)return false;
- if(c.tipo==='numero')return /^\d+$/.test(v);
- if(c.tipo==='asiento')return /^[A-Za-z0-9]+$/.test(v);
- if(c.tipo==='fecha')return fechaValida(v);
- return !/[\n\r]/.test(v);
+ return !!v.trim()&&!errorEntradaReferencia(c,v)&&(c.tipo!=='texto'||/\p{L}/u.test(v));
+}
+export function ayudaCampoReferencia(c:CampoReferencia){
+ return c.tipo==='numero'?`Solo números · máximo ${c.max} dígitos.`:
+ c.tipo==='asiento'?`Letras y números · máximo ${c.max} caracteres.`:
+ c.tipo==='fecha'?'Selecciona una fecha válida.':`Nombre de la notaría · máximo ${c.max} caracteres.`;
 }
 export function camposCompletos(d:DocumentoEmpresa){
  const esquema=camposReferencia[d.tipo];return !!esquema&&!!d.campos&&esquema.every(c=>campoReferenciaValido(c,d.campos![c.id]||''));

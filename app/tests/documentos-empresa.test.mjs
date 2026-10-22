@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {documentoConCampos,documentoCompleto,guardarDocumento,leerDocumento,resumenDocumento} from '../src/lib/documentosEmpresa.ts';
+import {documentoConCampos,documentoCompleto,guardarDocumento,leerDocumento,resumenDocumento,camposReferencia,errorEntradaReferencia,campoReferenciaValido} from '../src/lib/documentosEmpresa.ts';
 const persona={dni:'00000301',presente:true};
 const muestras=[
  ['partida',{partida:'0012345678',asiento:'A00001'},'Partida 0012345678, asiento A00001'],
@@ -24,3 +24,21 @@ const anterior=JSON.stringify({v:1,tipo:'matricula',ref:'Libro 1, folio 12, asie
 const recuperado=leerDocumento(anterior);assert.equal(recuperado.campos,undefined);assert.equal(documentoCompleto(recuperado),true);assert.equal(JSON.parse(guardarDocumento(recuperado,persona)).ref,JSON.parse(anterior).ref,'Una referencia anterior no se interpreta ni se pierde');
 const cambio=documentoConCampos('constitucion');assert.equal(cambio.referencia,'');assert.equal(documentoCompleto(cambio),false,'Cambiar de tipo exige los datos del nuevo documento');
 console.log('PASS: referencias guiadas, fechas reales, ceros iniciales, campos incompletos, compatibilidad v1 y recuperación sin pérdida.');
+
+// Mismas reglas para escritura, pegado y validación antes de guardar.
+for(const esquema of Object.values(camposReferencia))for(const c of esquema){
+ const valido=c.tipo==='numero'?'0'.repeat(c.max):c.tipo==='asiento'?'A'.repeat(c.max):c.tipo==='fecha'?'2024-02-29':'Á'.repeat(c.max);
+ assert.equal(errorEntradaReferencia(c,valido),'');assert.equal(campoReferenciaValido(c,valido),true);
+ assert.ok(errorEntradaReferencia(c,valido+'1'),'No acepta pegar más del límite');
+ assert.equal(errorEntradaReferencia(c,''),'');assert.equal(campoReferenciaValido(c,''),false,'Borrar se permite, continuar incompleto no');
+ if(c.tipo==='numero')for(const valor of ['123A','-1','1.5','1e3','1 2','12\n34','１２'])assert.ok(errorEntradaReferencia(c,valor));
+ if(c.tipo==='asiento')for(const valor of ['A/01','A 01','A_01','A\n01','Á001'])assert.ok(errorEntradaReferencia(c,valor));
+ if(c.tipo==='texto'){
+  assert.equal(errorEntradaReferencia(c,"Pérez, Núñez & Asociados N.º 2"),'');
+  for(const valor of ['<notaría>','Pérez\nLima','Notaría 💰'])assert.ok(errorEntradaReferencia(c,valor));
+  assert.equal(campoReferenciaValido(c,'123'),false);
+ }
+}
+const largo=JSON.stringify({v:1,tipo:'partida',ref:'Partida 123456789012345, asiento A00001',...persona});
+assert.equal(leerDocumento(largo).campos,undefined);assert.equal(JSON.parse(guardarDocumento(leerDocumento(largo),persona)).ref,JSON.parse(largo).ref,'No recorta referencias ya guardadas');
+console.log('PASS: límites por campo, escritura/pegado inválido, notaría con tildes, borrado y referencias anteriores extensas.');

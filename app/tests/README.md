@@ -48,3 +48,5 @@ Una edición exclusivamente documental se verifica comparando Markdown y Word, e
 `node documentos-empresa.test.mjs` (también incluido en `npm test`) comprueba los cuatro tipos, recuperación de campos al corregir, formato v1 compatible, ceros iniciales, asientos alfanuméricos, fechas de calendario, datos incompletos y conservación de referencias anteriores sin interpretación ambigua. No usa Decolecta ni la base de producción.
 
 Revisión manual tras publicar: seleccionar cada tipo, completar sus campos, volver desde Condiciones para comprobar que se conservan, revisar una solicitud observada con referencia anterior y verificar el espaciado de Solicitudes en escritorio y móvil.
+
+Las pruebas de documentos también verifican los límites de cada campo, rechazo de caracteres inválidos en entradas escritas o pegadas, nombres con tildes, campos vacíos y referencias antiguas más extensas. En navegador, probar pegar valores con letras en partida, signos en asiento y valores demasiado largos: el campo debe conservar el valor previo y explicar el rechazo.

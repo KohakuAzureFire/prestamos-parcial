@@ -80,3 +80,9 @@ Conserva únicamente `docs/REQUISITOS.md`, su Word, este README y `tests/README.
 - Las referencias existentes se recuperan en campos solo si la conversión es exacta; las demás se conservan y muestran una opción explícita para corregirlas. Se mantiene el formato v1 de la evidencia, sin migración de base de datos.
 - Nuevo préstamo ya no muestra el enlace «Ir a clientes». Se conservan la navegación interna y la advertencia al salir con un borrador.
 - Los filtros de Solicitudes tienen separación de la tabla, también en pantallas pequeñas.
+
+### Restricciones de entrada de documentos
+
+Los campos numéricos rechazan letras, espacios, signos y decimales. Los asientos admiten letras y números y se muestran en mayúsculas. Notaría admite nombres con tildes, números y puntuación habitual y exige al menos una letra. El pegado inválido se rechaza completo conservando el valor anterior.
+
+Límites operativos de la interfaz: partida 12 dígitos; escritura 10; libro y folio 6; asiento 10 caracteres; notaría 80. Estos límites no afirman una longitud registral universal. Las referencias guardadas anteriormente se conservan sin recortarlas. Cada campo muestra su ayuda y las fechas se comprueban como fechas reales.
