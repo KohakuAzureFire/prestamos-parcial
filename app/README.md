@@ -39,6 +39,7 @@ Para otra instalación sobre el esquema inicial compatible:
 6. Aplicar `supabase/migrations/20261018210722_retirar_cargos_y_ajustar_contrato.sql`.
 7. Aplicar `supabase/migrations/20261019194843_revision_representacion_ruc20.sql`, con Storage disponible.
 8. Aplicar `supabase/migrations/20261022170855_solicitudes_prestamo_ruc20.sql`.
+9. Aplicar `supabase/migrations/20261022201553_propietario_ausente_pendiente.sql`.
 
 Las migraciones presuponen el esquema inicial; las pruebas lo construyen explícitamente. `scripts/ACTUALIZAR_SISTEMA.sql` es una alternativa acumulada de los ajustes previos de modalidad, fichas y pagos, pero no incluye sesiones. No lo reapliques después del control de sesiones: reemplazaría su autorización central. `docs/archivo/007_no_aplicada.sql` es histórico y no se ejecuta.
 
@@ -52,7 +53,7 @@ RUC 20 recorre Identificación → Documentación → Condiciones → Cronograma
 
 El selector admite copia literal de la empresa, escritura pública de constitución, acto constitutivo de SACS y copia certificada de matrícula de acciones, según el vínculo que debe acreditarse. La referencia identifica el documento; no acredita propiedad por sí misma. El certificado de vigencia de poder SUNARP corresponde al firmante y se presenta aparte como PDF de hasta 5 MB. Los documentos cumplen fines diferentes; el asesor revisa pertinencia, autenticidad y contenido. Este flujo admite firma individual.
 
-Antes del envío no hay cargas ni nuevas altas desde el borrador RUC 20. Al pulsar Enviar solicitud de préstamo comienza la carga privada y la reserva técnica del archivo; el servidor comprueba formato básico y SHA-256 y firma el recibo con `IDENTITY_SIGNING_SECRET`. Una transacción valida identidad, registra personas y empresa cuando corresponde, finaliza el PDF y guarda la solicitud pendiente con monto, plazo y simulación. Un fallo revierte el expediente y las altas; una carga técnica incompleta no aparece como solicitud ni préstamo. Reintentar conserva la clave para evitar duplicados. No se crean préstamos, cuotas cobrables o contratos definitivos al enviar, ni se reserva capital.
+Antes del envío no hay cargas ni nuevas altas desde el borrador RUC 20. Al pulsar Enviar solicitud de préstamo comienza la carga privada y la reserva técnica del archivo; el servidor comprueba formato básico y SHA-256 y firma el recibo con `IDENTITY_SIGNING_SECRET`. Con las identidades verificadas, una transacción valida identidad, registra personas y empresa cuando corresponde, finaliza el PDF y guarda la solicitud pendiente con monto, plazo y simulación. Un fallo revierte el expediente y las altas; una carga técnica incompleta no aparece como solicitud ni préstamo. Reintentar conserva la clave para evitar duplicados. No se crean préstamos, cuotas cobrables o contratos definitivos al enviar, ni se reserva capital.
 
 La pantalla final informa el envío y regresa a Préstamos. La evaluación se abre después desde Solicitudes de préstamo: el asesor contrasta documentos y facultades, registra referencia, firma individual y sustento y aprueba, observa o rechaza. Solo aprobar genera el préstamo y el cronograma desde la fecha de aprobación. Antes consulta nuevamente SUNAT y comprueba identidad vigente, atrasos, conciliación y capital global de S/ 10 000. Un fallo conserva la solicitud pendiente y revierte la aprobación. No se atribuye un plazo legal de caducidad al certificado.
 
@@ -90,3 +91,13 @@ Límites operativos de la interfaz: partida 12 dígitos; escritura 10; libro y f
 Los botones «Corregir DNI del propietario» y «Corregir DNI del representante» aparecen como acciones discretas del encabezado de su tarjeta, con icono de lápiz, texto azul grisáceo y fondo transparente. En móvil se ubican debajo del título. Se conserva la restricción del propietario ya registrado y el comportamiento de corrección del DNI.
 
 La carpeta `docs` mantiene los requisitos y su Word sincronizados, incluidos los ajustes de interfaz y validaciones del 22/10/2026. Antes de cerrar una entrega, comprobar las HU, los criterios, los casos de verificación y los manuales de ejecución y pruebas.
+
+## Propietario ausente pendiente de verificación
+
+La actualización de este flujo requiere aplicar una vez `supabase/migrations/20261022201553_propietario_ausente_pendiente.sql` antes de publicar el código nuevo. No elimina datos ni requiere nuevas variables o dependencias. Incluye `pendiente_identidad` en solicitudes abiertas, permite que el expediente conserve un propietario aún sin ficha verificada y bloquea aprobar mientras falte su verificación presencial. El estado se determina en la base, sin confiar en la etiqueta del navegador.
+
+Nuevo préstamo permite enviar el DNI declarado, documentos, representante verificado, monto y plazo. No inventa nombres ni aprobación del propietario, no crea una empresa nueva sin el vínculo verificado y no reserva cupo. El capital se muestra por comprobar. Si el propietario ya tiene identidad vigente, conserva el recorrido normal.
+
+Desde el detalle de la misma solicitud se verifica el DNI fijo, su caducidad, original y presencia y se guarda expresamente la revisión. La operación consulta SUNAT, registra la identidad y el vínculo empresarial de forma atómica, conserva el certificado y agrega historial. Reintentar no duplica la revisión. Una solicitud observada conserva ese estado; completar identidad no resuelve sus observaciones documentales. Solo la evaluación posterior puede generar el préstamo y repite todos los controles de elegibilidad y capital.
+
+El representante debe usar otro DNI si se eligió un firmante distinto del propietario. La coincidencia se avisa bajo el campo, deshabilita Verificar representante y evita consultar tanto la ficha como el proveedor externo. Al corregirlo se habilita la consulta.

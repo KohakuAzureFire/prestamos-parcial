@@ -80,7 +80,7 @@ El menú del asesor contiene Préstamos, Clientes, Nuevo préstamo, Solicitudes 
 
 Nuevo préstamo conserva su recorrido para DNI y RUC 10. RUC 20 recorre Identificación → Documentación → Condiciones → Cronograma y envío. El borrador, incluido el PDF, permanece en memoria; Atrás conserva datos y abandonar descarta lo no enviado. Solo Enviar solicitud de préstamo guarda el expediente completo como pendiente de evaluación.
 
-El envío RUC 20 registra empresa, personas verificadas, referencia documental, PDF privado hasta 5 MB, monto, plazo y simulación; no genera deuda ni reserva capital. El asesor evalúa después desde Solicitudes de préstamo y puede aprobar, observar o rechazar en su agencia, incluso lo enviado por él. Aprobar exige contrastar autenticidad y firma individual, consultar SUNAT y repetir identidad, elegibilidad y cupo global. Entonces se crea el préstamo y sus cuotas desde la fecha de aprobación; conserva el expediente y su historial.
+El envío RUC 20 guarda el expediente, el PDF privado hasta 5 MB, monto, plazo y simulación; no genera deuda ni reserva capital. Si el propietario ausente es nuevo o su verificación no está vigente, queda Pendiente de verificación del propietario. No crea una identidad aprobada ni una empresa nueva sin ese vínculo; registra al representante verificado y conserva el DNI declarado del propietario. Cuando este acude, el asesor completa la revisión presencial desde la misma solicitud, conserva el PDF y pasa a evaluación; las observaciones documentales previas permanecen. El asesor evalúa después desde Solicitudes de préstamo y puede aprobar, observar o rechazar en su agencia, incluso lo enviado por él. Aprobar exige contrastar autenticidad y firma individual, consultar SUNAT y repetir identidad, elegibilidad y cupo global. Entonces se crea el préstamo y sus cuotas desde la fecha de aprobación; conserva el expediente y su historial.
 
 Desde Clientes se abre la ficha y Solicitar préstamo. Un cliente de otra agencia se recupera en Nuevo préstamo. La revalidación guardada actualiza la ficha compartida sin generar crédito ni eliminar atrasos.
 
@@ -109,6 +109,7 @@ Corregir DNI del propietario y Corregir DNI del representante aparecen junto al 
 | --- | --- |
 | Verificación de identidad | Pendiente, Aprobada, Caducada o Rechazada. Aprobada exige identidad confiable, documento vigente y evidencia suficiente de las condiciones exigidas. |
 | Condición de pago del cliente | Sin atrasos (valor interno habilitado) si no tiene cuotas vencidas impagas; Con atrasos si tiene atraso menor de 12 meses; Extrajudicial si al menos una cuota impaga cumple 12 meses de atraso. Son estados automáticos del grupo, con prioridad de Extrajudicial sobre Con atrasos; un historial incompleto se identifica como Pendiente de conciliación. |
+| Solicitud RUC 20 | Pendiente de verificación del propietario, Pendiente de evaluación, Observada, Rechazada o Aprobada. Una solicitud abierta por RUC entre agencias. La identidad pendiente impide aprobar; completarla no borra observaciones ni genera un préstamo. |
 | Préstamo | Activo mientras quede deuda contractual pendiente; Cancelado por pago total cuando todas sus cuotas estén pagadas. Cancelado no significa anulado. |
 | Cuota | Pendiente antes de vencer o durante su fecha de vencimiento; Vencida desde el día siguiente si no está pagada; Pagada únicamente si existe un cobro confirmado que la cubra. |
 
@@ -234,11 +235,11 @@ Como asesor de ventas, quiero verificar la identidad y vigencia del DNI, para re
 
 - **CA09. SUNAT y alcance:** SUNAT compara razón social, estado, condición y domicilio. Permite guardar consulta firmada sin cambios o con observaciones. No edita datos externos ni revalida DNI, propiedad o facultades; no hay actualización periódica.
 
-- **CA10. Representación:** RUC 20 distingue propietario y firmante presencial; el ausente exige identidad previa vigente. Documentación va en pantalla propia, con campos según el documento, referencia generada automáticamente y certificado SUNARP PDF hasta 5 MB. Los tipos admitidos son concretos y reconocidos. La evaluación posterior admite firma individual; no reasigna propietario.
+- **CA10. Representación:** RUC 20 distingue propietario y firmante presencial. Si el propietario ausente tiene identidad previa vigente, la reutiliza; si es nuevo o requiere revalidación, permite enviar el expediente como pendiente de verificarlo presencialmente. Ese estado bloquea aprobar y crear deuda, incluso por llamada directa. Documentación va en pantalla propia, con campos según el documento, referencia generada automáticamente y certificado SUNARP PDF hasta 5 MB. Los tipos admitidos son concretos y reconocidos. La evaluación posterior admite firma individual; no reasigna propietario.
 
 - **CA11. Referencias guiadas:** Genera la referencia con campos específicos, tipos y límites de Documentación y validaciones de empresas. Rechaza escritura y pegado inválidos; los campos vacíos o inválidos bloquean continuar. Conserva referencias anteriores sin recortarlas.
 
-- **CA12. Corrección visible:** Ubica las acciones Corregir DNI junto al título, con lápiz y estilo discreto adaptable a móvil. Repite verificación y conserva la restricción del propietario ya registrado.
+- **CA12. Corrección visible:** Ubica las acciones Corregir DNI junto al título, con lápiz y estilo discreto adaptable a móvil. Si el DNI del representante coincide con el propietario, muestra un aviso bajo el campo y deshabilita Verificar representante antes de consultar. Otro DNI válido elimina el aviso. Repite verificación y conserva la restricción del propietario ya registrado.
 
 
 ### HU-04 Registrar préstamo
@@ -261,7 +262,7 @@ Como asesor de ventas, quiero registrar el monto y plazo de un cliente elegible,
 
 - **CA07. Plazo y tasa:** Plazo inicial 0; solo enteros de 1 a 60 para continuar. TEA fija del 30 %, no porcentaje plano para cualquier duración.
 
-- **CA08. Confirmación conjunta:** Revisar el cronograma no guarda. Enviar RUC 20 registra expediente y alta conjunta o revierte todo; queda pendiente sin préstamo, contrato definitivo ni cuotas cobrables. Aprobar crea préstamo y cuotas sin duplicados. Firma de consulta mayor de 30 minutos exige renovarla.
+- **CA08. Confirmación conjunta:** Revisar el cronograma no guarda. Enviar RUC 20 registra expediente y las altas verificadas que correspondan, o revierte todo. Si falta verificar al propietario, conserva su DNI como declarado sin crear su ficha aprobada; queda pendiente sin préstamo, contrato definitivo ni cuotas cobrables. Aprobar crea préstamo y cuotas sin duplicados. Firma de consulta mayor de 30 minutos exige renovarla.
 
 - **CA09. Resultado protegido:** El préstamo pertenece a la agencia de sesión y añade allí al titular sin duplicar ficha ni trasladar préstamos. No permite editar ni anular lo confirmado.
 
@@ -317,7 +318,7 @@ Como asesor de ventas, quiero consultar clientes y la cartera de mi agencia, par
 
 - **CA10. Formato de búsqueda:** DNI de ocho dígitos y RUC válido de once. PR- fijo más ocho hexadecimales en mayúsculas; pegar código completo no duplica prefijo. Entrada inválida impide consultar.
 
-- **CA11. Solicitudes de la agencia:** Lista solicitudes RUC 20 por Pendientes, Observadas, Aprobadas, Rechazadas y Todas. Separa los filtros de la tabla y adapta su distribución a pantallas pequeñas; conserva la privacidad por agencia.
+- **CA11. Solicitudes de la agencia:** Lista solicitudes RUC 20 por Pendientes, Por verificar propietario, Observadas, Aprobadas, Rechazadas y Todas. Pendientes reúne las pendientes de evaluación y de identidad. Completar la identidad conserva solicitud, PDF e historial; no aprueba el crédito y respeta las observaciones previas. Separa los filtros de la tabla y adapta su distribución a pantallas pequeñas; conserva la privacidad por agencia.
 
 
 ### HU-07 Registrar pago de cuotas
@@ -384,7 +385,7 @@ La entrega debe demostrar las ocho HU integradas, permisos por agencia, cálculo
 | --- | --- |
 | Acceso y sesiones | Cuenta activa, contador de 15 minutos y renovación válida. Otro navegador reemplaza la sesión; cerrar la anterior no revoca la nueva. |
 | Identidad y representación | RUC 20: corregir DNI antes de enviar; documento concreto, referencia automática y PDF hasta 5 MB. Asesor evalúa después; otra agencia no accede al expediente. RUC 10 sin certificado. |
-| Cliente nuevo y borradores | RUC 20 no guarda antes del envío final. Pendiente sin deuda; observar corrige la misma solicitud y rechazar permite otra. Aprobar crea una sola operación. |
+| Cliente nuevo y borradores | RUC 20 no guarda antes del envío final. Propietario ausente nuevo o vencido permite enviar sin identidad ficticia ni deuda. Aprobar se bloquea hasta verificarlo presencialmente desde la misma solicitud. Se conserva el PDF; observar corrige la misma solicitud y rechazar permite otra. Aprobar crea una sola operación. |
 | Agencias y fichas | Cartera local sin incorporar titulares por cobro ajeno. DNI/RUC 10: ficha en ambos filtros, una fila en Todos. Empresa con ficha y propietario para el límite. |
 | RUC y elegibilidad | RUC observado bloquea ese RUC, sin impedir DNI elegible ni pagos. Aviso de Pagos solo con deuda del RUC exacto. Fallo técnico no es rechazo; revalidar conserva historial y atrasos. |
 | Monto plazo y capital | Solo dígitos, S/ 0.01 hasta el disponible global de S/ 10 000 y de 1 a 60 meses. Pagar libera únicamente el capital amortizado. |
