@@ -1,0 +1,72 @@
+// Base aislada: nunca consulta producción ni consume Decolecta.
+import {db,users,rpc,asUser,proof,secret} from './operaciones.test.mjs';
+import fs from 'node:fs';import assert from 'node:assert/strict';import crypto from 'node:crypto';
+process.argv.push('--serve');const {rucValido}=await import('./ruc.test.mjs');
+try{
+ await db.exec(`create schema storage;create table storage.buckets(id text primary key,name text,public boolean,file_size_limit bigint,allowed_mime_types text[]);
+ create table storage.objects(id uuid primary key default gen_random_uuid(),bucket_id text,name text,metadata jsonb);
+ alter table storage.objects enable row level security;grant usage on schema storage to authenticated;grant select,insert,update,delete on storage.objects to authenticated;`);
+ for(const n of ['20261019194843_revision_representacion_ruc20.sql','20261022170855_solicitudes_prestamo_ruc20.sql'])await db.exec(fs.readFileSync(new URL('../supabase/migrations/'+n,import.meta.url),'utf8'));
+ const uid=users.trujillo; // Cuenta sin autoriza_credito: evalúa como asesor de su propia agencia.
+ const firmado=(d,u=uid)=>{const payload=JSON.stringify({...d,asesor_id:u,consultadoEn:new Date().toISOString()});return {payload,firma:crypto.createHmac('sha256',secret).update(payload).digest('hex')};};
+ const cons=(ruc,u=uid,estado='ACTIVO')=>({ruc,...firmado({tipo:'ruc',ruc,razon_social:'EMPRESA SOLICITUD PRUEBA',estado,condicion:'HABIDO'},u)});
+ const person=(dni,u=uid)=>{const p=proof(dni,u);return {dni,borrador:{consulta:{dni,payload:p.p_payload,firma:p.p_firma},evidencia:p.p_evidencia}};};
+ const ruc=rucValido('2070000001'),owner='70000001',rep='70000002';
+ const datos=(r=ruc,u=uid,signer=rep,own=owner)=>({consulta:cons(r,u),propietario:person(own,u),representante:person(signer,u),propiedad_confirmada:true,evidencia_propiedad:JSON.stringify({v:1,tipo:'partida',ref:'Partida 12345678, asiento A00001',dni:own,presente:true}),evidencia_poder:'Certificado presentado para evaluación'});
+ const count=async()=>(await db.query('select (select count(*) from public.clientes)::int clientes,(select count(*) from public.prestamos)::int prestamos,(select count(*) from public.cuotas)::int cuotas,(select count(*) from public.pagos)::int pagos')).rows[0];
+ const before=await count();
+ const hoy=(await db.query('select public.fecha_peru()::text h')).rows[0].h;
+ async function archivo(d,u=uid){const r=await rpc('reservar_representacion',{p_consulta:d.consulta,p_propietario:d.propietario.dni,p_representante:d.representante.dni,p_nombre:'certificado.pdf',p_bytes:100,p_emision:hoy},u);
+ await asUser(u,tx=>tx.query("insert into storage.objects(bucket_id,name,metadata) values('certificados-representacion',$1,'{\"size\":100,\"mimetype\":\"application/pdf\"}')",[r.archivo_ruta]));
+ const seal=firmado({tipo:'certificado_pdf',id:r.id,ruta:r.archivo_ruta,bytes:100,sha256:'b'.repeat(64)},u);return {r,seal};}
+ async function args(d=datos(),m=5000,u=uid){const {seal}=await archivo(d,u);return {p_datos:d,p_monto:m,p_meses:6,p_clave:crypto.randomUUID(),p_payload:seal.payload,p_firma:seal.firma};}
+ const a=await args();assert.deepEqual(await count(),before,'Antes de enviar no se crea cliente ni préstamo');
+ const id=await rpc('enviar_solicitud',a,uid);assert.equal(await rpc('enviar_solicitud',a,uid),id);
+ let sol=(await db.query('select * from public.solicitudes_prestamo where id=$1',[id])).rows[0];
+ assert.equal(sol.estado,'pendiente');assert.equal((await count()).prestamos,before.prestamos);assert.equal((await count()).cuotas,before.cuotas);assert.equal((await count()).pagos,before.pagos);
+ assert.equal((await rpc('resolver_solicitud_ruc',{p_ruc:ruc},uid)).id,id);
+ const otro=await rpc('resolver_solicitud_ruc',{p_ruc:ruc},users.chimbote);assert.equal(otro.id,null);assert.equal(otro.agencia,'Trujillo');
+ const dup=await args();await assert.rejects(rpc('enviar_solicitud',dup,uid),/Ya existe/);
+ assert.equal((await asUser(users.chimbote,tx=>tx.query('select * from public.solicitudes_resumen where id=$1',[id]))).rows.length,0);
+ const evalArgs=(s=sol,extra={})=>({p_id:s.id,p_version:s.version,p_estado:'aprobada',p_motivo:'Certificado y facultades revisados para el préstamo solicitado',p_consulta:cons(s.ruc),p_referencia:'SUNARP código y asiento comprobados',p_facultades:true,p_individual:true,...extra});
+ await assert.rejects(rpc('evaluar_solicitud',evalArgs(),users.chimbote),/fuera de su agencia/);
+ await assert.rejects(rpc('evaluar_solicitud',evalArgs(sol,{p_facultades:false}),uid),/facultades/);
+ await assert.rejects(rpc('evaluar_solicitud',evalArgs(sol,{p_consulta:cons(ruc,uid,'BAJA')}),uid),/ACTIVO y HABIDO/);
+ await assert.rejects(rpc('confirmar_ruc_prestamo',{p_datos:{...datos(),representacion_id:sol.representacion_id},p_monto:5000,p_meses:6,p_clave:crypto.randomUUID()},uid),/solicitud de préstamo/);
+ await db.query('update public.clientes set dni_caducidad=public.fecha_peru()-1 where id=$1',[sol.representante_id]);
+ await assert.rejects(rpc('evaluar_solicitud',evalArgs(sol),uid),/DNI del representante/);
+ await db.query("update public.clientes set dni_caducidad='2030-12-31' where id=$1",[sol.representante_id]);
+ await assert.rejects(archivo(datos(ruc,uid,rep,'70000009')),/otro propietario/);
+ await rpc('evaluar_solicitud',evalArgs(sol,{p_estado:'observada'}),uid);
+ await assert.rejects(rpc('evaluar_solicitud',evalArgs(),uid),/cambió/);
+ sol=(await db.query('select * from public.solicitudes_prestamo where id=$1',[id])).rows[0];
+ const nuevo=await args(datos(ruc,uid,'70000003'),5000);nuevo.p_id=id;nuevo.p_version=sol.version;
+ assert.equal(await rpc('enviar_solicitud',nuevo,uid),id,'Corregir no crea otra solicitud');
+ sol=(await db.query('select * from public.solicitudes_prestamo where id=$1',[id])).rows[0];assert.equal(sol.estado,'pendiente');assert.equal(sol.expediente.representante.dni,'70000003');assert.notEqual(sol.representacion_id,JSON.parse(a.p_payload).id);
+ const prestamo=await rpc('evaluar_solicitud',evalArgs(sol),uid);assert.ok(prestamo);assert.equal(await rpc('evaluar_solicitud',evalArgs(sol),uid),prestamo);
+ assert.equal((await count()).prestamos,before.prestamos+1);assert.equal((await count()).cuotas,before.cuotas+6);
+ assert.equal((await rpc('resolver_solicitud_ruc',{p_ruc:ruc},uid)),null);
+ // Nueva empresa del mismo propietario: pendiente no reserva cupo; aprobar repite el límite global.
+ const r2=rucValido('2070000002');const b=await args(datos(r2),5000);const id2=await rpc('enviar_solicitud',b,uid);
+ const sol2=(await db.query('select * from public.solicitudes_prestamo where id=$1',[id2])).rows[0];
+ // Un préstamo personal consume el cupo entre envío y evaluación.
+ await rpc('confirmar_prestamo_cotizado',{p_tipo:'dni',p_datos:{cliente_id:sol2.propietario_id},p_monto:100,p_meses:2,p_clave:crypto.randomUUID()},uid);
+ await assert.rejects(rpc('evaluar_solicitud',evalArgs(sol2),uid),/capital disponible/);
+ assert.equal((await db.query('select estado from public.solicitudes_prestamo where id=$1',[id2])).rows[0].estado,'pendiente');
+ await rpc('evaluar_solicitud',evalArgs(sol2,{p_estado:'rechazada'}),uid);
+ assert.ok(await rpc('enviar_solicitud',await args(datos(r2),100),uid),'Tras rechazar permite nueva solicitud');
+ await assert.rejects(asUser(uid,tx=>tx.query("update public.solicitudes_prestamo set estado='aprobada' where id=$1",[id2])),/permission denied/);
+ await assert.rejects(db.query('delete from public.historial_solicitudes where solicitud_id=$1',[id]),/solo lectura/);
+ const cambio=await args(datos(rucValido('2070000003'),uid,rep,'70000004'),100);cambio.p_datos.evidencia_propiedad=JSON.stringify({v:1,tipo:'otro',ref:'cualquier cosa',dni:'70000004',presente:true});
+ const snapshot=await count();await assert.rejects(rpc('enviar_solicitud',cambio,uid),/documento admitido/);assert.deepEqual(await count(),snapshot,'Error revierte datos y archivo finalizado');
+ await db.exec(`create table auth.sessions(id uuid primary key,user_id uuid,created_at timestamptz);
+ create function auth.jwt() returns jsonb language sql stable as $$select nullif(current_setting('request.jwt.claims',true),'')::jsonb$$;grant execute on function auth.jwt() to authenticated;`);
+ await db.exec(fs.readFileSync(new URL('../scripts/control_sesiones.sql',import.meta.url),'utf8'));
+ await assert.rejects(rpc('resolver_solicitud_ruc',{p_ruc:r2},uid),/Sesión no disponible/);
+ const sid=crypto.randomUUID();await db.query('insert into auth.sessions values($1,$2,clock_timestamp())',[sid,uid]);
+ assert.equal((await rpc('control_sesion',{p_accion:'iniciar'},uid,sid)).ok,true);
+ assert.ok((await asUser(uid,tx=>tx.query('select id from public.solicitudes_resumen'),sid)).rows.length);
+ await db.query("update private.sesiones_asesor set ultima_actividad=clock_timestamp()-interval '16 minutes' where asesor_id=$1",[uid]);
+ await assert.rejects(rpc('evaluar_solicitud',evalArgs(sol),uid,sid),/Sesión no disponible/);
+ console.log('PASS: envío completo atómico, sin préstamos pendientes cobrables, documentos, asesor sin privilegios extra, RLS, duplicados entre agencias, observación/corrección, rechazo, aprobación idempotente y cupo global actualizado.');
+}finally{await db.close();}

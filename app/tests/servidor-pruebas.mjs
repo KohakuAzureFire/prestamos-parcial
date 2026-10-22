@@ -1,6 +1,6 @@
 // Servidor local de verificación: PGlite aislado; nunca conecta al proyecto real.
 import {db,users,asUser,rpc,secret} from './operaciones.test.mjs';import fs from 'node:fs';import http from 'node:http';import {randomUUID} from 'node:crypto';
-for(const n of fs.readdirSync(new URL('../supabase/migrations/',import.meta.url)).sort().filter(n=>!n.startsWith('20261019')&&!n.startsWith('20261018')&&!n.startsWith('20261016054059')&&!n.startsWith('20261016060800')))await db.exec(fs.readFileSync(new URL('../supabase/migrations/'+n,import.meta.url),'utf8'));
+for(const n of fs.readdirSync(new URL('../supabase/migrations/',import.meta.url)).sort().filter(n=>!n.startsWith('20261022')&&!n.startsWith('20261019')&&!n.startsWith('20261018')&&!n.startsWith('20261016054059')&&!n.startsWith('20261016060800')))await db.exec(fs.readFileSync(new URL('../supabase/migrations/'+n,import.meta.url),'utf8'));
 await db.exec(fs.readFileSync(new URL('../scripts/habilitar_modalidad_personal.sql',import.meta.url),'utf8'));
 await db.exec(fs.readFileSync(new URL('../scripts/revalidacion_y_pagos_globales.sql',import.meta.url),'utf8'));
 await db.exec(fs.readFileSync(new URL('../scripts/fichas_compartidas_y_grupo_pago.sql',import.meta.url),'utf8'));

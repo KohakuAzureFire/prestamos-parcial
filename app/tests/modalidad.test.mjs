@@ -2,7 +2,7 @@ import {db,users,rpc,proof,runTests} from './operaciones.test.mjs';
 import fs from 'node:fs';import crypto from 'node:crypto';import assert from 'node:assert/strict';
 import {camposContrato} from '../src/lib/contrato.ts';
 await runTests();
-for(const n of fs.readdirSync(new URL('../supabase/migrations/',import.meta.url)).sort().filter(n=>!n.startsWith('20261019')&&!n.startsWith('20261018')&&!n.startsWith('20261016054059')&&!n.startsWith('20261016060800')))await db.exec(fs.readFileSync(new URL('../supabase/migrations/'+n,import.meta.url),'utf8'));
+for(const n of fs.readdirSync(new URL('../supabase/migrations/',import.meta.url)).sort().filter(n=>!n.startsWith('20261022')&&!n.startsWith('20261019')&&!n.startsWith('20261018')&&!n.startsWith('20261016054059')&&!n.startsWith('20261016060800')))await db.exec(fs.readFileSync(new URL('../supabase/migrations/'+n,import.meta.url),'utf8'));
 await db.exec(fs.readFileSync(new URL('../scripts/habilitar_modalidad_personal.sql',import.meta.url),'utf8'));
 await db.exec(fs.readFileSync(new URL('../supabase/migrations/20261018210722_retirar_cargos_y_ajustar_contrato.sql',import.meta.url),'utf8'));
 await rpc('confirmar_cliente_prestamo',{...proof('40027174',users.chimbote),p_monto:500,p_meses:2,p_clave:crypto.randomUUID()});

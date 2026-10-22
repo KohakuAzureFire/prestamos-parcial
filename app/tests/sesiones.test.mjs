@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import assert from 'node:assert/strict';
 import { randomUUID } from 'node:crypto';
 try {
- for(const n of fs.readdirSync(new URL('../supabase/migrations/',import.meta.url)).sort().filter(n=>!n.startsWith('20261019')&&!n.startsWith('20261018')&&!n.startsWith('20261016054059')&&!n.startsWith('20261016060800')))await db.exec(fs.readFileSync(new URL('../supabase/migrations/'+n,import.meta.url),'utf8'));
+ for(const n of fs.readdirSync(new URL('../supabase/migrations/',import.meta.url)).sort().filter(n=>!n.startsWith('20261022')&&!n.startsWith('20261019')&&!n.startsWith('20261018')&&!n.startsWith('20261016054059')&&!n.startsWith('20261016060800')))await db.exec(fs.readFileSync(new URL('../supabase/migrations/'+n,import.meta.url),'utf8'));
  for(const n of ['habilitar_modalidad_personal.sql','revalidacion_y_pagos_globales.sql','fichas_compartidas_y_grupo_pago.sql'])await db.exec(fs.readFileSync(new URL('../scripts/'+n,import.meta.url),'utf8'));
 
  await db.exec(`create table auth.sessions(id uuid primary key,user_id uuid,created_at timestamptz);
