@@ -6,7 +6,7 @@ try{
  await db.exec(`create schema storage;create table storage.buckets(id text primary key,name text,public boolean,file_size_limit bigint,allowed_mime_types text[]);
  create table storage.objects(id uuid primary key default gen_random_uuid(),bucket_id text,name text,metadata jsonb);
  alter table storage.objects enable row level security;grant usage on schema storage to authenticated;grant select,insert,update,delete on storage.objects to authenticated;`);
- for(const n of ['20261019194843_revision_representacion_ruc20.sql','20261022170855_solicitudes_prestamo_ruc20.sql'])await db.exec(fs.readFileSync(new URL('../supabase/migrations/'+n,import.meta.url),'utf8'));
+ for(const n of ['20261019194843_revision_representacion_ruc20.sql','20261022170855_solicitudes_prestamo_ruc20.sql','20261022201553_propietario_ausente_pendiente.sql'])await db.exec(fs.readFileSync(new URL('../supabase/migrations/'+n,import.meta.url),'utf8'));
  const uid=users.trujillo; // Cuenta sin autoriza_credito: evalúa como asesor de su propia agencia.
  const firmado=(d,u=uid)=>{const payload=JSON.stringify({...d,asesor_id:u,consultadoEn:new Date().toISOString()});return {payload,firma:crypto.createHmac('sha256',secret).update(payload).digest('hex')};};
  const cons=(ruc,u=uid,estado='ACTIVO')=>({ruc,...firmado({tipo:'ruc',ruc,razon_social:'EMPRESA SOLICITUD PRUEBA',estado,condicion:'HABIDO'},u)});
@@ -59,6 +59,57 @@ try{
  await assert.rejects(db.query('delete from public.historial_solicitudes where solicitud_id=$1',[id]),/solo lectura/);
  const cambio=await args(datos(rucValido('2070000003'),uid,rep,'70000004'),100);cambio.p_datos.evidencia_propiedad=JSON.stringify({v:1,tipo:'otro',ref:'cualquier cosa',dni:'70000004',presente:true});
  const snapshot=await count();await assert.rejects(rpc('enviar_solicitud',cambio,uid),/documento admitido/);assert.deepEqual(await count(),snapshot,'Error revierte datos y archivo finalizado');
+ // Propietario ausente nuevo: guarda solo el expediente, sin inventar una identidad ni empresa.
+ const ru=rucValido('2070000011'),ausente='71000001';
+ const aus=datos(ru);aus.propietario={dni:ausente,nombres:'NOMBRE NO CONFIABLE',identidad_pendiente:false};
+ aus.evidencia_propiedad=JSON.stringify({v:1,tipo:'partida',ref:'Partida 12345678, asiento A00001',dni:ausente,presente:false});
+ const pendienteArgs=await args(aus,100);const antesPendiente=await count();
+ const idAus=await rpc('enviar_solicitud',pendienteArgs,uid);
+ let sa=(await db.query('select * from public.solicitudes_prestamo where id=$1',[idAus])).rows[0];
+ assert.equal(sa.estado,'pendiente_identidad');assert.equal(sa.cliente_id,null);assert.equal(sa.propietario_id,null);
+ assert.equal(sa.expediente.propietario.verificacion_pendiente,true);assert.equal(sa.expediente.propietario.nombres,'Identidad por verificar');
+ assert.deepEqual(await count(),antesPendiente);assert.equal(await rpc('enviar_solicitud',pendienteArgs,uid),idAus);
+ assert.equal((await rpc('resolver_solicitud_ruc',{p_ruc:ru},uid)).id,idAus);
+ assert.equal((await rpc('resolver_solicitud_ruc',{p_ruc:ru},users.chimbote)).id,null);
+ await assert.rejects(rpc('enviar_solicitud',await args(aus,100),uid),/Ya existe/);
+ await assert.rejects(rpc('evaluar_solicitud',evalArgs(sa),uid),/verificación presencial del propietario/);
+ const completar=(x=sa,p=person(ausente),u=uid)=>rpc('completar_propietario_solicitud',{p_id:x.id,p_version:x.version,p_propietario:p,p_consulta:cons(x.ruc,u)},u);
+ await assert.rejects(completar(sa,person(ausente,users.chimbote),users.chimbote),/fuera de su agencia/);
+ await assert.rejects(completar(sa,person('71000002')),/mismo propietario/);
+ const falso=person(ausente);falso.borrador.evidencia.original=false;
+ const antesCompletar=await count();await assert.rejects(completar(sa,falso));assert.deepEqual(await count(),antesCompletar);
+ assert.equal(await completar(),idAus);
+ sa=(await db.query('select * from public.solicitudes_prestamo where id=$1',[idAus])).rows[0];
+ assert.equal(sa.estado,'pendiente');assert.equal(sa.expediente.propietario.verificacion_pendiente,false);assert.ok(sa.propietario_id);assert.ok(sa.cliente_id);
+ assert.equal(sa.representacion_id,JSON.parse(pendienteArgs.p_payload).id);assert.equal((await count()).prestamos,antesCompletar.prestamos);
+ assert.equal(await completar(),idAus,'Reintentar no agrega otra verificación');
+ const auditAus=(await db.query('select expediente from public.historial_solicitudes where solicitud_id=$1 order by created_at',[idAus])).rows;
+ assert.equal(auditAus[0].expediente.propietario.verificacion_pendiente,true);assert.equal(auditAus.at(-1).expediente.propietario.verificacion_pendiente,false);
+ assert.ok(await rpc('evaluar_solicitud',evalArgs(sa),uid));
+ // Un propietario existente con DNI vencido tampoco se vuelve aprobado por enviar.
+ const ru2=rucValido('2070000012');await db.query('update public.clientes set dni_caducidad=public.fecha_peru()-1 where id=$1',[sa.propietario_id]);
+ const aus2=datos(ru2);aus2.propietario={dni:ausente};aus2.evidencia_propiedad=aus.evidencia_propiedad;
+ const idExp=await rpc('enviar_solicitud',await args(aus2,100),uid);
+ let se=(await db.query('select * from public.solicitudes_prestamo where id=$1',[idExp])).rows[0];assert.equal(se.estado,'pendiente_identidad');
+ assert.equal((await rpc('resolver_cliente',{p_dni:ausente},uid)).verificacion_identidad,'caducada');
+ await rpc('evaluar_solicitud',evalArgs(se,{p_estado:'observada'}),uid);
+ se=(await db.query('select * from public.solicitudes_prestamo where id=$1',[idExp])).rows[0];
+ await assert.rejects(rpc('evaluar_solicitud',evalArgs(se),uid),/verificación presencial/);
+ await completar(se);se=(await db.query('select * from public.solicitudes_prestamo where id=$1',[idExp])).rows[0];
+ assert.equal(se.estado,'observada','Completar identidad no elimina las observaciones documentales');
+ assert.equal(se.expediente.propietario.verificacion_pendiente,false);
+ // Representante nuevo: solo su identidad se registra al enviar.
+ const a3=datos(rucValido('2070000013'),uid,'71000003');a3.propietario={dni:'71000004'};
+ a3.evidencia_propiedad=JSON.stringify({v:1,tipo:'partida',ref:'Partida 12345678, asiento A00001',dni:'71000004',presente:false});
+ const ap3=await args(a3,100);const count3=await count();const id3=await rpc('enviar_solicitud',ap3,uid);
+ assert.equal((await count()).clientes,count3.clientes+1);
+ const sp3=(await db.query('select * from public.solicitudes_prestamo where id=$1',[id3])).rows[0];
+ assert.equal(sp3.cliente_id,null);assert.equal(sp3.propietario_id,null);assert.ok(sp3.representante_id);
+ await rpc('evaluar_solicitud',evalArgs(sp3,{p_estado:'rechazada'}),uid);
+ assert.ok(await rpc('enviar_solicitud',await args(a3,100),uid));
+ assert.equal((await db.query("select has_function_privilege('anon','public.completar_propietario_solicitud(uuid,integer,jsonb,jsonb)','execute') permiso")).rows[0].permiso,false);
+ assert.equal((await db.query("select has_table_privilege('authenticated','public.solicitudes_prestamo','update') permiso")).rows[0].permiso,false);
+ console.log('PASS: propietario ausente nuevo/vencido, sin alta falsa, bloqueo de aprobación, verificación presencial, PDF conservado, misma solicitud, RLS e historial.');
  await db.exec(`create table auth.sessions(id uuid primary key,user_id uuid,created_at timestamptz);
  create function auth.jwt() returns jsonb language sql stable as $$select nullif(current_setting('request.jwt.claims',true),'')::jsonb$$;grant execute on function auth.jwt() to authenticated;`);
  await db.exec(fs.readFileSync(new URL('../scripts/control_sesiones.sql',import.meta.url),'utf8'));
