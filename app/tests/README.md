@@ -11,7 +11,7 @@ npm.cmd ci
 npm test
 ```
 
-`npm test` ejecuta `agencias.test.mjs`, `borradores.test.mjs`, `ruc.test.mjs` , `representaciones.test.mjs` y `solicitudes.test.mjs`: cartera por agencia, identidad, alta conjunta, rollback, firmas, capital global, pagos sin recargos, atrasos e idempotencia.
+`npm test` ejecuta `documentos-empresa.test.mjs`, `agencias.test.mjs`, `borradores.test.mjs`, `ruc.test.mjs` , `representaciones.test.mjs` y `solicitudes.test.mjs`: cartera por agencia, identidad, alta conjunta, rollback, firmas, capital global, pagos sin recargos, atrasos e idempotencia.
 
 `ruc.test.mjs` aplica el retiro final y comprueba que no queden columnas, funciones o parámetros de recargos, que el importe atrasado sea la cuota original y que el aviso de Pagos dependa de deuda pendiente del RUC exacto. También comprueba la reaplicación del SQL.
 
@@ -50,3 +50,5 @@ Una edición exclusivamente documental se verifica comparando Markdown y Word, e
 Revisión manual tras publicar: seleccionar cada tipo, completar sus campos, volver desde Condiciones para comprobar que se conservan, revisar una solicitud observada con referencia anterior y verificar el espaciado de Solicitudes en escritorio y móvil.
 
 Las pruebas de documentos también verifican los límites de cada campo, rechazo de caracteres inválidos en entradas escritas o pegadas, nombres con tildes, campos vacíos y referencias antiguas más extensas. En navegador, probar pegar valores con letras en partida, signos en asiento y valores demasiado largos: el campo debe conservar el valor previo y explicar el rechazo.
+
+Para la revisión visual, comprobar que Corregir DNI del propietario y del representante esté junto al título, con lápiz, fondo transparente y foco visible; en móvil, debajo del título. No debe aparecer Ir a clientes en Nuevo préstamo. Los filtros de Solicitudes deben quedar separados de la tabla. Estos casos forman parte de los requisitos y su Word.

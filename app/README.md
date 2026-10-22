@@ -27,7 +27,7 @@ Para verificar código: `npm.cmd run lint` y `npm.cmd run build`. Para servir la
 
 ## Base de datos
 
-Esta actualización prepara solicitudes completas de préstamo RUC 20. En el proyecto existente, que ya tiene revisión de representación, se ejecuta una sola vez `supabase/migrations/20261022170855_solicitudes_prestamo_ruc20.sql`, coordinado con la publicación del código. Crea solicitudes e historial, RLS y funciones para enviar y evaluar; conserva clientes, préstamos y pagos existentes. No reapliques SQL antiguos sobre la base actualizada. No requiere nuevas variables ni dependencias.
+El esquema vigente admite solicitudes completas de préstamo RUC 20. Su instalación inicial utiliza una sola vez `supabase/migrations/20261022170855_solicitudes_prestamo_ruc20.sql`, coordinado con la publicación del código. Crea solicitudes e historial, RLS y funciones para enviar y evaluar; conserva clientes, préstamos y pagos existentes. No reapliques SQL antiguos sobre la base actualizada. No requiere nuevas variables ni dependencias.
 
 Para otra instalación sobre el esquema inicial compatible:
 
@@ -68,9 +68,9 @@ La consulta DNI obtiene nombres; caducidad y presencia se acreditan mediante rev
 
 ## Publicación
 
-El usuario publica en GitHub y la integración de Vercel despliega `main`. Vercel usa `app` como raíz y las cuatro variables del entorno correspondiente. Verifica la compilación, el login, las rutas protegidas y un recorrido autorizado. No registres operaciones reales para comprobar una edición documental.
+El usuario publica en GitHub. Se verifica el commit exacto de `main` y su despliegue en Vercel; si la integración no lo dispara, se crea el despliegue desde ese commit. Vercel usa `app` como raíz y las cuatro variables del entorno correspondiente. Verifica la compilación, el login, las rutas protegidas y un recorrido autorizado. No registres operaciones reales para comprobar una edición documental.
 
-Prepara estos commits en una rama de trabajo. La migración y la publicación de `main` requieren coordinación: el código de representación necesita las nuevas tablas y el bucket. La entrega del ZIP no implica haber aplicado SQL ni haber desplegado en Supabase o Vercel.
+Para una instalación nueva, coordina el esquema de solicitudes y la publicación de código. Los ajustes de campos, navegación, filtros y botones del 22/10/2026 no requieren SQL adicional. Una actualización exclusivamente documental tampoco requiere cambios de Supabase ni redeploy de Vercel. La entrega de un ZIP por sí sola no acredita su publicación.
 
 Conserva únicamente `docs/REQUISITOS.md`, su Word, este README y `tests/README.md` como documentación del sistema. El contrato original y las plantillas permanecen. `AGENTS.md` contiene instrucciones de desarrollo generadas por Next.js y no forma parte de los tres Markdown de documentación.
 
@@ -88,3 +88,5 @@ Los campos numéricos rechazan letras, espacios, signos y decimales. Los asiento
 Límites operativos de la interfaz: partida 12 dígitos; escritura 10; libro y folio 6; asiento 10 caracteres; notaría 80. Estos límites no afirman una longitud registral universal. Las referencias guardadas anteriormente se conservan sin recortarlas. Cada campo muestra su ayuda y las fechas se comprueban como fechas reales.
 
 Los botones «Corregir DNI del propietario» y «Corregir DNI del representante» aparecen como acciones discretas del encabezado de su tarjeta, con icono de lápiz, texto azul grisáceo y fondo transparente. En móvil se ubican debajo del título. Se conserva la restricción del propietario ya registrado y el comportamiento de corrección del DNI.
+
+La carpeta `docs` mantiene los requisitos y su Word sincronizados, incluidos los ajustes de interfaz y validaciones del 22/10/2026. Antes de cerrar una entrega, comprobar las HU, los criterios, los casos de verificación y los manuales de ejecución y pruebas.

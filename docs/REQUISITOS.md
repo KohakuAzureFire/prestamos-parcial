@@ -70,7 +70,7 @@ Los préstamos anteriores requieren capital, cronograma y pagos conciliados. La 
 | Préstamos | Cartera local; estado, tipo de titular y búsqueda exacta por DNI/RUC/PR-. Documento, cliente o razón social, fecha, monto, plazo, estado y detalle. |
 | Clientes | Titulares con préstamos confirmados locales, incluidos pagados. Filtros Todos/Personas/Negocios y empresas. DNI/RUC 10 aparece con DNI en Personas y con RUC en Negocios y empresas; Todos reúne ambos en una fila. |
 | Ficha del cliente | Identificación, condición, capital global y vínculos. Solicitar préstamo, Revalidar datos, Consultar para pagar y Ver historial. Historial en página aparte, sin tabla de préstamos. |
-| Nuevo préstamo | DNI/RUC 10: Cliente → Condiciones → Cronograma. RUC 20 añade Documentación tras identificar. Tipo fijo después del paso 1; Atrás conserva el borrador. |
+| Nuevo préstamo | DNI/RUC 10: Cliente → Condiciones → Cronograma. RUC 20 añade Documentación tras identificar. Tipo fijo después del paso 1; Atrás conserva el borrador. Sin enlace Ir a clientes dentro del formulario. |
 | Detalle del préstamo | Total a pagar, pagado y saldo; tasas, estado, cuotas e historial. Menús Cronograma y Contrato. Registrar pago carga ese préstamo fijo. |
 | Pagos | Consulta dirigida al grupo entre agencias por DNI/RUC o a un préstamo por PR-. Desde ficha fija documento; desde detalle fija préstamo. Regreso al origen y cobro individual. |
 
@@ -85,6 +85,23 @@ El envío RUC 20 registra empresa, personas verificadas, referencia documental, 
 Desde Clientes se abre la ficha y Solicitar préstamo. Un cliente de otra agencia se recupera en Nuevo préstamo. La revalidación guardada actualiza la ficha compartida sin generar crédito ni eliminar atrasos.
 
 Cobranza: Pagos → consultar DNI/RUC/PR- → elegir préstamo → revisar cuotas y origen → confirmar dinero recibido y cobro → constancia. Desde ficha o detalle consulta automáticamente y conserva el contexto.
+
+## Documentación y validaciones de empresas
+
+El asesor selecciona el documento que sustenta el vínculo e ingresa solo sus datos variables. Copia literal: partida y asiento; escritura pública: número, fecha y notaría; acto constitutivo SACS: partida y fecha; matrícula de acciones: libro, folio y asiento de titularidad. El sistema construye la referencia completa y no exige escribir sus etiquetas.
+
+| Campo | Entrada admitida | Máximo |
+| --- | --- | --- |
+| Partida | Solo números; conserva ceros iniciales. | 12 dígitos |
+| Escritura | Solo números; conserva ceros iniciales. | 10 dígitos |
+| Libro y folio | Solo números; conserva ceros iniciales. | 6 dígitos cada uno |
+| Asiento | Letras y números; se muestra en mayúsculas. | 10 caracteres |
+| Notaría | Nombre con tildes, números y signos habituales; al menos una letra. | 80 caracteres |
+| Fecha | Fecha real de calendario con año de cuatro dígitos. | Formato de fecha |
+
+Los límites anteriores son decisiones operativas del formulario y no describen una longitud registral universal. Escribir caracteres no admitidos o pegar un valor inválido no reemplaza el dato válido anterior; el formulario muestra el motivo. Un pegado demasiado largo se rechaza completo. Los campos vacíos o inválidos impiden continuar. Las referencias previas solo se separan en campos cuando la conversión es exacta; las demás se conservan completas y ofrecen Corregir datos del documento, sin recorte automático.
+
+Corregir DNI del propietario y Corregir DNI del representante aparecen junto al título de su tarjeta, con lápiz, texto azul grisáceo, fondo transparente y foco de teclado visible. En móvil se acomodan debajo del título. La corrección vuelve a verificar la identidad y descarta el PDF asociado; la empresa registrada conserva el propietario del límite. Los filtros de Solicitudes de préstamo se separan de la tabla y se distribuyen en varias líneas cuando falta espacio.
 
 ## Estados y datos que deben conservarse
 
@@ -217,7 +234,12 @@ Como asesor de ventas, quiero verificar la identidad y vigencia del DNI, para re
 
 - **CA09. SUNAT y alcance:** SUNAT compara razón social, estado, condición y domicilio. Permite guardar consulta firmada sin cambios o con observaciones. No edita datos externos ni revalida DNI, propiedad o facultades; no hay actualización periódica.
 
-- **CA10. Representación:** RUC 20 distingue propietario y firmante presencial; el ausente exige identidad previa vigente. Documentación va en pantalla propia, con referencia del documento y certificado SUNARP PDF hasta 5 MB. Los tipos admitidos son concretos y reconocidos. La evaluación posterior admite firma individual; no reasigna propietario.
+- **CA10. Representación:** RUC 20 distingue propietario y firmante presencial; el ausente exige identidad previa vigente. Documentación va en pantalla propia, con campos según el documento, referencia generada automáticamente y certificado SUNARP PDF hasta 5 MB. Los tipos admitidos son concretos y reconocidos. La evaluación posterior admite firma individual; no reasigna propietario.
+
+- **CA11. Referencias guiadas:** Genera la referencia con campos específicos, tipos y límites de Documentación y validaciones de empresas. Rechaza escritura y pegado inválidos; los campos vacíos o inválidos bloquean continuar. Conserva referencias anteriores sin recortarlas.
+
+- **CA12. Corrección visible:** Ubica las acciones Corregir DNI junto al título, con lápiz y estilo discreto adaptable a móvil. Repite verificación y conserva la restricción del propietario ya registrado.
+
 
 ### HU-04 Registrar préstamo
 
@@ -243,7 +265,7 @@ Como asesor de ventas, quiero registrar el monto y plazo de un cliente elegible,
 
 - **CA09. Resultado protegido:** El préstamo pertenece a la agencia de sesión y añade allí al titular sin duplicar ficha ni trasladar préstamos. No permite editar ni anular lo confirmado.
 
-- **CA10. Pasos y regreso:** Tipo modificable solo en identificación. RUC 20 añade Documentación sin Ver solicitudes ni Actualizar revisión; Atrás conserva el borrador. Corregir DNI descarta el PDF ligado a esa selección. DNI/RUC 10 conserva su navegación.
+- **CA10. Pasos y regreso:** Tipo modificable solo en identificación. RUC 20 añade Documentación sin Ver solicitudes ni Actualizar revisión; el formulario no muestra Ir a clientes. Atrás conserva el borrador y la salida voluntaria por los enlaces protegidos advierte sobre datos pendientes. Corregir DNI descarta el PDF ligado a esa selección. DNI/RUC 10 conserva su navegación.
 
 ### HU-05 Generar y entregar cronograma
 
@@ -294,6 +316,9 @@ Como asesor de ventas, quiero consultar clientes y la cartera de mi agencia, par
 - **CA09. Documento y resultados vacíos:** Recupera documentos sin alterar el préstamo. Una búsqueda vacía informa que no hay coincidencias, sin mostrar registros ajenos.
 
 - **CA10. Formato de búsqueda:** DNI de ocho dígitos y RUC válido de once. PR- fijo más ocho hexadecimales en mayúsculas; pegar código completo no duplica prefijo. Entrada inválida impide consultar.
+
+- **CA11. Solicitudes de la agencia:** Lista solicitudes RUC 20 por Pendientes, Observadas, Aprobadas, Rechazadas y Todas. Separa los filtros de la tabla y adapta su distribución a pantallas pequeñas; conserva la privacidad por agencia.
+
 
 ### HU-07 Registrar pago de cuotas
 
@@ -358,7 +383,7 @@ La entrega debe demostrar las ocho HU integradas, permisos por agencia, cálculo
 | Caso | Resultado esperado |
 | --- | --- |
 | Acceso y sesiones | Cuenta activa, contador de 15 minutos y renovación válida. Otro navegador reemplaza la sesión; cerrar la anterior no revoca la nueva. |
-| Identidad y representación | RUC 20: corregir DNI antes de enviar; documento concreto, referencia y PDF hasta 5 MB. Asesor evalúa después; otra agencia no accede al expediente. RUC 10 sin certificado. |
+| Identidad y representación | RUC 20: corregir DNI antes de enviar; documento concreto, referencia automática y PDF hasta 5 MB. Asesor evalúa después; otra agencia no accede al expediente. RUC 10 sin certificado. |
 | Cliente nuevo y borradores | RUC 20 no guarda antes del envío final. Pendiente sin deuda; observar corrige la misma solicitud y rechazar permite otra. Aprobar crea una sola operación. |
 | Agencias y fichas | Cartera local sin incorporar titulares por cobro ajeno. DNI/RUC 10: ficha en ambos filtros, una fila en Todos. Empresa con ficha y propietario para el límite. |
 | RUC y elegibilidad | RUC observado bloquea ese RUC, sin impedir DNI elegible ni pagos. Aviso de Pagos solo con deuda del RUC exacto. Fallo técnico no es rechazo; revalidar conserva historial y atrasos. |
@@ -369,3 +394,5 @@ La entrega debe demostrar las ocho HU integradas, permisos por agencia, cálculo
 | Concurrencia y reintentos | No excede capital ni duplica cobros o solicitudes. Aprobar revalida cupo sin reservarlo al enviar y rechaza versiones obsoletas; reintentar no duplica. |
 | Atrasos y regularización | Prueba vencimiento, día siguiente y doce meses. Regularizar no anticipa cuotas futuras; conserva antecedente y exige autorización especial para nuevo crédito. |
 | Conciliación y cierre | Un historial incompleto bloquea nuevas colocaciones; cancelar exige pago total. Pagar no elimina identidad ni su caducidad, y quedan historial y constancias. |
+| Referencias y restricciones | Elegir los cuatro documentos, comprobar campos y límites, conservar ceros y convertir asiento a mayúsculas. Rechazar letras en números, signos en asiento y pegado excesivo; aceptar notaría con tildes y fecha real. Retomar una referencia anterior sin recortarla. |
+| Interfaz y conservación del flujo | Sin Ir a clientes en Nuevo préstamo. Atrás conserva personas, documentos, PDF y condiciones; corregir DNI invalida el PDF. Botones junto al título y adaptables a móvil; filtros separados de la tabla de Solicitudes. |
