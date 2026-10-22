@@ -1,8 +1,9 @@
 export interface DocumentoEmpresa{tipo:string;referencia:string}
 export const documentoVacio=():DocumentoEmpresa=>({tipo:'',referencia:''});
-export const tiposPropiedad=[['partida','Partida registral'],['constitucion','Escritura o acto constitutivo'],['designacion','Designación documentada del responsable'],['otro','Otro documento'],['anterior','Documento previamente registrado']] as const;
+export const tiposPropiedad=[['partida','Copia literal de la partida de la empresa'],['constitucion','Escritura pública de constitución'],['acto','Acto constitutivo de SACS'],['matricula','Copia certificada del libro de matrícula de acciones']] as const;
 export const tiposPoder=[['vigencia','Vigencia de poder'],['poder','Poder inscrito o partida registral'],['otro','Otro documento'],['anterior','Documento previamente registrado']] as const;
 const todos=new Map<string,string>([...tiposPropiedad,...tiposPoder]);
+export const ejemploReferencia=(tipo:string)=>tipo==='constitucion'?'Ej.: Escritura 245, 15/03/2026, Notaría Pérez':tipo==='acto'?'Ej.: Acto constitutivo SACS, partida 12345678, 15/03/2026':tipo==='matricula'?'Ej.: Libro 1, folio 12, asiento de titularidad':'Ej.: Partida 12345678, asiento A00001';
 export function leerDocumento(texto?:string|null):DocumentoEmpresa{
  if(!texto)return documentoVacio();
  try{const d=JSON.parse(texto);if(d.v===1&&typeof d.tipo==='string'&&todos.has(d.tipo)&&typeof d.ref==='string'&&d.ref.length<=240)return {tipo:d.tipo,referencia:d.ref};}catch{}
