@@ -11,7 +11,7 @@ npm.cmd ci
 npm test
 ```
 
-`npm test` ejecuta `documentos-empresa.test.mjs`, `agencias.test.mjs`, `borradores.test.mjs`, `ruc.test.mjs` , `representaciones.test.mjs` y `solicitudes.test.mjs`: cartera por agencia, identidad, alta conjunta, rollback, firmas, capital global, pagos sin recargos, atrasos e idempotencia.
+`npm test` ejecuta `documentos-empresa.test.mjs`, `agencias.test.mjs`, `borradores.test.mjs`, `ruc.test.mjs` , `representaciones.test.mjs` , `solicitudes.test.mjs` y `contrato.test.mjs`: cartera por agencia, identidad, alta conjunta, rollback, firmas, capital global, pagos sin recargos, atrasos e idempotencia.
 
 `ruc.test.mjs` aplica el retiro final y comprueba que no queden columnas, funciones o parámetros de recargos, que el importe atrasado sea la cuota original y que el aviso de Pagos dependa de deuda pendiente del RUC exacto. También comprueba la reaplicación del SQL.
 
@@ -62,3 +62,11 @@ Revisión en navegador: con otro representante seleccionado, escribir el DNI del
 ### Regresión: guardar la verificación del propietario
 
 `solicitudes.test.mjs` ejecuta la ruta real de completar propietario con proveedor y sesión simulados, conectada a la base aislada. Comprueba la respuesta HTTP 200, la vinculación del propietario, el certificado conservado y la ausencia de un préstamo nuevo. Detecta la omisión de `p_consulta.ruc` que provocaba «RUC o solicitud inválida». La API toma ese RUC de la solicitud guardada y mantiene su comprobación contra la consulta firmada. No consulta Decolecta ni producción.
+
+## Evaluación guiada y contratos
+
+La suite de solicitudes aplica `20261022205543_simplificar_evaluacion_contrato_ruc20.sql`. Prueba aprobación sin observaciones por SQL y por la ruta real, motivo obligatorio al observar o rechazar, código inválido rechazado antes del proveedor, ceros iniciales, referencia del expediente conservada y registro de revisor y fecha. Conserva pruebas de agencia, sesión, verificación pendiente, facultades, firma individual, cupo e idempotencia.
+
+`contrato.test.mjs` forma parte de `npm test`. Verifica Word e impresión, razón social, firma con nombre/DNI/calidad, ambos casos RUC 20, DNI y RUC 10, falta de copia del representante y documento hasta firmas. La suite SQL comprueba la copia contractual de préstamos aprobados con propietario que firma o representante distinto y que cambios posteriores en la ficha no alteren los campos originales.
+
+Para generar ejemplos ficticios de revisión visual: `CONTRATOS_PRUEBA_DIR=/ruta/temporal node contrato.test.mjs`. Son archivos de QA; no se incluyen como contratos reales ni se cargan a producción.
