@@ -73,3 +73,10 @@ El usuario publica en GitHub y la integración de Vercel despliega `main`. Verce
 Prepara estos commits en una rama de trabajo. La migración y la publicación de `main` requieren coordinación: el código de representación necesita las nuevas tablas y el bucket. La entrega del ZIP no implica haber aplicado SQL ni haber desplegado en Supabase o Vercel.
 
 Conserva únicamente `docs/REQUISITOS.md`, su Word, este README y `tests/README.md` como documentación del sistema. El contrato original y las plantillas permanecen. `AGENTS.md` contiene instrucciones de desarrollo generadas por Next.js y no forma parte de los tres Markdown de documentación.
+
+### Ajustes de interfaz del 22/10/2026
+
+- Documentación de empresa: campos por tipo (partida y asiento; escritura, fecha y notaría; partida y fecha del acto SACS; libro, folio y asiento de matrícula). La referencia se arma automáticamente. Los números conservan ceros iniciales y los asientos admiten letras y números.
+- Las referencias existentes se recuperan en campos solo si la conversión es exacta; las demás se conservan y muestran una opción explícita para corregirlas. Se mantiene el formato v1 de la evidencia, sin migración de base de datos.
+- Nuevo préstamo ya no muestra el enlace «Ir a clientes». Se conservan la navegación interna y la advertencia al salir con un borrador.
+- Los filtros de Solicitudes tienen separación de la tabla, también en pantallas pequeñas.

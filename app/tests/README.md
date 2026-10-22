@@ -42,3 +42,9 @@ Para RUC 20, verifica cuatro pantallas y Atrás sin pérdida del borrador; corre
 Desde `app/tests`, `node servidor-pruebas.mjs --serve` levanta el servicio aislado en `127.0.0.1:54329`, con tokens y sesiones ficticios. Su ruta `/__sesion` permite simular antigüedad para pruebas; no existe en la aplicación publicada. Este servicio no sustituye al proveedor externo ni se despliega a producción.
 
 Una edición exclusivamente documental se verifica comparando Markdown y Word, enlaces, criterios y paginación; no necesita registrar préstamos o cobros.
+
+### Referencias guiadas de documentos
+
+`node documentos-empresa.test.mjs` (también incluido en `npm test`) comprueba los cuatro tipos, recuperación de campos al corregir, formato v1 compatible, ceros iniciales, asientos alfanuméricos, fechas de calendario, datos incompletos y conservación de referencias anteriores sin interpretación ambigua. No usa Decolecta ni la base de producción.
+
+Revisión manual tras publicar: seleccionar cada tipo, completar sus campos, volver desde Condiciones para comprobar que se conservan, revisar una solicitud observada con referencia anterior y verificar el espaciado de Solicitudes en escritorio y móvil.

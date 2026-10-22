@@ -346,3 +346,11 @@ h1{font-size:32px!important;font-weight:750!important;letter-spacing:-.045em!imp
 
 /* Revisión documental de representación: conserva el sistema visual de las fichas. */
 .representation-card .alert p{margin:8px 0}.representation-upload{margin-top:20px;border-top:1px solid var(--border);padding-top:16px}.representation-upload summary{cursor:pointer;font-weight:600;color:var(--text-primary)}.representation-upload[open] summary{margin-bottom:12px}.representation-card input[type=file]{height:auto;padding:10px;max-width:100%}.representation-card .btn{white-space:normal}.representation-card .section-heading{gap:12px;flex-wrap:wrap}.representation-card+.signer-attendance{margin-top:22px}
+
+/* Referencias guiadas y separación de los filtros de solicitudes. */
+.document-fields-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:18px}
+.document-fields-grid .form-group{min-width:0}
+.generated-document-reference,.saved-document-reference{margin:8px 0 20px;padding:14px 16px;background:var(--bg-secondary,#f5f9fc);border:1px solid var(--border);border-radius:8px;overflow-wrap:anywhere}
+.saved-document-reference p{margin-bottom:12px}
+.solicitudes-filtros{margin-bottom:24px;row-gap:12px}
+@media(max-width:760px){.document-fields-grid{grid-template-columns:1fr}.solicitudes-filtros{margin-bottom:20px}}
