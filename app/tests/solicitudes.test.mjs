@@ -1,13 +1,15 @@
 // Base aislada: nunca consulta producción ni consume Decolecta.
 import {db,users,rpc,asUser,proof,secret} from './operaciones.test.mjs';
 import ts from 'typescript';
+import {camposContrato,generarContratoDocx} from '../src/lib/contrato.ts';
+import {errorEvaluacion} from '../src/lib/evaluacionSolicitud.ts';
 import fs from 'node:fs';import assert from 'node:assert/strict';import crypto from 'node:crypto';
 process.argv.push('--serve');const {rucValido}=await import('./ruc.test.mjs');
 try{
  await db.exec(`create schema storage;create table storage.buckets(id text primary key,name text,public boolean,file_size_limit bigint,allowed_mime_types text[]);
  create table storage.objects(id uuid primary key default gen_random_uuid(),bucket_id text,name text,metadata jsonb);
  alter table storage.objects enable row level security;grant usage on schema storage to authenticated;grant select,insert,update,delete on storage.objects to authenticated;`);
- for(const n of ['20261019194843_revision_representacion_ruc20.sql','20261022170855_solicitudes_prestamo_ruc20.sql','20261022201553_propietario_ausente_pendiente.sql'])await db.exec(fs.readFileSync(new URL('../supabase/migrations/'+n,import.meta.url),'utf8'));
+ for(const n of ['20261019194843_revision_representacion_ruc20.sql','20261022170855_solicitudes_prestamo_ruc20.sql','20261022201553_propietario_ausente_pendiente.sql','20261022205543_simplificar_evaluacion_contrato_ruc20.sql'])await db.exec(fs.readFileSync(new URL('../supabase/migrations/'+n,import.meta.url),'utf8'));
  const uid=users.trujillo; // Cuenta sin autoriza_credito: evalúa como asesor de su propia agencia.
  const firmado=(d,u=uid)=>{const payload=JSON.stringify({...d,asesor_id:u,consultadoEn:new Date().toISOString()});return {payload,firma:crypto.createHmac('sha256',secret).update(payload).digest('hex')};};
  const cons=(ruc,u=uid,estado='ACTIVO')=>({ruc,...firmado({tipo:'ruc',ruc,razon_social:'EMPRESA SOLICITUD PRUEBA',estado,condicion:'HABIDO'},u)});
@@ -29,7 +31,7 @@ try{
  const otro=await rpc('resolver_solicitud_ruc',{p_ruc:ruc},users.chimbote);assert.equal(otro.id,null);assert.equal(otro.agencia,'Trujillo');
  const dup=await args();await assert.rejects(rpc('enviar_solicitud',dup,uid),/Ya existe/);
  assert.equal((await asUser(users.chimbote,tx=>tx.query('select * from public.solicitudes_resumen where id=$1',[id]))).rows.length,0);
- const evalArgs=(s=sol,extra={})=>({p_id:s.id,p_version:s.version,p_estado:'aprobada',p_motivo:'Certificado y facultades revisados para el préstamo solicitado',p_consulta:cons(s.ruc),p_referencia:'SUNARP código y asiento comprobados',p_facultades:true,p_individual:true,...extra});
+ const evalArgs=(s=sol,extra={})=>({p_id:s.id,p_version:s.version,p_estado:'aprobada',p_motivo:'Certificado y facultades revisados para el préstamo solicitado',p_consulta:cons(s.ruc),p_referencia:'00012345-AB/26',p_facultades:true,p_individual:true,...extra});
  await assert.rejects(rpc('evaluar_solicitud',evalArgs(),users.chimbote),/fuera de su agencia/);
  await assert.rejects(rpc('evaluar_solicitud',evalArgs(sol,{p_facultades:false}),uid),/facultades/);
  await assert.rejects(rpc('evaluar_solicitud',evalArgs(sol,{p_consulta:cons(ruc,uid,'BAJA')}),uid),/ACTIVO y HABIDO/);
@@ -38,13 +40,17 @@ try{
  await assert.rejects(rpc('evaluar_solicitud',evalArgs(sol),uid),/DNI del representante/);
  await db.query("update public.clientes set dni_caducidad='2030-12-31' where id=$1",[sol.representante_id]);
  await assert.rejects(archivo(datos(ruc,uid,rep,'70000009')),/otro propietario/);
+ for(const estado of ['observada','rechazada'])await assert.rejects(rpc('evaluar_solicitud',evalArgs(sol,{p_estado:estado,p_motivo:' '}),uid),/motivo/);
+ for(const referencia of ['', 'a'.repeat(81), '<script>', 'codigo con espacios'])await assert.rejects(rpc('evaluar_solicitud',evalArgs(sol,{p_referencia:referencia}),uid),/código/);
  await rpc('evaluar_solicitud',evalArgs(sol,{p_estado:'observada'}),uid);
  await assert.rejects(rpc('evaluar_solicitud',evalArgs(),uid),/cambió/);
  sol=(await db.query('select * from public.solicitudes_prestamo where id=$1',[id])).rows[0];
  const nuevo=await args(datos(ruc,uid,'70000003'),5000);nuevo.p_id=id;nuevo.p_version=sol.version;
  assert.equal(await rpc('enviar_solicitud',nuevo,uid),id,'Corregir no crea otra solicitud');
  sol=(await db.query('select * from public.solicitudes_prestamo where id=$1',[id])).rows[0];assert.equal(sol.estado,'pendiente');assert.equal(sol.expediente.representante.dni,'70000003');assert.notEqual(sol.representacion_id,JSON.parse(a.p_payload).id);
- const prestamo=await rpc('evaluar_solicitud',evalArgs(sol),uid);assert.ok(prestamo);assert.equal(await rpc('evaluar_solicitud',evalArgs(sol),uid),prestamo);
+ const prestamo=await rpc('evaluar_solicitud',evalArgs(sol,{p_motivo:''}),uid);assert.ok(prestamo);assert.equal(await rpc('evaluar_solicitud',evalArgs(sol),uid),prestamo);
+ const revision=(await db.query('select * from public.representaciones_empresa where id=$1',[sol.representacion_id])).rows[0];
+ assert.ok(revision.referencia_validacion.includes('00012345-AB/26'));assert.ok(revision.referencia_validacion.includes('Partida 12345678, asiento A00001'));assert.equal(revision.revisor_id,uid);assert.ok(revision.revisado_at);assert.match(revision.observacion,/Aprobación registrada/);
  assert.equal((await count()).prestamos,before.prestamos+1);assert.equal((await count()).cuotas,before.cuotas+6);
  assert.equal((await rpc('resolver_solicitud_ruc',{p_ruc:ruc},uid)),null);
  // Nueva empresa del mismo propietario: pendiente no reserva cupo; aprobar repite el límite global.
@@ -123,6 +129,33 @@ try{
  assert.equal((await db.query("select has_function_privilege('anon','public.completar_propietario_solicitud(uuid,integer,jsonb,jsonb)','execute') permiso")).rows[0].permiso,false);
  assert.equal((await db.query("select has_table_privilege('authenticated','public.solicitudes_prestamo','update') permiso")).rows[0].permiso,false);
  console.log('PASS: propietario ausente nuevo/vencido, sin alta falsa, bloqueo de aprobación, verificación presencial, PDF conservado, misma solicitud, RLS e historial.');
+ // Ruta real de evaluación: validación antes del proveedor y aprobación sin observaciones.
+ const selfDni='72000001';const selfArgs=await args(datos(rucValido('2070000021'),uid,selfDni,selfDni),100);
+ const selfId=await rpc('enviar_solicitud',selfArgs,uid);
+ const selfSol=(await db.query('select * from public.solicitudes_prestamo where id=$1',[selfId])).rows[0];
+ let consultas=0;
+ const evalSource=fs.readFileSync(new URL('../src/app/api/solicitudes/[id]/evaluar/route.ts',import.meta.url),'utf8');
+ const evalModule={exports:{}};
+ const evalMocks={...mocks,'@/lib/evaluacionSolicitud':{errorEvaluacion},'@/lib/sunat':{consultarRuc:async(r)=>{consultas++;return {ruc:r,razon_social:'EMPRESA FIRMA PROPIETARIO',estado:'ACTIVO',condicion:'HABIDO'};}},'@/lib/supabase/server':{createClient:async()=>({...fakeClient,from:()=>({select:()=>({eq:()=>({maybeSingle:async()=>({data:selfSol})})})})})}};
+ new Function('require','exports',ts.transpileModule(evalSource,{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText)((n)=>evalMocks[n],evalModule.exports);
+ async function evaluarAPI(body){return evalModule.exports.POST(new Request('https://prueba.local/api/solicitudes/'+selfId+'/evaluar',{method:'POST',headers:{origin:'https://prueba.local',host:'prueba.local','content-type':'application/json'},body:JSON.stringify({version:selfSol.version,...body})}),{params:Promise.resolve({id:selfId})});}
+ const envPrev=process.env.IDENTITY_SIGNING_SECRET;process.env.IDENTITY_SIGNING_SECRET=secret;
+ let selfLoan;
+ try{
+  for(const body of [{estado:'observada',motivo:''},{estado:'rechazada',motivo:'corto'},{estado:'aprobada',motivo:'',codigo:'',facultades:true,individual:true}])assert.equal((await evaluarAPI(body)).status,400);
+  assert.equal(consultas,0,'No consume consultas con un formulario inválido');
+  const approved=await evaluarAPI({estado:'aprobada',motivo:'',codigo:'000021-AB',facultades:true,individual:true});
+  const result=await approved.json();assert.equal(approved.status,200,JSON.stringify(result));selfLoan=result.prestamo_id;assert.ok(selfLoan);
+ }finally{if(envPrev===undefined)delete process.env.IDENTITY_SIGNING_SECRET;else process.env.IDENTITY_SIGNING_SECRET=envPrev;}
+ async function contratoDatos(pid){return (await db.query("select p.*,p.fecha_prestamo::text fecha_prestamo,to_jsonb(c) clientes,jsonb_build_object('nombre',a.nombre) agencias,(select jsonb_agg(q) from public.cuotas q where q.prestamo_id=p.id) cuotas from public.prestamos p join public.clientes c on c.id=p.cliente_id join public.agencias a on a.id=p.agencia_id where p.id=$1",[pid])).rows[0];}
+ const distinto=await contratoDatos(prestamo),mismo=await contratoDatos(selfLoan);
+ const camposDistinto=camposContrato(distinto),camposMismo=camposContrato(mismo);
+ assert.equal(camposDistinto.DOCUMENTO,'RUC Nº '+sol.ruc);assert.ok(camposDistinto.FIRMANTE.includes('70000003'));assert.equal(camposDistinto.FIRMANTE.includes(owner),false);
+ assert.ok(camposMismo.FIRMANTE.includes(selfDni));assert.equal(camposMismo.CALIDAD_FIRMANTE,'Representante de EL CLIENTE');assert.equal(camposMismo.CLIENTE,'EMPRESA FIRMA PROPIETARIO');
+ await db.query("update public.clientes set nombres='CAMBIO POSTERIOR',razon_social=case when tipo_cliente='juridica' then 'EMPRESA CAMBIADA' else razon_social end,representante_id=case when tipo_cliente='juridica' then $2 else representante_id end where id in ($1,$3)",[distinto.cliente_id,mismo.clientes.propietario_id,sol.representante_id]);
+ assert.deepEqual(camposContrato(await contratoDatos(prestamo)),camposDistinto,'El contrato conserva nombres y firmante originales aunque cambie la ficha');
+ if(process.env.CONTRATOS_PRUEBA_DIR){fs.mkdirSync(process.env.CONTRATOS_PRUEBA_DIR,{recursive:true});const template=fs.readFileSync(new URL('../templates/contrato.docx',import.meta.url));for(const [nombre,p] of [['representante-distinto',distinto],['propietario-representante',mismo]])fs.writeFileSync(process.env.CONTRATOS_PRUEBA_DIR+'/'+nombre+'.docx',generarContratoDocx(template,p));}
+ console.log('PASS: aprobación sin observaciones por API real, motivo obligatorio al observar/rechazar, código y referencia conservados, contratos RUC 20 con ambos firmantes e identidad congelada.');
  await db.exec(`create table auth.sessions(id uuid primary key,user_id uuid,created_at timestamptz);
  create function auth.jwt() returns jsonb language sql stable as $$select nullif(current_setting('request.jwt.claims',true),'')::jsonb$$;grant execute on function auth.jwt() to authenticated;`);
  await db.exec(fs.readFileSync(new URL('../scripts/control_sesiones.sql',import.meta.url),'utf8'));
