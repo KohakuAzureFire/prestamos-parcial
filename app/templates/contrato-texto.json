@@ -209,7 +209,7 @@
         ""
       ],
       [
-        "Firma\n{{DOCUMENTO_FIRMA}}",
+        "Firma\n{{FIRMANTE}}\n{{CALIDAD_FIRMANTE}}",
         "Huella",
         "Huella",
         "PRESTAMOS CASTILLO\nGerente General"

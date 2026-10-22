@@ -364,3 +364,5 @@ h1{font-size:32px!important;font-weight:750!important;letter-spacing:-.045em!imp
 .identity-correction:focus-visible{outline:2px solid var(--primary,#009eac);outline-offset:3px}
 .company-identity-card p{overflow-wrap:anywhere}
 @media(max-width:640px){.company-identity-heading{align-items:flex-start;flex-direction:column;gap:8px}.identity-correction{padding-left:0}}
+
+.evaluation-card{display:flex;flex-direction:column;gap:18px}.evaluation-card .field-error{color:#b33444;font-size:12px}.evaluation-card .form-checkbox{margin:0}
