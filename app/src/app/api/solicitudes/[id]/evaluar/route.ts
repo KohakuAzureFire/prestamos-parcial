@@ -12,6 +12,7 @@ export async function POST(request:NextRequest,{params}:{params:Promise<{id:stri
   const {data:sol,error:es}=await s.from('solicitudes_prestamo').select('*').eq('id',id).maybeSingle();if(es||!sol)return NextResponse.json({mensaje:'Solicitud no disponible.'},{status:404,headers});
   if(sol.estado==='aprobada'&&b.estado==='aprobada')return NextResponse.json({ok:true,prestamo_id:sol.prestamo_id},{headers});
   let consulta=null;
+  if(b.estado==='aprobada'&&sol.expediente?.propietario?.verificacion_pendiente)throw new Error('Completa la verificación del propietario antes de aprobar.');
   if(b.estado==='aprobada'){
    const secret=process.env.IDENTITY_SIGNING_SECRET;if(!secret)throw new Error('Falta configuración de firma.');
    const d=await consultarRuc(sol.ruc);const payload=JSON.stringify({...d,tipo:'ruc',asesor_id:user.id,consultadoEn:new Date().toISOString()});consulta={payload,firma:createHmac('sha256',secret).update(payload).digest('hex')};
