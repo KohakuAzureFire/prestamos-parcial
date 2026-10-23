@@ -22,7 +22,7 @@ export default async function DetallePrestamo({ params, searchParams }: Props) {
     .from('prestamos')
     .select(`
       *,
-      clientes(*),
+      clientes:clientes!prestamos_cliente_id_fkey(*),
       agencias(*),
       asesores(nombre_completo),
       cuotas(*)

@@ -14,7 +14,7 @@ El sistema sustituye el registro en hojas de cálculo para conservar identidad, 
 
 | Usuario | Función |
 | --- | --- |
-| Asesor de ventas | Verifica clientes, registra préstamos, evalúa solicitudes RUC 20 y cobra cuotas desde su agencia asignada. |
+| Asesor de ventas | Verifica clientes, registra préstamos y cobra cuotas desde su agencia asignada. |
 | Administrador | Rol previsto para una entrega posterior; no tiene pantallas en este sprint. |
 
 ## Reglas del negocio
@@ -25,24 +25,24 @@ El sistema sustituye el registro en hojas de cálculo para conservar identidad, 
 | Préstamo | Cliente, fecha de operación, monto positivo en soles y plazo entero de 1 a 60 meses. Mínimo S/ 0.01 y máximo según el capital disponible. |
 | Interés | TEA fija del 30 %. Sistema francés y tasa efectiva mensual equivalente. |
 | Vencimientos | Cada 30 días: fecha del préstamo más 30, 60, 90 días y así sucesivamente. No se fija el día del mes. Se conservan las cuotas ya confirmadas. |
-| Capital máximo | Hasta S/ 10 000 de capital pendiente del propietario, incluidos préstamos personales y empresas vinculadas de las cinco agencias. Solo la amortización pagada libera cupo. |
+| Capital máximo | Hasta S/ 10 000 de capital pendiente por persona entre las cinco agencias. Suma préstamos personales, RUC 10 y RUC 20 vinculados al representante en cada préstamo. Solo la amortización pagada libera cupo; otro representante no recibe deudas anteriores. |
 | Elegibilidad | Identidad aprobada y vigente, sin atrasos, historial conciliado y capital disponible; RUC ACTIVO/HABIDO cuando corresponda. El antecedente extrajudicial exige autorización. |
 | Cobranza | Se pueden pagar cuotas de un préstamo en otra agencia. Se atienden primero las cuotas pendientes más antiguas del préstamo seleccionado. |
 
 ## Funciones de la entrega
 
-Se atiende a personas naturales con DNI, personas naturales con negocio (RUC 10) y empresas (RUC 20). DNI y RUC 10 comparten ficha; la empresa conserva titular propio y se vincula al propietario responsable del límite global. Clientes lista solo a los titulares con préstamos confirmados en la agencia actual, incluidos los ya pagados; Préstamos lista solo operaciones originadas en esa agencia. Las fichas autorizadas comparten identidad y saldos globales, sin ampliar la cartera local.
+Se atiende a personas con DNI, negocios RUC 10 y empresas RUC 20. DNI y RUC 10 comparten ficha. La empresa tiene ficha propia y cada préstamo RUC 20 conserva al representante que lo solicitó. Clientes incluye titulares y representantes con préstamos confirmados en la agencia; Préstamos conserva solo operaciones originadas allí. Identidad y límite se comparten entre las cinco agencias, sin ampliar la cartera local por un cobro ajeno.
 
 | Área | En esta entrega | Para después |
 | --- | --- | --- |
 | Acceso | Iniciar y cerrar sesión, controlar 15 minutos de inactividad y mantener una sesión por cuenta, sin credenciales de demostración visibles. | Administrar cuentas y recuperar contraseñas. |
-| Clientes | Consultar ficha e historial de verificación; registrar o revalidar desde el flujo del préstamo. | Otros documentos de identidad y cambios de propietario. |
+| Clientes | Consultar ficha e historial de verificación; registrar o revalidar desde el flujo del préstamo. | Otros documentos de identidad y evaluación del alcance de poderes. |
 | Préstamos | Registrar, controlar el capital pendiente y consultar cartera propia. | Editar, anular o refinanciar préstamos confirmados. |
 | Cronograma | Cuotas cada 30 días, desglose de interés y capital, guardado y PDF. | Reprogramaciones y amortización extraordinaria. |
 | Pagos | Registrar cuotas completas, incluso de otra agencia, y emitir constancia. | Abonos parciales, devoluciones y pasarelas de pago. |
 | Estados | Actualizar deuda y condición de pago automáticamente. | Reportes gerenciales y gestión jurídica de cobranza. |
 
-No incluye abonos parciales, reversos, refinanciación, gestión judicial, panel gerencial, evaluación automática de riesgo, documentos extranjeros ni aprobación remota de un propietario no verificado. La vinculación para el límite es una regla académica; no constituye por sí sola garantía personal de una deuda empresarial.
+No incluye abonos parciales, reversos, refinanciación, gestión judicial, panel gerencial, evaluación automática de riesgo ni documentos extranjeros. El vínculo con el representante para el límite es una regla académica; no constituye por sí solo garantía personal de una deuda empresarial. La consulta API identifica representantes informados, sin certificar el alcance de sus poderes.
 
 ## Decisiones que precisan el alcance
 
@@ -70,38 +70,38 @@ Los préstamos anteriores requieren capital, cronograma y pagos conciliados. La 
 | Préstamos | Cartera local; estado, tipo de titular y búsqueda exacta por DNI/RUC/PR-. Documento, cliente o razón social, fecha, monto, plazo, estado y detalle. |
 | Clientes | Titulares con préstamos confirmados locales, incluidos pagados. Filtros Todos/Personas/Negocios y empresas. DNI/RUC 10 aparece con DNI en Personas y con RUC en Negocios y empresas; Todos reúne ambos en una fila. |
 | Ficha del cliente | Identificación, condición, capital global y vínculos. Solicitar préstamo, Revalidar datos, Consultar para pagar y Ver historial. Historial en página aparte, sin tabla de préstamos. |
-| Nuevo préstamo | DNI/RUC 10: Cliente → Condiciones → Cronograma. RUC 20 añade Documentación tras identificar. Tipo fijo después del paso 1; Atrás conserva el borrador. Sin enlace Ir a clientes dentro del formulario. |
+| Nuevo préstamo | Cliente → Condiciones → Cronograma. RUC 20 verifica empresa y DNI del representante por API, sin documentación ni evaluación posterior. Tipo fijo después del paso 1; Atrás conserva el borrador. Sin Ir a clientes dentro del formulario. |
 | Detalle del préstamo | Total a pagar, pagado y saldo; tasas, estado, cuotas e historial. Menús Cronograma y Contrato. Registrar pago carga ese préstamo fijo. |
 | Pagos | Consulta dirigida al grupo entre agencias por DNI/RUC o a un préstamo por PR-. Desde ficha fija documento; desde detalle fija préstamo. Regreso al origen y cobro individual. |
 
-El menú del asesor contiene Préstamos, Clientes, Nuevo préstamo, Solicitudes de préstamo, Pagos y Cerrar sesión. Los accesos desde ficha o detalle llevan a esos mismos procesos, sin formularios de negocio duplicados.
+El menú del asesor contiene Préstamos, Clientes, Nuevo préstamo, Pagos y Cerrar sesión. Los accesos desde ficha o detalle llevan a esos mismos procesos. Solicitudes documentales queda fuera del flujo vigente.
 
 ## Recorrido del cliente nuevo y del cliente existente
 
-Nuevo préstamo conserva su recorrido para DNI y RUC 10. RUC 20 recorre Identificación → Documentación → Condiciones → Cronograma y envío. El borrador, incluido el PDF, permanece en memoria; Atrás conserva datos y abandonar descarta lo no enviado. Solo Enviar solicitud de préstamo guarda el expediente completo como pendiente de evaluación.
+Nuevo préstamo usa Cliente → Condiciones → Cronograma para DNI, RUC 10 y RUC 20. Para RUC 20, consulta la empresa y comprueba el DNI del representante mediante API Perú; no pide propietario, certificados ni archivos. Atrás conserva el borrador en memoria. Solo Confirmar préstamo registra las altas y el préstamo; abandonar descarta lo no confirmado.
 
-El envío RUC 20 guarda el expediente, el PDF privado hasta 5 MB, monto, plazo y simulación; no genera deuda ni reserva capital. Si el propietario ausente es nuevo o su verificación no está vigente, queda Pendiente de verificación del propietario. No crea una identidad aprobada ni una empresa nueva sin ese vínculo; registra al representante verificado y conserva el DNI declarado del propietario. Cuando este acude, el asesor completa la revisión presencial desde la misma solicitud, conserva el PDF y pasa a evaluación; las observaciones documentales previas permanecen. El asesor evalúa después desde Solicitudes de préstamo y puede aprobar, observar o rechazar en su agencia, incluso lo enviado por él. La evaluación reutiliza el documento de propiedad presentado y pide solo el código del certificado (hasta 80 caracteres: letras, números, guion o barra), conservando ceros iniciales. Es un límite operativo, no un formato registral universal. El asesor y la fecha se registran automáticamente. Aprobar permite observaciones opcionales; observar o rechazar exige un motivo de 10 a 1000 caracteres. Aprobar exige contrastar autenticidad y firma individual, consultar SUNAT y repetir identidad, elegibilidad y cupo global. Entonces se crea el préstamo y sus cuotas desde la fecha de aprobación; conserva el expediente y su historial.
+La empresa debe estar ACTIVA y HABIDA. El DNI completo del firmante debe coincidir exactamente con uno de los representantes devueltos para ese RUC. Se comprueba identidad vigente y presencia, elegibilidad y capital global antes de confirmar. Una API caída, sin coincidencias o con documentos ocultos impide continuar; no se completa una identidad por deducción. Cada préstamo fija su representante y copia contractual. Elegir otra persona en un préstamo posterior no le traslada deudas anteriores. El cronograma nace al confirmar y vence cada 30 días.
 
 Desde Clientes se abre la ficha y Solicitar préstamo. Un cliente de otra agencia se recupera en Nuevo préstamo. La revalidación guardada actualiza la ficha compartida sin generar crédito ni eliminar atrasos.
 
 Cobranza: Pagos → consultar DNI/RUC/PR- → elegir préstamo → revisar cuotas y origen → confirmar dinero recibido y cobro → constancia. Desde ficha o detalle consulta automáticamente y conserva el contexto.
 
-## Documentación y validaciones de empresas
+## Validación del representante de la empresa
 
-El asesor selecciona el documento que sustenta el vínculo e ingresa solo sus datos variables. Copia literal: partida y asiento; escritura pública: número, fecha y notaría; acto constitutivo SACS: partida y fecha; matrícula de acciones: libro, folio y asiento de titularidad. El sistema construye la referencia completa y no exige escribir sus etiquetas.
+El asesor ingresa el DNI del representante que solicita y firma. La consulta expresa a API Perú puede devolver varias personas. El sistema compara el DNI completo con la lista del RUC consultado y luego verifica la identidad de quien firma. No se solicitan referencias de propiedad ni documentos adjuntos.
 
-| Campo | Entrada admitida | Máximo |
+| Campo | Entrada admitida | Validación |
 | --- | --- | --- |
-| Partida | Solo números; conserva ceros iniciales. | 12 dígitos |
-| Escritura | Solo números; conserva ceros iniciales. | 10 dígitos |
-| Libro y folio | Solo números; conserva ceros iniciales. | 6 dígitos cada uno |
-| Asiento | Letras y números; se muestra en mayúsculas. | 10 caracteres |
-| Notaría | Nombre con tildes, números y signos habituales; al menos una letra. | 80 caracteres |
-| Fecha | Fecha real de calendario con año de cuatro dígitos. | Formato de fecha |
+| RUC de empresa | Once dígitos con prefijo 20. | Dígito verificador; ACTIVO y HABIDO. |
+| DNI del representante | Ocho dígitos; conserva ceros iniciales. | Coincidencia completa en la lista del RUC. |
+| Representantes API | Puede incluir varias personas. | Sin coincidencia o con datos ocultos, bloquea. |
+| Consulta firmada | Asesor, RUC, fecha y respuesta del proveedor. | Firma válida y antigüedad hasta 30 minutos. |
+| Identidad presencial | DNI original, caducidad y presencia. | Identidad vigente al confirmar. |
+| Capital global | Préstamos personales y por empresas. | Hasta S/ 10 000 por representante. |
 
-Los límites anteriores son decisiones operativas del formulario y no describen una longitud registral universal. Escribir caracteres no admitidos o pegar un valor inválido no reemplaza el dato válido anterior; el formulario muestra el motivo. Un pegado demasiado largo se rechaza completo. Los campos vacíos o inválidos impiden continuar. Las referencias previas solo se separan en campos cuando la conversión es exacta; las demás se conservan completas y ofrecen Corregir datos del documento, sin recorte automático.
+El DNI admite exactamente ocho dígitos y conserva ceros iniciales. El RUC admite once dígitos, prefijo 10 o 20 y dígito verificador. Una consulta firmada pertenece al asesor y RUC consultados y vence a los 30 minutos. El servidor repite estas comprobaciones al confirmar, sin confiar en la selección del navegador.
 
-Corregir DNI del propietario y Corregir DNI del representante aparecen junto al título de su tarjeta, con lápiz, texto azul grisáceo, fondo transparente y foco de teclado visible. En móvil se acomodan debajo del título. La corrección vuelve a verificar la identidad y descarta el PDF asociado; la empresa registrada conserva el propietario del límite. Los filtros de Solicitudes de préstamo se separan de la tabla y se distribuyen en varias líneas cuando falta espacio.
+Cambiar el DNI descarta la identidad seleccionada y exige comprobar de nuevo el vínculo. Renovar consulta descarta la validación anterior. Una persona ya verificada puede reutilizar su ficha, pero el asesor confirma DNI original y presencia durante esta atención. Sin identidad vigente o capital disponible no se confirma el préstamo.
 
 ## Estados y datos que deben conservarse
 
@@ -109,7 +109,7 @@ Corregir DNI del propietario y Corregir DNI del representante aparecen junto al 
 | --- | --- |
 | Verificación de identidad | Pendiente, Aprobada, Caducada o Rechazada. Aprobada exige identidad confiable, documento vigente y evidencia suficiente de las condiciones exigidas. |
 | Condición de pago del cliente | Sin atrasos (valor interno habilitado) si no tiene cuotas vencidas impagas; Con atrasos si tiene atraso menor de 12 meses; Extrajudicial si al menos una cuota impaga cumple 12 meses de atraso. Son estados automáticos del grupo, con prioridad de Extrajudicial sobre Con atrasos; un historial incompleto se identifica como Pendiente de conciliación. |
-| Solicitud RUC 20 | Pendiente de verificación del propietario, Pendiente de evaluación, Observada, Rechazada o Aprobada. Una solicitud abierta por RUC entre agencias. La identidad pendiente impide aprobar; completarla no borra observaciones ni genera un préstamo. |
+| Validación RUC 20 | Consulta en memoria hasta confirmar. Exige DNI completo coincidente e identidad presencial vigente. No genera solicitud pendiente; las solicitudes documentales anteriores quedan como historial. |
 | Préstamo | Activo mientras quede deuda contractual pendiente; Cancelado por pago total cuando todas sus cuotas estén pagadas. Cancelado no significa anulado. |
 | Cuota | Pendiente antes de vencer o durante su fecha de vencimiento; Vencida desde el día siguiente si no está pagada; Pagada únicamente si existe un cobro confirmado que la cubra. |
 
@@ -121,7 +121,7 @@ El fallecimiento acreditado bloquea nuevas colocaciones y no se modifica con un 
 
 | Registro | Información que conserva |
 | --- | --- |
-| Cliente y verificación | DNI único para la persona y RUC de la empresa; ficha personal compartida con RUC 10, propietario y representante vinculados; nombres y apellidos exactos; agencia de registro inicial; fecha de caducidad; resultado, evidencia, fuente, fecha, asesor y agencia de cada revisión. La renovación agrega una revisión y conserva las anteriores. Una revalidación actualiza la misma ficha para todas las agencias. |
+| Cliente y verificación | DNI único de la persona y RUC propio de la empresa. La ficha personal se comparte con RUC 10; cada préstamo RUC 20 fija su representante. Conserva nombres exactos, agencia inicial, caducidad, resultado, evidencia, fuente, fecha, asesor y agencia de cada revisión. Renovar agrega una revisión y conserva las anteriores para todas las agencias. |
 | Préstamo y cronograma | Identificador único, cliente, agencia de origen, asesor, fecha, monto, plazo, TEA, tasa mensual y cuotas originales con interés, amortización y saldo programado. |
 | Pago y aplicación | Identificador único, préstamo, cuotas cubiertas, importe, fecha y hora, asesor y agencia de cobro. La aplicación distingue capital e interés según el cronograma guardado. |
 | Situación vigente | Total pagado, deuda contractual pendiente, capital pendiente, cuotas vencidas, antigüedad del atraso y fecha de actualización. Se derivan de datos conciliados y pagos confirmados. |
@@ -219,7 +219,7 @@ Como asesor de ventas, quiero verificar la identidad y vigencia del DNI, para re
 
 - **CA01. Documento admitido:** DNI peruano de ocho dígitos; RUC de once, prefijo 10 o 20 y dígito verificador. Conserva ceros iniciales y valida en pantalla y servidor. Extranjería y otros prefijos quedan fuera.
 
-- **CA02. Entrada y borrador:** Reutiliza la ficha vigente entre agencias sin duplicar consultas de DNI. DNI/RUC 10 guarda al confirmar; RUC 20 conserva personas y documentos en memoria hasta el envío final. Corregir DNI repite la verificación; no edita nombres. Abandonar descarta el borrador.
+- **CA02. Entrada y borrador:** Reutiliza la ficha vigente entre agencias sin duplicar consultas de DNI. Personas y empresa permanecen en memoria hasta confirmar el préstamo. Cambiar DNI repite vínculo e identidad; no edita nombres. Abandonar descarta el borrador.
 
 - **CA03. Identidad exacta:** Consulta identidad para nuevos o revalidaciones. Nombres y apellidos originales no se editan; cambiar documento exige repetir su comprobación.
 
@@ -235,11 +235,11 @@ Como asesor de ventas, quiero verificar la identidad y vigencia del DNI, para re
 
 - **CA09. SUNAT y alcance:** SUNAT compara razón social, estado, condición y domicilio. Permite guardar consulta firmada sin cambios o con observaciones. No edita datos externos ni revalida DNI, propiedad o facultades; no hay actualización periódica.
 
-- **CA10. Representación:** RUC 20 distingue propietario del límite y firmante presencial. Propietario ausente nuevo o vencido: solicitud pendiente, sin identidad ficticia ni deuda; impide aprobar hasta su revisión presencial. Documentación en pantalla propia, con referencia guiada y certificado SUNARP PDF hasta 5 MB. No reasigna propietario y admite firma individual. API Perú lista varios representantes y permite elegir al firmante. Contrasta el DNI completo al enviar; datos ocultos son referencia parcial. La consulta es opcional y no reemplaza DNI original, propiedad ni facultades.
+- **CA10. Representación:** RUC 20 consulta API Perú y exige DNI completo coincidente con un representante de ese RUC. Admite varias personas y elige quien solicita y firma. Documentos ocultos, respuesta vacía o fallo impiden continuar. No pide propietario ni certificados; conserva verificación de identidad y presencia.
 
-- **CA11. Referencias guiadas:** Genera la referencia con campos específicos, tipos y límites de Documentación y validaciones de empresas. Rechaza escritura y pegado inválidos; conserva referencias anteriores sin recortarlas. En evaluación reutiliza el documento presentado y exige solo el código del certificado. Aprobar admite observaciones opcionales; observar o rechazar requiere un motivo de 10 a 1000 caracteres. Registra asesor y fecha.
+- **CA11. Consulta firmada:** El flujo vigente no exige referencias documentales ni cargas. La consulta de representantes se firma con asesor y RUC y vence a los 30 minutos. El servidor valida firma, RUC y DNI al confirmar; no acepta un vínculo declarado solo por el navegador.
 
-- **CA12. Corrección visible:** Ubica las acciones Corregir DNI junto al título, con lápiz y estilo discreto adaptable a móvil. Si el DNI del representante coincide con el propietario, muestra un aviso bajo el campo y deshabilita Verificar representante antes de consultar. Otro DNI válido elimina el aviso. Repite verificación y conserva la restricción del propietario ya registrado.
+- **CA12. Corrección visible:** El DNI admite ocho dígitos y conserva ceros iniciales. Cambiarlo limpia la persona y exige validar el nuevo vínculo. Renovar consulta descarta la validación previa; Atrás conserva el borrador y las condiciones.
 
 
 ### HU-04 Registrar préstamo
@@ -250,23 +250,23 @@ Como asesor de ventas, quiero registrar el monto y plazo de un cliente elegible,
 
 - **CA01. Cliente previo:** Reutiliza cliente y documento desde HU-03 o ficha, sin volver a escribir identidad ni abrir otro buscador.
 
-- **CA02. Elegibilidad automática:** Exige identidad vigente, sin atrasos, historial conciliado, capital y autorización cuando corresponda. DNI personal no exige estado SUNAT del RUC 10 asociado; por RUC exige ACTIVO/HABIDO e identidad vigente. RUC 20 permite enviar para evaluación y solo genera préstamo al aprobar el expediente de empresa, propietario, firmante e importe, con todos los controles vigentes.
+- **CA02. Elegibilidad automática:** Exige identidad vigente, sin atrasos, historial conciliado, capital y autorización cuando corresponda. DNI personal no exige estado SUNAT del RUC 10 asociado. Por RUC exige ACTIVO/HABIDO. RUC 20 añade coincidencia del DNI en la API y presencia del representante; confirma inmediatamente al superar los controles.
 
 - **CA03. Datos de sesión:** Fecha de Perú, agencia y asesor provienen de la sesión y no son editables.
 
 - **CA04. Monto:** Inicial 0.00, punto fijo y solo dígitos en soles y dos cifras de centavos. Mínimo S/ 0.01 y máximo disponible, hasta S/ 10 000; cero, signos, letras o precisión adicional impiden continuar.
 
-- **CA05. Capital global:** Suma capital pendiente del propietario y sus empresas entre agencias. Solo amortización pagada libera cupo. El representante sin propiedad no aporta su límite al grupo.
+- **CA05. Capital global:** Suma préstamos personales, RUC 10 y préstamos RUC 20 de la misma persona en las cinco agencias, hasta S/ 10 000. Cada préstamo RUC 20 fija su representante; cambiarlo en otro préstamo no traslada deuda. Solo amortización pagada libera cupo.
 
 - **CA06. Concurrencia:** Repite elegibilidad y cupo al confirmar de forma transaccional para impedir exceder el capital con solicitudes simultáneas.
 
 - **CA07. Plazo y tasa:** Plazo inicial 0; solo enteros de 1 a 60 para continuar. TEA fija del 30 %, no porcentaje plano para cualquier duración.
 
-- **CA08. Confirmación conjunta:** Revisar el cronograma no guarda. Enviar RUC 20 registra expediente y las altas verificadas que correspondan, o revierte todo. Si falta verificar al propietario, conserva su DNI como declarado sin crear su ficha aprobada; queda pendiente sin préstamo, contrato definitivo ni cuotas cobrables. Aprobar crea préstamo y cuotas sin duplicados. Firma de consulta mayor de 30 minutos exige renovarla.
+- **CA08. Confirmación conjunta:** Revisar cronograma no guarda. Confirmar crea personas, empresa, préstamo, copia contractual y cuotas en una transacción, o revierte todo. No crea solicitud pendiente ni pide PDF. Firma de consulta mayor de 30 minutos exige renovarla; reintentar no duplica operaciones.
 
 - **CA09. Resultado protegido:** El préstamo pertenece a la agencia de sesión y añade allí al titular sin duplicar ficha ni trasladar préstamos. No permite editar ni anular lo confirmado.
 
-- **CA10. Pasos y regreso:** Tipo modificable solo en identificación. RUC 20 añade Documentación sin Ver solicitudes ni Actualizar revisión; el formulario no muestra Ir a clientes. Atrás conserva el borrador y la salida voluntaria por los enlaces protegidos advierte sobre datos pendientes. Corregir DNI descarta el PDF ligado a esa selección. DNI/RUC 10 conserva su navegación.
+- **CA10. Pasos y regreso:** Cliente → Condiciones → Cronograma, también para RUC 20. Tipo modificable solo en identificación. Sin Documentación, Ver solicitudes, Actualizar revisión ni Ir a clientes. Atrás conserva el borrador; salir por enlaces protegidos advierte de datos pendientes. Cambiar DNI exige validar de nuevo.
 
 ### HU-05 Generar y entregar cronograma
 
@@ -284,7 +284,7 @@ Como asesor de ventas, quiero generar y entregar el cronograma, para que el clie
 
 - **CA05. Redondeo y cargos:** Dos decimales y última cuota ajustada a saldo cero. Sin comisiones, seguros, penalidades ni recargos por atraso.
 
-- **CA06. Consistencia:** Guarda el cronograma confirmado sin recalcularlo al consultar o pagar. El contrato conserva identidad, modalidad y firmante originales. En RUC 20, la empresa es prestataria; firma su representante verificado, sea o no el propietario, sin atribuir aval al propietario. Solo se emite para un préstamo confirmado. Si falta la copia completa del firmante, bloquea la descarga en lugar de usar la ficha actual.
+- **CA06. Consistencia:** Guarda el cronograma confirmado sin recalcularlo al consultar o pagar. RUC 20 conserva empresa, RUC, representante y DNI originales en el préstamo; otra persona posterior no cambia el contrato ni la deuda anterior. Solo emite contrato para un préstamo confirmado y bloquea si falta la copia completa del firmante.
 
 - **CA07. Descarga e impresión:** Cronograma agrupa PDF e impresión. Contrato agrupa Word e impresión/guardar PDF, con plantilla adaptada del profesor que termina en las firmas, con nombre, DNI y calidad del firmante, sin anexo de condiciones. Descargar de nuevo no crea préstamo.
 
@@ -302,11 +302,11 @@ Como asesor de ventas, quiero consultar clientes y la cartera de mi agencia, par
 
 - **CA02. Listado y filtros:** Activos por defecto; filtros Activos/Cancelados/Todos y Personas/Empresas/Todos. Busca DNI, RUC o PR-. Documento muestra DNI personal o RUC empresarial, con monto, plazo, fecha, estado y detalle.
 
-- **CA03. Clientes de la agencia:** Solo titulares con préstamos confirmados locales, incluidos pagados. DNI/RUC 10 figura en Personas con DNI y en Negocios y empresas con RUC; Todos conserva una fila. Identidad, solicitudes y cobros ajenos no incorporan titulares.
+- **CA03. Clientes de la agencia:** Titulares y representantes de préstamos confirmados locales, incluidos pagados. DNI/RUC 10 figura en Personas con DNI y en Negocios y empresas con RUC; Todos conserva una fila. Identidad y cobros ajenos no incorporan personas a la cartera.
 
-- **CA04. Ficha y privacidad de cartera:** DNI/RUC 10 comparten ficha; RUC 20 conserva empresa y propietario del límite. Recupera datos previos y permite otro representante verificado en otra solicitud. Una pendiente u observada por RUC se retoma sin duplicar; el historial conserva rechazos y aprobaciones.
+- **CA04. Ficha y privacidad de cartera:** DNI/RUC 10 comparten ficha; RUC 20 conserva su empresa y muestra el representante actual. Repetir el RUC permite otro préstamo con representante validado por API, sin alterar contratos ni responsables anteriores. El detalle mantiene privacidad por agencia.
 
-- **CA05. Continuar atención:** Solicitar préstamo despliega DNI/RUC 10 cuando existen ambos; sin elegibilidad o cupo queda bloqueado. Revalidar datos ofrece DNI/RUC 10, o SUNAT directo para RUC 20. Incluye Consultar para pagar y Ver historial.
+- **CA05. Continuar atención:** Solicitar préstamo ofrece DNI/RUC 10 si existen ambos y exige elegibilidad y cupo. Para RUC 20 abre la validación del representante antes de determinar su capital. Revalidar datos ofrece DNI/RUC 10 o SUNAT para RUC 20. Incluye Consultar para pagar y Ver historial.
 
 - **CA06. Resumen del detalle:** Detalle muestra Total a pagar, Total pagado y Saldo por pagar, con estado, TEA, TEM e interés total; diseño adaptable a móvil.
 
@@ -318,7 +318,7 @@ Como asesor de ventas, quiero consultar clientes y la cartera de mi agencia, par
 
 - **CA10. Formato de búsqueda:** DNI de ocho dígitos y RUC válido de once. PR- fijo más ocho hexadecimales en mayúsculas; pegar código completo no duplica prefijo. Entrada inválida impide consultar.
 
-- **CA11. Solicitudes de la agencia:** Lista solicitudes RUC 20 por Pendientes, Por verificar propietario, Observadas, Aprobadas, Rechazadas y Todas. Pendientes reúne las pendientes de evaluación y de identidad. Completar la identidad conserva solicitud, PDF e historial; no aprueba el crédito y respeta las observaciones previas. Separa los filtros de la tabla y adapta su distribución a pantallas pequeñas; conserva la privacidad por agencia.
+- **CA11. Confirmación directa:** Nuevo préstamo RUC 20 confirma directamente. El menú retira Solicitudes de préstamo y la base bloquea nuevos envíos y evaluaciones documentales. Conserva solicitudes previas y sus documentos como historial; no modifica préstamos anteriores.
 
 
 ### HU-07 Registrar pago de cuotas
@@ -327,7 +327,7 @@ Como asesor de ventas, quiero registrar el pago de cuotas de un préstamo, inclu
 
 #### Criterios de aceptación
 
-- **CA01. Localización:** DNI, RUC 10 o RUC 20 reúnen deudas del propietario y sus empresas entre agencias; ser representante no une grupos. Desde ficha fija documento; desde detalle fija UUID autorizado. Consulta automática y regreso al origen, sin Cambiar cliente.
+- **CA01. Localización:** DNI o RUC 10 reúne préstamos personales y los RUC 20 vinculados a esa persona al confirmar. RUC 20 reúne préstamos de esa empresa, incluso con distintos representantes. PR- identifica un préstamo. Permite cobrar entre agencias sin cambiar el responsable; desde ficha o detalle conserva contexto y regreso.
 
 - **CA02. Datos de revisión:** Muestra titular, código, agencia de origen, deuda y cuotas. No exige DNI vigente, RUC habilitado ni ausencia de atrasos para pagar.
 
@@ -384,16 +384,16 @@ La entrega debe demostrar las ocho HU integradas, permisos por agencia, cálculo
 | Caso | Resultado esperado |
 | --- | --- |
 | Acceso y sesiones | Cuenta activa, contador de 15 minutos y renovación válida. Otro navegador reemplaza la sesión; cerrar la anterior no revoca la nueva. |
-| Identidad y representación | RUC 20: corregir DNI antes de enviar; documento concreto, referencia automática y PDF hasta 5 MB. Asesor evalúa después; otra agencia no accede al expediente. RUC 10 sin certificado. |
-| Cliente nuevo y borradores | RUC 20 no guarda antes del envío final. Propietario ausente nuevo o vencido permite enviar sin identidad ficticia ni deuda. Aprobar se bloquea hasta verificarlo presencialmente desde la misma solicitud. Se conserva el PDF; observar corrige la misma solicitud y rechazar permite otra. Aprobar crea una sola operación. |
-| Agencias y fichas | Cartera local sin incorporar titulares por cobro ajeno. DNI/RUC 10: ficha en ambos filtros, una fila en Todos. Empresa con ficha y propietario para el límite. |
+| Identidad y representación | RUC 20: DNI de un representante devuelto por API, identidad y presencia verificadas. Prueba varios representantes, DNI con ceros y datos ocultos; no pide propietario, referencia ni certificado. |
+| Cliente nuevo y borradores | Antes de confirmar no guarda personas ni empresa. Un fallo de API o DNI sin coincidencia impide continuar. Confirmar crea una sola operación; fallo transaccional revierte todo. Atrás conserva el borrador. |
+| Agencias y fichas | Cartera local sin incorporar titulares por cobro ajeno. DNI/RUC 10 en ambos filtros, una fila en Todos. Empresa y representante visibles por préstamos locales; deuda fijada por préstamo. |
 | RUC y elegibilidad | RUC observado bloquea ese RUC, sin impedir DNI elegible ni pagos. Aviso de Pagos solo con deuda del RUC exacto. Fallo técnico no es rechazo; revalidar conserva historial y atrasos. |
 | Monto plazo y capital | Solo dígitos, S/ 0.01 hasta el disponible global de S/ 10 000 y de 1 a 60 meses. Pagar libera únicamente el capital amortizado. |
 | Cronograma y documentos | Comprueba el ejemplo de S/ 1 000, redondeos, meses de 28 a 31 días y bisiestos. Descargas e impresión conservan las condiciones e identidad del préstamo. |
-| Cobro entre agencias | DNI/RUC 10/RUC 20 reúnen el grupo. Se elige un préstamo y cuotas completas consecutivas; conserva origen, registra agencia de cobro y emite constancia. |
+| Cobro entre agencias | DNI/RUC 10 reúne préstamos de la persona y empresas donde es responsable. RUC 20 muestra solo esa empresa. Cobra cuotas consecutivas, conserva origen y libera cupo del representante original. |
 | Contexto y navegación | Desde ficha o detalle los campos quedan fijos y el regreso conserva el origen. Búsqueda general limpia resultados al cambiar documento/tipo; seleccionar préstamo desplaza al titular una vez. |
-| Concurrencia y reintentos | No excede capital ni duplica cobros o solicitudes. Aprobar revalida cupo sin reservarlo al enviar y rechaza versiones obsoletas; reintentar no duplica. |
+| Concurrencia y reintentos | No excede capital ni duplica préstamos o cobros. Confirma con firma vigente y controles repetidos. Préstamos de varias empresas suman al mismo representante; cambiarlo no traslada deuda. |
 | Atrasos y regularización | Prueba vencimiento, día siguiente y doce meses. Regularizar no anticipa cuotas futuras; conserva antecedente y exige autorización especial para nuevo crédito. |
 | Conciliación y cierre | Un historial incompleto bloquea nuevas colocaciones; cancelar exige pago total. Pagar no elimina identidad ni su caducidad, y quedan historial y constancias. |
-| Referencias y restricciones | Elegir los cuatro documentos, comprobar campos y límites, conservar ceros y convertir asiento a mayúsculas. Rechazar letras en números, signos en asiento y pegado excesivo; aceptar notaría con tildes y fecha real. Retomar una referencia anterior sin recortarla. |
-| Interfaz y conservación del flujo | Sin Ir a clientes en Nuevo préstamo. Atrás conserva personas, documentos, PDF y condiciones; corregir DNI invalida el PDF. Botones junto al título y adaptables a móvil; filtros separados de la tabla de Solicitudes. |
+| Entradas y restricciones | Validar RUC y DNI, conservar ceros iniciales y rechazar caracteres o longitudes inválidas. Cambiar DNI exige nueva coincidencia. Una máscara o un fallo de API impide continuar; las consultas caducadas se renuevan. |
+| Interfaz y conservación del flujo | Sin Ir a clientes ni documentación en Nuevo préstamo. Atrás conserva personas y condiciones; cambiar DNI reinicia la validación del vínculo. Revisar escritorio y móvil, foco y separación de botones. |

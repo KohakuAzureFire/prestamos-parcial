@@ -9,7 +9,7 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
   const s = await createClient();
   const { data: { user } } = await s.auth.getUser();
   if (!user) return NextResponse.json({ mensaje: 'Inicia sesión nuevamente.' }, { status: 401 });
-  const { data, error } = await s.from('prestamos').select('*,clientes(*),agencias(nombre),cuotas(*)').eq('id', id).eq('estado', 'confirmado').maybeSingle();
+  const { data, error } = await s.from('prestamos').select('*,clientes:clientes!prestamos_cliente_id_fkey(*),agencias(nombre),cuotas(*)').eq('id', id).eq('estado', 'confirmado').maybeSingle();
   if (error || !data) return NextResponse.json({ mensaje: 'Préstamo no disponible para tu agencia.' }, { status: 404 });
   return new Response(htmlCronograma(data as CronogramaImprimible), { headers: {
     'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'private, no-store',

@@ -16,7 +16,7 @@ export default async function Nuevo({searchParams}:{searchParams:Promise<{client
  // Desde una ficha se conserva la identidad seleccionada y se verifica el cupo antes de elegir modalidad.
  if(cliente_id){
   const {data:c,error}=await s.from('clientes_resumen').select('*').eq('id',cliente_id).maybeSingle();if(error)throw new Error('No se pudo recuperar la ficha.');if(!c)notFound();
-  if(Number(c.situacion.capital_disponible)<0.01)return <LimiteAlcanzado clienteId={c.id}/>;
+  if(!esEmpresa(c)&&Number(c.situacion.capital_disponible)<0.01)return <LimiteAlcanzado clienteId={c.id}/>;
   if(esEmpresa(c))return <VerificarRuc key={c.id} {...comunes} rucInicial={c.ruc} autoConsultar/>;
   if(c.ruc?.startsWith('10')&&modalidad!=='dni'&&modalidad!=='ruc')return <div className="animate-fade-in"><div className="page-heading"><div><h1>Nuevo préstamo</h1><p>{c.nombres} {c.apellidos}</p></div></div><section className="card"><h2>Modalidad del préstamo</h2><p>Elige cómo se registrará este préstamo. Ambas modalidades comparten el mismo límite global.</p><div className="action-group"><Link className="btn btn-primary" href={'?'+new URLSearchParams({cliente_id:c.id,modalidad:'dni'})}>Personal · DNI</Link><Link className="btn btn-secondary" href={'?'+new URLSearchParams({cliente_id:c.id,modalidad:'ruc'})}>Negocio · RUC 10</Link></div></section><Link className="breadcrumb" href={'/dashboard/clientes/'+c.id}>← Volver a la ficha</Link></div>;
   if(c.ruc?.startsWith('10')&&modalidad==='ruc')return <VerificarRuc key={c.id} {...comunes} rucInicial={c.ruc} autoConsultar/>;
@@ -24,7 +24,7 @@ export default async function Nuevo({searchParams}:{searchParams:Promise<{client
   return <FormularioPrestamo {...comunes} cliente={c} situacion={c.situacion} volverHref={'/dashboard/clientes/'+c.id}/>;
  }
  if(ruc){
-  if(!errorBusqueda('ruc',ruc)){const {data:c,error}=await s.from('clientes_resumen').select('id,situacion').eq('ruc',ruc).maybeSingle();if(error)throw new Error('No se pudo recuperar el cupo del cliente.');if(c&&Number(c.situacion.capital_disponible)<0.01)return <LimiteAlcanzado clienteId={c.id}/>;}
+  if(!errorBusqueda('ruc',ruc)){const {data:c,error}=await s.from('clientes_resumen').select('id,situacion,tipo_cliente,ruc,dni').eq('ruc',ruc).maybeSingle();if(error)throw new Error('No se pudo recuperar el cupo del cliente.');if(c&&!esEmpresa(c)&&Number(c.situacion.capital_disponible)<0.01)return <LimiteAlcanzado clienteId={c.id}/>;}
   return <InicioPrestamo {...comunes} rucInicial={ruc}/>;
  }
  if(!dni)return <InicioPrestamo {...comunes}/>;

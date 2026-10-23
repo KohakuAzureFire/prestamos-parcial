@@ -8,7 +8,7 @@ export const runtime='nodejs';export const dynamic='force-dynamic';
 export async function GET(request:NextRequest,{params}:{params:Promise<{id:string}>}){
  const {id}=await params;if(!/^[a-f0-9-]{36}$/i.test(id))return NextResponse.json({mensaje:'Préstamo no encontrado.'},{status:404});
  const s=await createClient();const {data:{user}}=await s.auth.getUser();if(!user)return NextResponse.json({mensaje:'Inicia sesión nuevamente.'},{status:401});
- const {data:p,error}=await s.from('prestamos').select('*,clientes(*),agencias(nombre),cuotas(*)').eq('id',id).eq('estado','confirmado').maybeSingle();
+ const {data:p,error}=await s.from('prestamos').select('*,clientes:clientes!prestamos_cliente_id_fkey(*),agencias(nombre),cuotas(*)').eq('id',id).eq('estado','confirmado').maybeSingle();
  if(error||!p)return NextResponse.json({mensaje:'Préstamo no disponible para tu agencia.'},{status:404});
  const prestamo=p as DatosContrato;let campos:Record<string,string>;
  try{campos=camposContrato(prestamo);}catch(e){return NextResponse.json({mensaje:e instanceof Error?e.message:'Revisa los datos del contrato.'},{status:409,headers:{'Cache-Control':'private, no-store'}});}

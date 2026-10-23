@@ -1,122 +1,76 @@
 # Aplicación de préstamos
 
-Sistema académico del Sprint 1 para cinco agencias del Perú. Reglas, flujos, ocho HU y criterios de aceptación están en [REQUISITOS.md](../docs/REQUISITOS.md) y [su Word equivalente](../docs/Sprint_1_Sistema_Prestamos.docx). Las pruebas se describen en [tests/README.md](tests/README.md).
+Sistema académico para cinco agencias del Perú. Las ocho HU están en [REQUISITOS.md](../docs/REQUISITOS.md) y [su Word](../docs/Sprint_1_Sistema_Prestamos.docx). Las pruebas están en [tests/README.md](tests/README.md).
 
 ## Ejecución local
 
-Usa Node.js 24, versión utilizada en las pruebas. Desde `app`, instala con `npm.cmd ci` si es la primera ejecución o cambió `package-lock.json`. Conservando las mismas dependencias, una actualización documental no necesita reinstalarlas.
+Usa Node.js 24. Desde `app`: `npm.cmd ci`, `npm.cmd run dev`. Verificación: `npm.cmd run lint` y `npm.cmd run build`. Servir compilación: `npm.cmd start`.
 
-Crea `app/.env.local` con los valores del proyecto:
+Configura `app/.env.local` sin versionarlo:
 
 | Variable | Uso |
 | --- | --- |
-| `NEXT_PUBLIC_SUPABASE_URL` | URL del proyecto Supabase. |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Clave pública del cliente. |
-| `API_PERU_TOKEN` | API Key de apiperu.pe; solo servidor, sin NEXT_PUBLIC_. |
-| `DECOLECTA_API_TOKEN` | Token del proveedor de consulta; solo servidor. |
-| `IDENTITY_SIGNING_SECRET` | Clave de firma de identidad, coincidente con la configuración privada de la base; solo servidor. |
+| NEXT_PUBLIC_SUPABASE_URL | URL del proyecto. |
+| NEXT_PUBLIC_SUPABASE_ANON_KEY | Clave pública del cliente. |
+| API_PERU_TOKEN | API Key de apiperu.pe, solo servidor. |
+| DECOLECTA_API_TOKEN | DNI y datos tributarios, solo servidor. |
+| IDENTITY_SIGNING_SECRET | Firma coincidente con la configuración privada de la base. |
 
-No publiques `.env.local`. Los valores de prueba local no sirven para producción. La configuración inicial de firma utiliza `scripts/configurar-identidad.mjs`; no cambies una firma operativa por actualizar documentos.
+La firma inicial usa `scripts/configurar-identidad.mjs`. No reemplaces una firma operativa por actualizar código. Ante un fallo de caché, detén el servidor y retira solo `app/.next`.
 
-Desde `app`:
+## Nuevo préstamo RUC 20
 
-```powershell
-npm.cmd run dev
-```
+Cliente → Condiciones → Cronograma → Confirmar préstamo. Se consulta el RUC ACTIVO/HABIDO, se ingresa el DNI de quien solicita y firma y se comprueba su coincidencia completa con un representante devuelto por API Perú para esa empresa. Después se verifica identidad vigente y presencia. No se pide propietario, referencia documental, certificado ni PDF; tampoco hay envío pendiente ni evaluación posterior.
 
-Para verificar código: `npm.cmd run lint` y `npm.cmd run build`. Para servir la compilación: `npm.cmd start`. Si la caché se daña, detén el servidor y retira solo `app/.next`; conserva `src`, plantillas, variables y dependencias.
+La API puede devolver varias personas. Se verifica al firmante ingresado. Respuesta sin coincidencias, caída o DNI enmascarado impide continuar. El sistema no reconstruye dígitos ni presenta la consulta como certificación del alcance de poderes.
+
+La consulta se ejecuta al pulsar el botón, se firma por asesor y RUC y vence a los 30 minutos. El servidor repite la comprobación al confirmar. Renovarla elimina la selección; cambiar DNI exige comprobar nuevamente vínculo e identidad.
+
+El borrador permanece en memoria hasta confirmar. La transacción registra personas y empresa cuando corresponda, préstamo, copia contractual y cuotas, o revierte todo. Los reintentos conservan la clave para evitar duplicados.
+
+## Límite por representante
+
+Cada préstamo RUC 20 guarda `prestamos.responsable_id` con su representante. Préstamos personales, RUC 10 y los de varias empresas suman al límite global de S/ 10 000 entre las cinco agencias. Solo amortización pagada libera cupo. Otro representante para el siguiente préstamo no cambia deuda, contrato ni responsabilidad anteriores.
+
+La empresa mantiene ficha propia y representante actual para futuras atenciones. Clientes incorpora empresa y representante por préstamos locales; un cobro ajeno no amplía la cartera. Préstamos conserva la agencia de origen y permite buscar por DNI del responsable. Pagos por DNI/RUC 10 reúne sus operaciones; por RUC 20 muestra solo esa empresa, aunque tenga varios representantes.
+
+Es una regla académica de límite; no constituye automáticamente garantía personal. Los registros anteriores conservan sus responsables mediante compatibilidad con el propietario histórico.
 
 ## Base de datos
 
-El esquema vigente admite solicitudes completas de préstamo RUC 20. Su instalación inicial utiliza una sola vez `supabase/migrations/20261022170855_solicitudes_prestamo_ruc20.sql`, coordinado con la publicación del código. Crea solicitudes e historial, RLS y funciones para enviar y evaluar; conserva clientes, préstamos y pagos existentes. No reapliques SQL antiguos sobre la base actualizada. No requiere nuevas variables ni dependencias.
+Sobre la versión publicada `ddc41b2`, aplicar una vez `supabase/migrations/20261023020208_ruc20_directo_representante.sql`, coordinado con el código. Agrega origen de empresa y responsable por préstamo, ajusta saldos, cobros, relaciones y vistas y crea `confirmar_empresa_api`. Conserva datos. No requiere nuevas variables ni dependencias; API_PERU_TOKEN debe estar en Vercel.
 
-Para otra instalación sobre el esquema inicial compatible:
+Instalación compatible desde el esquema inicial, en orden:
 
-1. Aplicar las migraciones históricas de `supabase/migrations` anteriores a `20261018`, en orden cronológico.
-2. Aplicar `scripts/habilitar_modalidad_personal.sql`.
-3. Aplicar `scripts/revalidacion_y_pagos_globales.sql`.
-4. Aplicar `scripts/fichas_compartidas_y_grupo_pago.sql`.
-5. Aplicar `scripts/control_sesiones.sql`.
-6. Aplicar `supabase/migrations/20261018210722_retirar_cargos_y_ajustar_contrato.sql`.
-7. Aplicar `supabase/migrations/20261019194843_revision_representacion_ruc20.sql`, con Storage disponible.
-8. Aplicar `supabase/migrations/20261022170855_solicitudes_prestamo_ruc20.sql`.
-9. Aplicar `supabase/migrations/20261022201553_propietario_ausente_pendiente.sql`.
+1. Migraciones históricas anteriores a `20261018`.
+2. `scripts/habilitar_modalidad_personal.sql`.
+3. `scripts/revalidacion_y_pagos_globales.sql`.
+4. `scripts/fichas_compartidas_y_grupo_pago.sql`.
+5. `scripts/control_sesiones.sql`.
+6. Migración `20261018210722_retirar_cargos_y_ajustar_contrato.sql`.
+7. `20261019194843_revision_representacion_ruc20.sql`, con Storage disponible.
+8. `20261022170855_solicitudes_prestamo_ruc20.sql`.
+9. `20261022201553_propietario_ausente_pendiente.sql`.
+10. `20261022205543_simplificar_evaluacion_contrato_ruc20.sql`.
+11. `20261023013114_api_representantes_cuotas_30_dias.sql`.
+12. `20261023020208_ruc20_directo_representante.sql`.
 
-Las migraciones presuponen el esquema inicial; las pruebas lo construyen explícitamente. `scripts/ACTUALIZAR_SISTEMA.sql` es una alternativa acumulada de los ajustes previos de modalidad, fichas y pagos, pero no incluye sesiones. No lo reapliques después del control de sesiones: reemplazaría su autorización central. `docs/archivo/007_no_aplicada.sql` es histórico y no se ejecuta.
+No reapliques scripts antiguos sobre el esquema actualizado. `scripts/ACTUALIZAR_SISTEMA.sql` no incluye sesiones; aplicarlo después sustituiría su autorización central. `docs/archivo/007_no_aplicada.sql` es histórico.
 
-Cada asesor activo puede enviar y evaluar solicitudes RUC 20 de su agencia, incluidas las suyas. No se crea un rol adicional ni se requiere conceder `autoriza_credito`; ese permiso conserva su función independiente de regularización especial. La base impide consultar expedientes o evaluar solicitudes de otras agencias. El buscador de RUC solo informa si hay una solicitud abierta en otra agencia y dónde atenderla. Las migraciones previas se conservan como historial; no hay configuración de recargos por atraso.
+Solicitudes documentales anteriores se conservan como historial; el menú las retira y se bloquean nuevos envíos/evaluaciones para impedir eludir la validación API. No se eliminan sus tablas, archivos ni historial. Las suites históricas prueban sus versiones del esquema; la suite directa aplica las migraciones nuevas.
 
-## Clientes y representación de empresas
+## Contrato y cronograma
 
-En Clientes, una ficha DNI/RUC 10 aparece en Personas con DNI y en Negocios y empresas con RUC; Todos conserva una sola fila con ambos documentos. Se mantiene la cartera local y el capital global de la ficha. El filtro de titulares de Préstamos conserva su significado contractual.
+El contrato usa empresa, RUC, nombre y DNI del representante guardados en cada préstamo, aunque la ficha cambie. Mantiene formato del profesor y termina en firmas, sin anexo. Se conservan `docs/Contrato_profesor.docx`, `templates/contrato.docx` y `templates/contrato-texto.json`. Sin copia completa del firmante se bloquea la emisión.
 
-RUC 20 recorre Identificación → Documentación → Condiciones → Cronograma y envío. Permite corregir DNI durante identificación y repite su verificación; nombres externos no se editan. Una empresa registrada conserva propietario para el límite; en otra solicitud puede usar otro representante verificado. Corregir personas descarta el PDF asociado. Atrás conserva el borrador, sus condiciones y el archivo seleccionado; abandonar descarta lo no enviado. DNI/RUC 10 mantiene su flujo.
+Cuotas nuevas: 30, 60, 90 días desde la confirmación. TEA 30 %, sistema francés, tasa por período `(1 + 0,30)^(30/360) − 1`. No se cambian cronogramas anteriores ni el umbral extrajudicial de doce meses calendario. No se cobran recargos por atraso.
 
-El selector admite copia literal de la empresa, escritura pública de constitución, acto constitutivo de SACS y copia certificada de matrícula de acciones, según el vínculo que debe acreditarse. La referencia identifica el documento; no acredita propiedad por sí misma. El certificado de vigencia de poder SUNARP corresponde al firmante y se presenta aparte como PDF de hasta 5 MB. Los documentos cumplen fines diferentes; el asesor revisa pertinencia, autenticidad y contenido. Este flujo admite firma individual.
+## API y publicación
 
-Antes del envío no hay cargas ni nuevas altas desde el borrador RUC 20. Al pulsar Enviar solicitud de préstamo comienza la carga privada y la reserva técnica del archivo; el servidor comprueba formato básico y SHA-256 y firma el recibo con `IDENTITY_SIGNING_SECRET`. Con las identidades verificadas, una transacción valida identidad, registra personas y empresa cuando corresponde, finaliza el PDF y guarda la solicitud pendiente con monto, plazo y simulación. Un fallo revierte el expediente y las altas; una carga técnica incompleta no aparece como solicitud ni préstamo. Reintentar conserva la clave para evitar duplicados. No se crean préstamos, cuotas cobrables o contratos definitivos al enviar, ni se reserva capital.
+Proveedor: https://apiperu.pe/; contrato técnico: https://docs.apiperu.pe/openapi.json. Endpoint `POST https://api.apiperu.pe/ruc/representantes`, Bearer token, JSON con `ruc`. El ejemplo oficial tiene datos ocultos; la cuenta real debe devolver DNI completo para validar.
 
-La pantalla final informa el envío y regresa a Préstamos. La evaluación se abre después desde Solicitudes de préstamo: el asesor contrasta documentos y facultades, reutiliza la referencia de propiedad, copia el código del certificado, confirma firma individual y aprueba, observa o rechaza. Las observaciones son opcionales al aprobar; observar o rechazar exige un motivo de 10 a 1000 caracteres. Solo aprobar genera el préstamo y el cronograma desde la fecha de aprobación. Antes consulta nuevamente SUNAT y comprueba identidad vigente, atrasos, conciliación y capital global de S/ 10 000. Un fallo conserva la solicitud pendiente y revierte la aprobación. No se atribuye un plazo legal de caducidad al certificado.
+API_PERU_TOKEN debe ser secreto de servidor, sin NEXT_PUBLIC_. No copiar tokens a chats ni archivos versionados. Pruebas con respuestas simuladas; falta consulta autenticada con la cuenta real para comprobar cobertura y cuota.
 
-Solo puede existir una solicitud pendiente u observada por RUC 20 entre agencias. Al repetir la consulta se abre su detalle, o se informa la agencia que la atiende. Observada se corrige y reenvía con la misma identidad de solicitud y un nuevo PDF; el historial conserva cada presentación y certificado. Rechazada permite una nueva solicitud; aprobada conserva su préstamo y permite otra si hay elegibilidad y cupo. No se modifica ni se elimina ninguna operación anterior.
+El usuario sube a GitHub; después se verifica el commit y se coordina migración y Vercel. Raíz: `app`. No registrar operaciones ficticias en producción. Entregar ZIP no acredita publicación.
 
-Las rutas antiguas de representación quedan para consulta histórica; el listado redirige a Solicitudes de préstamo. Las nuevas colocaciones RUC 20 requieren evaluar una solicitud, incluso si se intenta llamar directamente al RPC antiguo.
-
-## Contrato y consultas
-
-`docs/Contrato_profesor.docx` conserva el original; `templates/contrato.docx` y `templates/contrato-texto.json` alimentan descarga e impresión. La plantilla generada termina en las firmas, sin anexo de condiciones, y aplica únicamente el interés compensatorio del cronograma. Conserva esas plantillas. Las menciones del original a EFS/Préstamos Castillo, una cláusula décimo sexta ausente o módulos fuera del sprint no crean funciones ni cargos en la aplicación.
-
-La consulta DNI obtiene nombres; caducidad y presencia se acreditan mediante revisión del asesor. SUNAT se actualiza al consultar y guardar, sin proceso periódico externo. Las respuestas requieren proveedor y firma configurados. Un error técnico no se guarda como rechazo de identidad.
-
-## Publicación
-
-El usuario publica en GitHub. Se verifica el commit exacto de `main` y su despliegue en Vercel; si la integración no lo dispara, se crea el despliegue desde ese commit. Vercel usa `app` como raíz y las cuatro variables del entorno correspondiente. Verifica la compilación, el login, las rutas protegidas y un recorrido autorizado. No registres operaciones reales para comprobar una edición documental.
-
-Para una instalación nueva, coordina el esquema de solicitudes y la publicación de código. Los ajustes de campos, navegación, filtros y botones del 22/10/2026 no requieren SQL adicional. Una actualización exclusivamente documental tampoco requiere cambios de Supabase ni redeploy de Vercel. La entrega de un ZIP por sí sola no acredita su publicación.
-
-Conserva únicamente `docs/REQUISITOS.md`, su Word, este README y `tests/README.md` como documentación del sistema. El contrato original y las plantillas permanecen. `AGENTS.md` contiene instrucciones de desarrollo generadas por Next.js y no forma parte de los tres Markdown de documentación.
-
-### Ajustes de interfaz del 22/10/2026
-
-- Documentación de empresa: campos por tipo (partida y asiento; escritura, fecha y notaría; partida y fecha del acto SACS; libro, folio y asiento de matrícula). La referencia se arma automáticamente. Los números conservan ceros iniciales y los asientos admiten letras y números.
-- Las referencias existentes se recuperan en campos solo si la conversión es exacta; las demás se conservan y muestran una opción explícita para corregirlas. Se mantiene el formato v1 de la evidencia, sin migración de base de datos.
-- Nuevo préstamo ya no muestra el enlace «Ir a clientes». Se conservan la navegación interna y la advertencia al salir con un borrador.
-- Los filtros de Solicitudes tienen separación de la tabla, también en pantallas pequeñas.
-
-### Restricciones de entrada de documentos
-
-Los campos numéricos rechazan letras, espacios, signos y decimales. Los asientos admiten letras y números y se muestran en mayúsculas. Notaría admite nombres con tildes, números y puntuación habitual y exige al menos una letra. El pegado inválido se rechaza completo conservando el valor anterior.
-
-Límites operativos de la interfaz: partida 12 dígitos; escritura 10; libro y folio 6; asiento 10 caracteres; notaría 80. Estos límites no afirman una longitud registral universal. Las referencias guardadas anteriormente se conservan sin recortarlas. Cada campo muestra su ayuda y las fechas se comprueban como fechas reales.
-
-Los botones «Corregir DNI del propietario» y «Corregir DNI del representante» aparecen como acciones discretas del encabezado de su tarjeta, con icono de lápiz, texto azul grisáceo y fondo transparente. En móvil se ubican debajo del título. Se conserva la restricción del propietario ya registrado y el comportamiento de corrección del DNI.
-
-La carpeta `docs` mantiene los requisitos y su Word sincronizados, incluidos los ajustes de interfaz y validaciones del 22/10/2026. Antes de cerrar una entrega, comprobar las HU, los criterios, los casos de verificación y los manuales de ejecución y pruebas.
-
-## Propietario ausente pendiente de verificación
-
-La actualización de este flujo requiere aplicar una vez `supabase/migrations/20261022201553_propietario_ausente_pendiente.sql` antes de publicar el código nuevo. No elimina datos ni requiere nuevas variables o dependencias. Incluye `pendiente_identidad` en solicitudes abiertas, permite que el expediente conserve un propietario aún sin ficha verificada y bloquea aprobar mientras falte su verificación presencial. El estado se determina en la base, sin confiar en la etiqueta del navegador.
-
-Nuevo préstamo permite enviar el DNI declarado, documentos, representante verificado, monto y plazo. No inventa nombres ni aprobación del propietario, no crea una empresa nueva sin el vínculo verificado y no reserva cupo. El capital se muestra por comprobar. Si el propietario ya tiene identidad vigente, conserva el recorrido normal.
-
-Desde el detalle de la misma solicitud se verifica el DNI fijo, su caducidad, original y presencia y se guarda expresamente la revisión. La operación consulta SUNAT, registra la identidad y el vínculo empresarial de forma atómica, conserva el certificado y agrega historial. Reintentar no duplica la revisión. Una solicitud observada conserva ese estado; completar identidad no resuelve sus observaciones documentales. Solo la evaluación posterior puede generar el préstamo y repite todos los controles de elegibilidad y capital.
-
-El representante debe usar otro DNI si se eligió un firmante distinto del propietario. La coincidencia se avisa bajo el campo, deshabilita Verificar representante y evita consultar tanto la ficha como el proveedor externo. Al corregirlo se habilita la consulta.
-
-## Evaluación y contratos RUC 20
-
-Aplicar después de las migraciones anteriores `supabase/migrations/20261022205543_simplificar_evaluacion_contrato_ruc20.sql`. Cambia solo la función de evaluación; no reescribe préstamos ni evaluaciones previas. Conserva permisos, agencia, sesión, comprobación de identidad, certificado, firma individual y cupo global.
-
-La evaluación muestra el documento de propiedad registrado y pide solo el código del certificado de vigencia de poder. Admite letras, números, guion y barra, hasta 80 caracteres; es un límite operativo, no una especificación de SUNARP. Conserva ceros iniciales y rechaza pegados inválidos sin recortar. La base construye la referencia con el documento guardado y registra revisor y fecha. Aprobar sin observaciones guarda una descripción automática de las confirmaciones; observar o rechazar requiere un motivo de 10 a 1000 caracteres. Esto no automatiza la autenticidad del certificado.
-
-El contrato RUC 20 toma la razón social, RUC y representante de la copia guardada en el préstamo. La firma incluye nombre, DNI y calidad de representante, incluso cuando este es el propietario. El propietario no se convierte en aval. Si falta la copia completa del firmante, descarga e impresión devuelven un aviso y no sustituyen datos con la ficha actual. Se mantienen DNI/RUC 10 y el cierre en firmas. La revisión visual usa contratos ficticios de ambos casos RUC 20, DNI y RUC 10; nunca genera operaciones de prueba en producción.
-
-## API Perú y vencimientos cada 30 días
-
-Aplicar `supabase/migrations/20261023013114_api_representantes_cuotas_30_dias.sql` después de simplificar_evaluacion_contrato_ruc20. Cambia la creación de cuotas nuevas y el envío de solicitudes, conservando permisos y datos anteriores. El préstamo guarda periodicidad 30_dias; una simulación anterior sin esa marca se muestra con sus meses calendario originales. Al aprobar hoy se genera el calendario definitivo cada 30 días. La tasa por período sigue siendo (1 + 0,30)^(30/360) − 1; los doce meses calendario de atraso no cambian.
-
-API Perú: https://apiperu.pe/ y contrato técnico https://docs.apiperu.pe/openapi.json, POST https://api.apiperu.pe/ruc/representantes. En Vercel guardar API_PERU_TOKEN solo en servidor. Decolecta continúa para DNI y datos tributarios. La consulta se ejecuta al pulsar el botón, sin selección automática y sin guardar hasta enviar. Se recuperan múltiples representantes; no se presupone que todos firmen juntos. Los documentos distintos de DNI siguen fuera del alcance.
-
-El ejemplo oficial contiene datos enmascarados. Se conserva esa máscara sin reconstruir identidades. Solo un DNI completo permite contrastar la selección con el firmante verificado; los datos parciales se guardan como referencia parcial, sin afirmar coincidencia. La consulta se firma por asesor y RUC, vence a los 30 minutos y su selección se valida dentro de la transacción. Una consulta ausente o fallida permite el flujo documental previo y nunca se registra como verificación API satisfactoria. No sustituye vigencia de poder ni identifica al propietario del límite académico.
-
-Activación: crear cuenta en apiperu.pe, generar API Key, guardarla en Settings → Environment Variables del proyecto Vercel como API_PERU_TOKEN (Production; Preview solo si se desea probar allí) y publicar un nuevo despliegue. No copiar claves en chats ni archivos versionados. La integración está probada con respuestas simuladas; falta una consulta autenticada con la cuenta del usuario para comprobar datos reales y cupo.
+Documentación: este README, `tests/README.md`, requisitos y su Word. AGENTS.md contiene instrucciones de desarrollo de Next.js.
