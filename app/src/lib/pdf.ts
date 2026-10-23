@@ -37,8 +37,9 @@ export function generarPDF(
       ['Código del préstamo', 'PR-'+prestamo.id.slice(0,8).toUpperCase()],
       ['Agencia de origen', agencia.nombre],
       ['Fecha', formatFecha(new Date(prestamo.fecha_prestamo.slice(0,10)+'T00:00:00'))],
-      ['Monto y plazo', `${formatMoneda(prestamo.monto)} · ${prestamo.plazo_meses} meses`],
-      ['TEA y tasa mensual', '30 % · TEM 2,210445 %'],
+      ['Monto y plazo', `${formatMoneda(prestamo.monto)} · ${prestamo.plazo_meses} cuotas`],
+      ['TEA y tasa por período', '30 % · 2,210445 %'],
+      ['Periodicidad', prestamo.identidad_contrato?.periodicidad==='30_dias'?'Cada 30 días':'Según cronograma confirmado'],
     ], styles: {fontSize:9,cellPadding:2}, columnStyles:{0:{cellWidth:43,fontStyle:'bold'},1:{cellWidth:139}},
   });
   const y=(doc as jsPDF & {lastAutoTable:{finalY:number}}).lastAutoTable.finalY;

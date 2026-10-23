@@ -12,6 +12,7 @@ Crea `app/.env.local` con los valores del proyecto:
 | --- | --- |
 | `NEXT_PUBLIC_SUPABASE_URL` | URL del proyecto Supabase. |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Clave pública del cliente. |
+| `API_PERU_TOKEN` | API Key de apiperu.pe; solo servidor, sin NEXT_PUBLIC_. |
 | `DECOLECTA_API_TOKEN` | Token del proveedor de consulta; solo servidor. |
 | `IDENTITY_SIGNING_SECRET` | Clave de firma de identidad, coincidente con la configuración privada de la base; solo servidor. |
 
@@ -109,3 +110,13 @@ Aplicar después de las migraciones anteriores `supabase/migrations/202610222055
 La evaluación muestra el documento de propiedad registrado y pide solo el código del certificado de vigencia de poder. Admite letras, números, guion y barra, hasta 80 caracteres; es un límite operativo, no una especificación de SUNARP. Conserva ceros iniciales y rechaza pegados inválidos sin recortar. La base construye la referencia con el documento guardado y registra revisor y fecha. Aprobar sin observaciones guarda una descripción automática de las confirmaciones; observar o rechazar requiere un motivo de 10 a 1000 caracteres. Esto no automatiza la autenticidad del certificado.
 
 El contrato RUC 20 toma la razón social, RUC y representante de la copia guardada en el préstamo. La firma incluye nombre, DNI y calidad de representante, incluso cuando este es el propietario. El propietario no se convierte en aval. Si falta la copia completa del firmante, descarga e impresión devuelven un aviso y no sustituyen datos con la ficha actual. Se mantienen DNI/RUC 10 y el cierre en firmas. La revisión visual usa contratos ficticios de ambos casos RUC 20, DNI y RUC 10; nunca genera operaciones de prueba en producción.
+
+## API Perú y vencimientos cada 30 días
+
+Aplicar `supabase/migrations/20261023013114_api_representantes_cuotas_30_dias.sql` después de simplificar_evaluacion_contrato_ruc20. Cambia la creación de cuotas nuevas y el envío de solicitudes, conservando permisos y datos anteriores. El préstamo guarda periodicidad 30_dias; una simulación anterior sin esa marca se muestra con sus meses calendario originales. Al aprobar hoy se genera el calendario definitivo cada 30 días. La tasa por período sigue siendo (1 + 0,30)^(30/360) − 1; los doce meses calendario de atraso no cambian.
+
+API Perú: https://apiperu.pe/ y contrato técnico https://docs.apiperu.pe/openapi.json, POST https://api.apiperu.pe/ruc/representantes. En Vercel guardar API_PERU_TOKEN solo en servidor. Decolecta continúa para DNI y datos tributarios. La consulta se ejecuta al pulsar el botón, sin selección automática y sin guardar hasta enviar. Se recuperan múltiples representantes; no se presupone que todos firmen juntos. Los documentos distintos de DNI siguen fuera del alcance.
+
+El ejemplo oficial contiene datos enmascarados. Se conserva esa máscara sin reconstruir identidades. Solo un DNI completo permite contrastar la selección con el firmante verificado; los datos parciales se guardan como referencia parcial, sin afirmar coincidencia. La consulta se firma por asesor y RUC, vence a los 30 minutos y su selección se valida dentro de la transacción. Una consulta ausente o fallida permite el flujo documental previo y nunca se registra como verificación API satisfactoria. No sustituye vigencia de poder ni identifica al propietario del límite académico.
+
+Activación: crear cuenta en apiperu.pe, generar API Key, guardarla en Settings → Environment Variables del proyecto Vercel como API_PERU_TOKEN (Production; Preview solo si se desea probar allí) y publicar un nuevo despliegue. No copiar claves en chats ni archivos versionados. La integración está probada con respuestas simuladas; falta una consulta autenticada con la cuenta del usuario para comprobar datos reales y cupo.

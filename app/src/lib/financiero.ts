@@ -45,7 +45,8 @@ export function agregarMeses(fecha: Date, meses: number): Date {
 export function generarCronograma(
   monto: number,
   n: number,
-  fechaPrestamo: Date | string
+  fechaPrestamo: Date | string,
+  periodicidad:'30_dias'|'mensual'='30_dias'
 ): FilaCuota[] {
   const fecha0 = typeof fechaPrestamo === 'string' ? new Date(fechaPrestamo + 'T00:00:00') : fechaPrestamo;
   const cuotaConst = monto * TEM / (1 - Math.pow(1 + TEM, -n));
@@ -70,7 +71,7 @@ export function generarCronograma(
 
     filas.push({
       numero_cuota: k,
-      fecha_vencimiento: agregarMeses(fecha0, k),
+      fecha_vencimiento: periodicidad==='mensual'?agregarMeses(fecha0,k):new Date(fecha0.getFullYear(),fecha0.getMonth(),fecha0.getDate()+30*k),
       cuota_total,
       interes,
       amortizacion,

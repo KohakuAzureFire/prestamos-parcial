@@ -366,3 +366,5 @@ h1{font-size:32px!important;font-weight:750!important;letter-spacing:-.045em!imp
 @media(max-width:640px){.company-identity-heading{align-items:flex-start;flex-direction:column;gap:8px}.identity-correction{padding-left:0}}
 
 .evaluation-card{display:flex;flex-direction:column;gap:18px}.evaluation-card .field-error{color:#b33444;font-size:12px}.evaluation-card .form-checkbox{margin:0}
+
+.api-representantes{border:0;padding:0;margin:18px 0;display:grid;gap:12px}.api-representantes legend{font-weight:600;margin-bottom:12px}.api-representante{display:flex;gap:12px;align-items:flex-start;padding:14px;border:1px solid #dce6ef;border-radius:8px}.api-representante input{margin-top:4px}.api-representante span{display:grid;gap:5px}.api-representante small{color:#607b94}

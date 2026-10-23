@@ -21,12 +21,12 @@ assert.equal(Object.keys(z.files).length,Object.keys(new PizZip(template).files)
 // Descargar e imprimir recorren la misma ruta real, con la sesión y lectura RLS simuladas.
 let actual=sample,autenticado=true;const filtros=[];
 const routeSource=fs.readFileSync(new URL('../src/app/api/prestamos/[id]/contrato/route.ts',import.meta.url),'utf8');
-const module={exports:{}};
+const routeModule={exports:{}};
 const chain={select:()=>chain,eq:(k,v)=>{filtros.push([k,v]);return chain;},maybeSingle:async()=>({data:actual?.estado==='confirmado'?actual:null})};
 const mocks={'node:fs/promises':{readFile:async()=>template},'node:path':{default:{join:(...p)=>p.join('/')}},'next/server':{NextResponse:{json:(d,init)=>Response.json(d,init)}},'@/lib/supabase/server':{createClient:async()=>({auth:{getUser:async()=>({data:{user:autenticado?{id:'asesor-prueba'}:null}})},from:()=>chain})},'@/lib/contrato':{camposContrato,completarTexto,escapar,generarContratoDocx},'../../../../../../templates/contrato-texto.json':{default:bloques}};
-new Function('require','exports',ts.transpileModule(routeSource,{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText)((n)=>{if(!(n in mocks))throw new Error('Import no simulado '+n);return mocks[n];},module.exports);
+new Function('require','exports',ts.transpileModule(routeSource,{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText)((n)=>{if(!(n in mocks))throw new Error('Import no simulado '+n);return mocks[n];},routeModule.exports);
 const request=(format)=>({nextUrl:new URL('https://prueba.local/api/prestamos/'+sample.id+'/contrato'+(format?'?formato=imprimir':''))});
-const get=(format)=>module.exports.GET(request(format),{params:Promise.resolve({id:sample.id})});
+const get=(format)=>routeModule.exports.GET(request(format),{params:Promise.resolve({id:sample.id})});
 for(const p of [sample,same,solo,negocio]){
  actual={...p,estado:'confirmado'};const word=await get(false);assert.equal(word.status,200);assert.ok(word.headers.get('content-type').includes('wordprocessingml'));assert.ok(new PizZip(Buffer.from(await word.arrayBuffer())).file('word/document.xml').asText().includes(escapar(camposContrato(p).CLIENTE)));
  const printed=await get(true);assert.equal(printed.status,200);const html=await printed.text();assert.ok(html.includes(escapar(camposContrato(p).CLIENTE)));assert.ok(html.includes(escapar(camposContrato(p).FIRMANTE)));assert.ok(html.includes('white-space:pre-line'));assert.equal(html.includes('{{'),false);

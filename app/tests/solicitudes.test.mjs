@@ -9,7 +9,7 @@ try{
  await db.exec(`create schema storage;create table storage.buckets(id text primary key,name text,public boolean,file_size_limit bigint,allowed_mime_types text[]);
  create table storage.objects(id uuid primary key default gen_random_uuid(),bucket_id text,name text,metadata jsonb);
  alter table storage.objects enable row level security;grant usage on schema storage to authenticated;grant select,insert,update,delete on storage.objects to authenticated;`);
- for(const n of ['20261019194843_revision_representacion_ruc20.sql','20261022170855_solicitudes_prestamo_ruc20.sql','20261022201553_propietario_ausente_pendiente.sql','20261022205543_simplificar_evaluacion_contrato_ruc20.sql'])await db.exec(fs.readFileSync(new URL('../supabase/migrations/'+n,import.meta.url),'utf8'));
+ for(const n of ['20261019194843_revision_representacion_ruc20.sql','20261022170855_solicitudes_prestamo_ruc20.sql','20261022201553_propietario_ausente_pendiente.sql','20261022205543_simplificar_evaluacion_contrato_ruc20.sql','20261023013114_api_representantes_cuotas_30_dias.sql']){const previo=n.startsWith('20261023')?(await db.query('select jsonb_agg(to_jsonb(q) order by id) filas from public.cuotas q')).rows[0].filas:null;await db.exec(fs.readFileSync(new URL('../supabase/migrations/'+n,import.meta.url),'utf8'));if(previo)assert.deepEqual((await db.query('select jsonb_agg(to_jsonb(q) order by id) filas from public.cuotas q')).rows[0].filas,previo,'La migración conserva cada cuota histórica');}
  const uid=users.trujillo; // Cuenta sin autoriza_credito: evalúa como asesor de su propia agencia.
  const firmado=(d,u=uid)=>{const payload=JSON.stringify({...d,asesor_id:u,consultadoEn:new Date().toISOString()});return {payload,firma:crypto.createHmac('sha256',secret).update(payload).digest('hex')};};
  const cons=(ruc,u=uid,estado='ACTIVO')=>({ruc,...firmado({tipo:'ruc',ruc,razon_social:'EMPRESA SOLICITUD PRUEBA',estado,condicion:'HABIDO'},u)});
@@ -23,9 +23,18 @@ try{
  await asUser(u,tx=>tx.query("insert into storage.objects(bucket_id,name,metadata) values('certificados-representacion',$1,'{\"size\":100,\"mimetype\":\"application/pdf\"}')",[r.archivo_ruta]));
  const seal=firmado({tipo:'certificado_pdf',id:r.id,ruta:r.archivo_ruta,bytes:100,sha256:'b'.repeat(64)},u);return {r,seal};}
  async function args(d=datos(),m=5000,u=uid){const {seal}=await archivo(d,u);return {p_datos:d,p_monto:m,p_meses:6,p_clave:crypto.randomUUID(),p_payload:seal.payload,p_firma:seal.firma};}
- const a=await args();assert.deepEqual(await count(),before,'Antes de enviar no se crea cliente ni préstamo');
+ const a=await args();
+ const representantes=[{tipo_documento:'DNI',documento:owner,nombre:'PROPIETARIO PRUEBA',cargo:'GERENTE',desde:'2020-01-01',dni_completo:true},{tipo_documento:'DNI',documento:rep,nombre:'REPRESENTANTE PRUEBA',cargo:'APODERADO',desde:'2021-01-01',dni_completo:true}];
+ const consultaApi=firmado({tipo:'representantes',ruc,representantes,proveedor:'apiperu.pe'});
+ a.p_datos.consulta_representantes={...consultaApi,indice:0};
+ await assert.rejects(rpc('enviar_solicitud',a,uid),/no coincide/);
+ a.p_datos.consulta_representantes={...consultaApi,indice:2};await assert.rejects(rpc('enviar_solicitud',a,uid),/Selecciona/);
+ a.p_datos.consulta_representantes={...consultaApi,firma:'f'.repeat(64),indice:1};await assert.rejects(rpc('enviar_solicitud',a,uid),/inválida/);
+ a.p_datos.consulta_representantes={...consultaApi,indice:1};
+ assert.deepEqual(await count(),before,'Antes de enviar no se crea cliente ni préstamo');
  const id=await rpc('enviar_solicitud',a,uid);assert.equal(await rpc('enviar_solicitud',a,uid),id);
  let sol=(await db.query('select * from public.solicitudes_prestamo where id=$1',[id])).rows[0];
+ assert.equal(sol.expediente.consulta_representantes.representante.documento,rep);assert.equal(sol.expediente.periodicidad,'30_dias');
  assert.equal(sol.estado,'pendiente');assert.equal((await count()).prestamos,before.prestamos);assert.equal((await count()).cuotas,before.cuotas);assert.equal((await count()).pagos,before.pagos);
  assert.equal((await rpc('resolver_solicitud_ruc',{p_ruc:ruc},uid)).id,id);
  const otro=await rpc('resolver_solicitud_ruc',{p_ruc:ruc},users.chimbote);assert.equal(otro.id,null);assert.equal(otro.agencia,'Trujillo');
@@ -120,9 +129,11 @@ try{
  // Representante nuevo: solo su identidad se registra al enviar.
  const a3=datos(rucValido('2070000013'),uid,'71000003');a3.propietario={dni:'71000004'};
  a3.evidencia_propiedad=JSON.stringify({v:1,tipo:'partida',ref:'Partida 12345678, asiento A00001',dni:'71000004',presente:false});
+ a3.consulta_representantes={...firmado({tipo:'representantes',ruc:a3.consulta.ruc,proveedor:'apiperu.pe',representantes:[{tipo_documento:'DNI',documento:'71****03',nombre:'REP *****',cargo:'APODERADO',desde:'',dni_completo:false}]}),indice:0};
  const ap3=await args(a3,100);const count3=await count();const id3=await rpc('enviar_solicitud',ap3,uid);
  assert.equal((await count()).clientes,count3.clientes+1);
  const sp3=(await db.query('select * from public.solicitudes_prestamo where id=$1',[id3])).rows[0];
+ assert.equal(sp3.expediente.consulta_representantes.representante.dni_completo,false,'Dato parcial nunca se declara DNI completo contrastado');
  assert.equal(sp3.cliente_id,null);assert.equal(sp3.propietario_id,null);assert.ok(sp3.representante_id);
  await rpc('evaluar_solicitud',evalArgs(sp3,{p_estado:'rechazada'}),uid);
  assert.ok(await rpc('enviar_solicitud',await args(a3,100),uid));
@@ -149,6 +160,8 @@ try{
  }finally{if(envPrev===undefined)delete process.env.IDENTITY_SIGNING_SECRET;else process.env.IDENTITY_SIGNING_SECRET=envPrev;}
  async function contratoDatos(pid){return (await db.query("select p.*,p.fecha_prestamo::text fecha_prestamo,to_jsonb(c) clientes,jsonb_build_object('nombre',a.nombre) agencias,(select jsonb_agg(q) from public.cuotas q where q.prestamo_id=p.id) cuotas from public.prestamos p join public.clientes c on c.id=p.cliente_id join public.agencias a on a.id=p.agencia_id where p.id=$1",[pid])).rows[0];}
  const distinto=await contratoDatos(prestamo),mismo=await contratoDatos(selfLoan);
+ for(const pid of [prestamo,selfLoan]){const result=(await db.query('select bool_and(q.fecha_vencimiento=p.fecha_prestamo+30*q.numero_cuota) ok from public.cuotas q join public.prestamos p on p.id=q.prestamo_id where p.id=$1',[pid])).rows[0];assert.equal(result.ok,true);}
+ assert.equal(distinto.identidad_contrato.periodicidad,'30_dias');
  const camposDistinto=camposContrato(distinto),camposMismo=camposContrato(mismo);
  assert.equal(camposDistinto.DOCUMENTO,'RUC Nº '+sol.ruc);assert.ok(camposDistinto.FIRMANTE.includes('70000003'));assert.equal(camposDistinto.FIRMANTE.includes(owner),false);
  assert.ok(camposMismo.FIRMANTE.includes(selfDni));assert.equal(camposMismo.CALIDAD_FIRMANTE,'Representante de EL CLIENTE');assert.equal(camposMismo.CLIENTE,'EMPRESA FIRMA PROPIETARIO');

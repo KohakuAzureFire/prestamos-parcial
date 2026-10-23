@@ -2,7 +2,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node documentos-empresa.test.mjs && node agencias.test.mjs && node borradores.test.mjs && node ruc.test.mjs && node representaciones.test.mjs && node solicitudes.test.mjs && node contrato.test.mjs"
+    "test": "node documentos-empresa.test.mjs && node agencias.test.mjs && node borradores.test.mjs && node ruc.test.mjs && node representaciones.test.mjs && node solicitudes.test.mjs && node contrato.test.mjs && node api-peru.test.mjs"
   },
   "devDependencies": {
     "@electric-sql/pglite": "0.5.10"

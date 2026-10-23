@@ -70,3 +70,9 @@ La suite de solicitudes aplica `20261022205543_simplificar_evaluacion_contrato_r
 `contrato.test.mjs` forma parte de `npm test`. Verifica Word e impresión, razón social, firma con nombre/DNI/calidad, ambos casos RUC 20, DNI y RUC 10, falta de copia del representante y documento hasta firmas. La suite SQL comprueba la copia contractual de préstamos aprobados con propietario que firma o representante distinto y que cambios posteriores en la ficha no alteren los campos originales.
 
 Para generar ejemplos ficticios de revisión visual: `CONTRATOS_PRUEBA_DIR=/ruta/temporal node contrato.test.mjs`. Son archivos de QA; no se incluyen como contratos reales ni se cargan a producción.
+
+## Representantes y cuotas de 30 días
+
+`api-peru.test.mjs` integra normalización, cliente HTTP y ruta real con respuestas simuladas: varios representantes, DNI con ceros, enmascarados, vacíos, respuestas inválidas, cuota agotada, autorización, sesión y firma. No hace consultas externas. Comprueba fechas de 30, 60 y 90 días en cambios de mes, año y bisiestos, y conserva el modo mensual de simulaciones anteriores. Está incluido en npm test.
+
+La suite de solicitudes aplica la migración de API y 30 días. Comprueba selección firmada, índice inválido, firma alterada, DNI seleccionado diferente al firmante y cronogramas definitivos de ambos casos RUC 20 a intervalos de 30 días. Revisión en navegador pendiente con API_PERU_TOKEN real: listado de varios, selección expresa, volver entre pasos, quitar selección, datos ocultos, caída y cuota agotada; sin generar préstamos ficticios en producción.

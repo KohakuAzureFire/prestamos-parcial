@@ -1,5 +1,5 @@
 import PizZip from 'pizzip';
-export interface IdentidadContrato {nombres:string;apellidos:string;dni?:string|null;ruc?:string|null;razon_social?:string|null;propietario?:{dni:string;nombre:string};representante?:{dni:string;nombre:string}|null}
+export interface IdentidadContrato {periodicidad?:'30_dias'|'mensual';nombres:string;apellidos:string;dni?:string|null;ruc?:string|null;razon_social?:string|null;propietario?:{dni:string;nombre:string};representante?:{dni:string;nombre:string}|null}
 export interface DatosContrato {id:string;fecha_prestamo:string;monto:number;plazo_meses:number;identidad_contrato?:IdentidadContrato|null;clientes:IdentidadContrato;agencias:{nombre:string};cuotas:{numero_cuota:number;fecha_vencimiento:string;cuota_total:number;interes:number}[]}
 export const escapar=(x:string)=>x.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&apos;'}[c]!));
 const dinero=(n:number)=>'S/ '+Number(n).toLocaleString('es-PE',{minimumFractionDigits:2,maximumFractionDigits:2});

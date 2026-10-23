@@ -38,7 +38,7 @@ export interface Cliente {
 }
 
 export interface Prestamo {
-  identidad_contrato?: {nombres:string;apellidos:string;dni?:string|null;ruc?:string|null;modalidad?:string}|null;
+  identidad_contrato?: {periodicidad?:'30_dias'|'mensual';nombres:string;apellidos:string;dni?:string|null;ruc?:string|null;modalidad?:string}|null;
   id: string;
   cliente_id: string;
   agencia_id: string;

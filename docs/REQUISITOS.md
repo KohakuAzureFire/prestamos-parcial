@@ -24,7 +24,7 @@ El sistema sustituye el registro en hojas de cálculo para conservar identidad, 
 | Agencias | Solo Chimbote, Trujillo, Chiclayo, Piura y Tumbes. Cada cuenta tiene una agencia asignada. |
 | Préstamo | Cliente, fecha de operación, monto positivo en soles y plazo entero de 1 a 60 meses. Mínimo S/ 0.01 y máximo según el capital disponible. |
 | Interés | TEA fija del 30 %. Sistema francés y tasa efectiva mensual equivalente. |
-| Vencimientos | Mensuales, en el día original del préstamo. Si no existe en un mes, se utiliza el último día de ese mes, considerando años bisiestos. |
+| Vencimientos | Cada 30 días: fecha del préstamo más 30, 60, 90 días y así sucesivamente. No se fija el día del mes. Se conservan las cuotas ya confirmadas. |
 | Capital máximo | Hasta S/ 10 000 de capital pendiente del propietario, incluidos préstamos personales y empresas vinculadas de las cinco agencias. Solo la amortización pagada libera cupo. |
 | Elegibilidad | Identidad aprobada y vigente, sin atrasos, historial conciliado y capital disponible; RUC ACTIVO/HABIDO cuando corresponda. El antecedente extrajudicial exige autorización. |
 | Cobranza | Se pueden pagar cuotas de un préstamo en otra agencia. Se atienden primero las cuotas pendientes más antiguas del préstamo seleccionado. |
@@ -38,7 +38,7 @@ Se atiende a personas naturales con DNI, personas naturales con negocio (RUC 10)
 | Acceso | Iniciar y cerrar sesión, controlar 15 minutos de inactividad y mantener una sesión por cuenta, sin credenciales de demostración visibles. | Administrar cuentas y recuperar contraseñas. |
 | Clientes | Consultar ficha e historial de verificación; registrar o revalidar desde el flujo del préstamo. | Otros documentos de identidad y cambios de propietario. |
 | Préstamos | Registrar, controlar el capital pendiente y consultar cartera propia. | Editar, anular o refinanciar préstamos confirmados. |
-| Cronograma | Cuotas mensuales, desglose de interés y capital, guardado y PDF. | Reprogramaciones y amortización extraordinaria. |
+| Cronograma | Cuotas cada 30 días, desglose de interés y capital, guardado y PDF. | Reprogramaciones y amortización extraordinaria. |
 | Pagos | Registrar cuotas completas, incluso de otra agencia, y emitir constancia. | Abonos parciales, devoluciones y pasarelas de pago. |
 | Estados | Actualizar deuda y condición de pago automáticamente. | Reportes gerenciales y gestión jurídica de cobranza. |
 
@@ -54,7 +54,7 @@ Se adoptan las siguientes precisiones para la consulta por agencia, el pago entr
 | Un año de atraso | Doce meses calendario desde el vencimiento de la cuota impaga más antigua. El día inexistente se ajusta al último del mes. |
 | Cobro mínimo | Registro interno por el asesor de una o varias cuotas completas consecutivas del préstamo seleccionado; no integra un banco ni una pasarela. |
 | Orden del pago | Primero la cuota pendiente más antigua del préstamo elegido. La condición del cliente considera todos sus préstamos en las cinco agencias. |
-| Cálculo mensual | Tasa mensual constante equivalente a la TEA, separada de las fechas mensuales de calendario. El interés compensatorio mantiene la tasa mensual; el atraso no genera cargos adicionales. |
+| Cálculo mensual | Tasa constante por período de 30 días equivalente a la TEA con base 360. La fecha se obtiene sumando 30 días por cuota; el atraso no genera cargos adicionales. |
 
 ## Condiciones para operar
 
@@ -135,9 +135,9 @@ La fecha de operación y el corte diario se interpretan en la zona horaria de Pe
 | TEA | 30 % efectiva anual, fija y no editable. |
 | Tasa mensual | TEM = (1 + 0,30)^(1/12) − 1 = 2,210445 % aproximadamente. Equivale a (1 + 0,30)^(30/360) − 1 bajo la base convencional de 360 días adoptada. |
 | Amortización | Sistema francés con cuota mensual constante. Interés del mes = capital anterior × TEM; amortización = cuota − interés. La última cuota ajusta los redondeos. |
-| Vencimientos | Meses calendario desde la fecha original, sin sumar intervalos fijos de 30 días. Un vencimiento ajustado a febrero no cambia el día de los meses siguientes. |
-| Bisiestos | Un préstamo del 31/01/2028 vence primero el 29/02/2028 y después el 31/03/2028. Del 12/05/2026 al 12/06/2026 hay 31 días y sigue siendo una cuota mensual. |
-| Convención | La base 360 sustenta la equivalencia mensual elegida; no obliga a que todas las fechas estén separadas por 30 días. No se ajustan fines de semana en este alcance. |
+| Vencimientos | Intervalos de 30 días desde la fecha de operación: fecha original más 30 por el número de cuota. Los cronogramas confirmados antes de este cambio permanecen intactos. |
+| Bisiestos | Un préstamo del 31/01/2028 vence el 01/03/2028, 31/03/2028 y 30/04/2028. Uno del 22/10/2026 vence el 21/11/2026, 21/12/2026 y 20/01/2027. |
+| Convención | La tasa por período usa 30/360 y los nuevos vencimientos se separan por 30 días. No se ajustan fines de semana. El umbral extrajudicial conserva los doce meses calendario. |
 | Redondeo y cargos | De 1 a 60 cuotas, dos decimales y saldo final cero. Sin comisiones, seguros, penalidades ni recargos por atraso. |
 | Importes informativos | Interés total programado = suma de intereses; total programado = suma de cuotas; deuda pendiente = total programado menos cobros confirmados. El capital pendiente excluye intereses futuros. |
 | Atrasos sin recargos | El atraso no incrementa el importe de las cuotas. Se conservan vencimientos, días de atraso, condición de pago y bloqueo de nuevos préstamos. |
@@ -235,7 +235,7 @@ Como asesor de ventas, quiero verificar la identidad y vigencia del DNI, para re
 
 - **CA09. SUNAT y alcance:** SUNAT compara razón social, estado, condición y domicilio. Permite guardar consulta firmada sin cambios o con observaciones. No edita datos externos ni revalida DNI, propiedad o facultades; no hay actualización periódica.
 
-- **CA10. Representación:** RUC 20 distingue propietario y firmante presencial. Si el propietario ausente tiene identidad previa vigente, la reutiliza; si es nuevo o requiere revalidación, permite enviar el expediente como pendiente de verificarlo presencialmente. Ese estado bloquea aprobar y crear deuda, incluso por llamada directa. Documentación va en pantalla propia, con campos según el documento, referencia generada automáticamente y certificado SUNARP PDF hasta 5 MB. Los tipos admitidos son concretos y reconocidos. La evaluación posterior admite firma individual; no reasigna propietario.
+- **CA10. Representación:** RUC 20 distingue propietario del límite y firmante presencial. Propietario ausente nuevo o vencido: solicitud pendiente, sin identidad ficticia ni deuda; impide aprobar hasta su revisión presencial. Documentación en pantalla propia, con referencia guiada y certificado SUNARP PDF hasta 5 MB. No reasigna propietario y admite firma individual. API Perú lista varios representantes y permite elegir al firmante. Contrasta el DNI completo al enviar; datos ocultos son referencia parcial. La consulta es opcional y no reemplaza DNI original, propiedad ni facultades.
 
 - **CA11. Referencias guiadas:** Genera la referencia con campos específicos, tipos y límites de Documentación y validaciones de empresas. Rechaza escritura y pegado inválidos; conserva referencias anteriores sin recortarlas. En evaluación reutiliza el documento presentado y exige solo el código del certificado. Aprobar admite observaciones opcionales; observar o rechazar requiere un motivo de 10 a 1000 caracteres. Registra asesor y fecha.
 
@@ -278,7 +278,7 @@ Como asesor de ventas, quiero generar y entregar el cronograma, para que el clie
 
 - **CA02. Cálculo:** TEM = (1 + 0,30)^(1/12) − 1, aproximadamente 2,210445 %. Sistema francés: interés sobre saldo y amortización como cuota menos interés.
 
-- **CA03. Fechas mensuales:** Suma meses a la fecha original, conserva el día y usa el último del mes si falta. Considera bisiestos, sin ajuste por fines de semana.
+- **CA03. Fechas cada 30 días:** Suma 30 días por cuota a la fecha del préstamo. Considera cambios de mes, año y bisiestos, sin ajuste por fines de semana. Conserva las fechas de cuotas ya confirmadas.
 
 - **CA04. Detalle:** Muestra número, vencimiento, cuota, interés, amortización y saldo; identifica titular, código, agencia, monto, plazo, TEA, TEM y totales.
 
@@ -290,7 +290,7 @@ Como asesor de ventas, quiero generar y entregar el cronograma, para que el clie
 
 - **CA08. Caso financiero:** Para S/ 1 000 a seis meses: primeras cinco cuotas S/ 179,80 y última S/ 179,77; capital S/ 1 000, interés S/ 78,77 y total S/ 1 078,77.
 
-- **CA09. Caso de calendario:** 12/05/2026 vence el 12/06/2026. Desde 31/01/2028: 29/02/2028 y 31/03/2028; el ajuste no cambia la TEM.
+- **CA09. Caso de calendario:** Desde 22/10/2026 vence el 21/11/2026, 21/12/2026 y 20/01/2027. Desde 31/01/2028 usa 01/03/2028 y 31/03/2028; la tasa por período se mantiene.
 
 ### HU-06 Consultar clientes y cartera propia
 
